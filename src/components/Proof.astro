@@ -1,0 +1,13 @@
+---
+import { site } from '../data/site';
+interface Props { dark?: boolean; title?: string }
+const { dark = false, title } = Astro.props;
+---
+<div class:list={['proof', { 'proof-dark': dark }]}>
+  {title && <p class="eyebrow proof-title">{title}</p>}
+  <ul>
+    {site.proof.points.map((p) => (
+      <li><strong>{p.value}</strong><span>{p.label}</span></li>
+    ))}
+  </ul>
+</div>

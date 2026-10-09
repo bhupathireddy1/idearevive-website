@@ -1,0 +1,83 @@
+---
+import { site } from '../data/site';
+import { services } from '../data/services';
+interface Props { id?: string; submitLabel?: string; showWebsite?: boolean }
+const { id = 'lead-form', submitLabel = 'Send my request', showWebsite = true } = Astro.props;
+const action = site.formEndpoint || `mailto:${site.email}`;
+const method = site.formEndpoint ? 'post' : 'get';
+---
+<form class="lead-form" id={id} action={action} method={method} data-lead-form>
+  <div class="form-row">
+    <div class="form-group">
+      <label class="form-label" for={`${id}-name`}>Full name</label>
+      <input class="form-input" id={`${id}-name`} name="name" autocomplete="name" required />
+    </div>
+    <div class="form-group">
+      <label class="form-label" for={`${id}-email`}>Work email</label>
+      <input class="form-input" id={`${id}-email`} name="email" type="email" autocomplete="email" required />
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group">
+      <label class="form-label" for={`${id}-phone`}>Phone / WhatsApp</label>
+      <input class="form-input" id={`${id}-phone`} name="phone" type="tel" autocomplete="tel" inputmode="tel" />
+    </div>
+    {showWebsite && (
+      <div class="form-group">
+        <label class="form-label" for={`${id}-website`}>Website</label>
+        <input class="form-input" id={`${id}-website`} name="website" type="url" placeholder="https://" autocomplete="url" />
+      </div>
+    )}
+  </div>
+  <div class="form-group">
+    <label class="form-label" for={`${id}-service`}>What do you need help with?</label>
+    <select class="form-input" id={`${id}-service`} name="service">
+      <option value="">Not sure yet — advise me</option>
+      {services.map((s) => <option value={s.name}>{s.name}</option>)}
+    </select>
+  </div>
+  <div class="form-group">
+    <label class="form-label" for={`${id}-message`}>Your goals</label>
+    <textarea class="form-input form-textarea" id={`${id}-message`} name="message" placeholder="e.g. More enquiries for our clinic in Kondapur"></textarea>
+  </div>
+  <div class="hp" aria-hidden="true">
+    <label for={`${id}-company`}>Company</label>
+    <input id={`${id}-company`} name="_gotcha" tabindex="-1" autocomplete="off" />
+  </div>
+  <button type="submit" class="btn btn-primary btn-lg btn-block">{submitLabel}</button>
+  <p class="form-note">We reply within one business day. Your details are used only to respond to your enquiry — see our <a href="/privacy-policy/">privacy policy</a>.</p>
+  <p class="form-status" role="status" aria-live="polite"></p>
+</form>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('[data-lead-form]').forEach((form) => {
+    form.addEventListener('submit', async (e) => {
+      const status = form.querySelector<HTMLElement>('.form-status');
+      const data = new FormData(form);
+      if (data.get('_gotcha')) { e.preventDefault(); return; }
+      const w = window as unknown as { gtag?: (...a: unknown[]) => void };
+      w.gtag?.('event', 'form_submit', { form_id: form.id, service: data.get('service') });
+
+      if (form.method.toLowerCase() !== 'post') {
+        e.preventDefault();
+        const body = [...data.entries()]
+          .filter(([k, v]) => k !== '_gotcha' && v)
+          .map(([k, v]) => `${k}: ${v}`)
+          .join('\n');
+        window.location.href = `${form.action}?subject=${encodeURIComponent('New enquiry from idearevive.com')}&body=${encodeURIComponent(body)}`;
+        return;
+      }
+
+      e.preventDefault();
+      if (status) status.textContent = 'Sending…';
+      try {
+        const res = await fetch(form.action, { method: 'POST', body: data, headers: { Accept: 'application/json' } });
+        if (!res.ok) throw new Error();
+        form.reset();
+        if (status) status.textContent = 'Thank you! We will be in touch within one business day.';
+      } catch {
+        if (status) status.textContent = 'Something went wrong. Please email us directly.';
+      }
+    });
+  });
+</script>

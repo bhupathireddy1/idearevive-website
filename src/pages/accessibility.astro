@@ -1,0 +1,38 @@
+---
+import LegalPage from '../components/LegalPage.astro';
+import { site } from '../data/site';
+---
+<LegalPage
+  title="Accessibility Statement | IdeaRevive"
+  heading="Accessibility Statement"
+  description="IdeaRevive’s commitment to an accessible website aligned with WCAG 2.2 Level AA, what we have done so far, and how to report an accessibility barrier."
+  path="/accessibility/"
+  summary="IdeaRevive aims for this website to meet WCAG 2.2 Level AA so everyone can use it, including people using screen readers, keyboards or reduced-motion settings. Report any barrier and we will respond within five business days."
+>
+  <p>{site.name} wants everyone to be able to use this website. We aim to meet the Web Content Accessibility Guidelines (WCAG) 2.2 at Level AA.</p>
+  <h2>What we have done so far</h2>
+  <ul>
+    <li>Semantic HTML with a logical heading structure on every page.</li>
+    <li>Full keyboard navigation with visible focus indicators and a skip-to-content link.</li>
+    <li>Colour contrast designed to meet AA ratios for text and controls.</li>
+    <li>Labelled form fields and live status messages.</li>
+    <li>Animations disabled for visitors who prefer reduced motion.</li>
+    <li>Content that works without JavaScript, so assistive technologies read the full page.</li>
+  </ul>
+  <h2>Known limitations</h2>
+  <p>Embedded third-party content such as Google Maps may not fully meet our standards. We provide the same information in text alongside it.</p>
+  <h2>Report an accessibility barrier</h2>
+  <p>If you find any barrier on this site, please email <a href={`mailto:${site.email}`}>{site.email}</a> with the page address and a short description. We will respond within five business days.</p>
+  <h2>How we test the site</h2>
+  <p>
+    We check pages with keyboard-only navigation, a screen-reader pass on the home, contact and audit forms,
+    and a reduced-motion setting. Colour contrast is measured against WCAG 2.2 AA for body text and buttons.
+    New templates are reviewed against this list before they go live. The site is static HTML, so content is
+    available without JavaScript.
+  </p>
+  <p>
+    IdeaRevive is a Hyderabad digital marketing agency. Accessibility is part of how we build client websites
+    too: labelled fields, visible focus, skip links and text that still makes sense if images fail to load.
+    If a third-party embed fails these tests, we duplicate the important facts in text on the same page.
+  </p>
+</LegalPage>

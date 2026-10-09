@@ -1,0 +1,29 @@
+---
+import Icon from './Icon.astro';
+interface Props { title?: string; alt?: boolean }
+const { title = 'What the first 90 days look like', alt = false } = Astro.props;
+const steps = [
+  { when: 'Week 1', name: 'Audit', icon: 'eye', text: 'We go through your site, rankings, Google Business Profile, ad accounts and tracking, and benchmark you against the three competitors you lose to most.' },
+  { when: 'Weeks 2–3', name: 'Plan', icon: 'pen', text: 'A written 90-day plan: what we’ll fix, what we’ll build, the budget, and the numbers we agree to be judged on.' },
+  { when: 'Months 1–3', name: 'Build & launch', icon: 'layers', text: 'Weekly sprints. Every change is logged in a shared doc so you can see exactly what was done and why.' },
+  { when: 'Every month', name: 'Report', icon: 'chart', text: 'Leads, cost per lead and revenue in one page. We double down on what works and cut what doesn’t.' },
+];
+---
+<section class:list={['section', { 'section-alt': alt }]} aria-labelledby="process-title">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">How we work</p>
+      <h2 id="process-title" class="heading-1" data-reveal>{title}</h2>
+    </div>
+    <ol class="timeline">
+      {steps.map((s) => (
+        <li data-reveal>
+          <span class="timeline-icon" aria-hidden="true"><Icon name={s.icon} size={20} /></span>
+          <span class="when eyebrow">{s.when}</span>
+          <h3>{s.name}</h3>
+          <p>{s.text}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>

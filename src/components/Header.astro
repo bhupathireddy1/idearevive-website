@@ -1,0 +1,38 @@
+---
+import Icon from './Icon.astro';
+import Logo from './Logo.astro';
+import { nav, site } from '../data/site';
+const current = Astro.url.pathname;
+---
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a href="/" class="wordmark" aria-label={`${site.name} home`}>
+      <Logo class="wordmark-logo" />
+    </a>
+
+    <nav class="nav" aria-label="Primary">
+      <ul class="nav-list" data-nav-panel>
+        {nav.map((item) => (
+          <li>
+            <a href={item.href} class="nav-link" aria-current={current.startsWith(item.href) ? 'page' : undefined}>
+              {item.label}
+            </a>
+          </li>
+        ))}
+        <li class="nav-mobile-cta">
+          <a href="/free-audit/" class="btn btn-primary btn-lg" data-track="nav-mobile-audit">Get a free growth audit</a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="header-actions">
+      <a href="/contact/" class="btn btn-ghost hide-sm">Contact</a>
+      <a href="/free-audit/" class="btn hide-sm" data-track="nav-audit">Free growth audit <span class="arrow" aria-hidden="true">→</span></a>
+      <button class="btn btn-secondary btn-icon nav-toggle" aria-label="Menu" aria-expanded="false" data-nav-toggle>
+        <Icon name="menu" size={20} class="icon-open" />
+        <Icon name="close" size={20} class="icon-close" />
+      </button>
+    </div>
+  </div>
+  <div class="scroll-progress" aria-hidden="true"></div>
+</header>

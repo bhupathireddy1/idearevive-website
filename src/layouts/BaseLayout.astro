@@ -1,0 +1,157 @@
+---
+import '@fontsource-variable/bricolage-grotesque';
+import '@fontsource-variable/instrument-sans';
+import '../styles/site.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../data/site';
+import { coverFor } from '../lib/og';
+import {
+  organizationSchema, websiteSchema, webPageSchema, breadcrumbSchema, founderSchema, type Crumb,
+} from '../lib/schema';
+
+interface Props {
+  title: string;
+  description: string;
+  crumbs?: Crumb[];
+  schema?: Record<string, unknown>[];
+  pageType?: string;
+  ogType?: 'website' | 'article';
+  noindex?: boolean;
+  published?: string;
+  updated?: string;
+}
+
+const { title, description, crumbs = [], schema = [], pageType, ogType = 'website', noindex = false, published, updated } = Astro.props;
+const path = Astro.url.pathname;
+const reviewed = updated || site.contentUpdated;
+const canonical = new URL(path, site.url).toString();
+const cover = coverFor(path);
+const ogPath = cover.src;
+const ogImage = new URL(ogPath, site.url).toString();
+
+const graph = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    organizationSchema(),
+    founderSchema(),
+    websiteSchema(),
+    webPageSchema({ path, title, description, type: pageType, published, updated, image: ogPath }),
+    ...(crumbs.length ? [breadcrumbSchema([{ name: 'Home', path: '/' }, ...crumbs])] : []),
+    ...schema,
+  ],
+};
+---
+<!doctype html>
+<html lang="en-IN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1'} />
+    <meta name="theme-color" content="#f2ede3" />
+    <meta name="geo.region" content="IN-TG" />
+    <meta name="geo.placename" content="Hyderabad" />
+    <meta name="geo.position" content={`${site.geo.lat};${site.geo.lng}`} />
+    <meta name="ICBM" content={`${site.geo.lat}, ${site.geo.lng}`} />
+
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap.xml" />
+    <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM summary" />
+    <link rel="alternate" type="text/plain" href="/llms-full.txt" title="Full LLM content" />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content="en_IN" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:alt" content={cover.alt} />
+    <meta property="og:image:width" content={String(cover.width)} />
+    <meta property="og:image:height" content={String(cover.height)} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(graph)} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <Header />
+    <main id="main">
+      <slot />
+      <p class="sr-only"><time datetime={reviewed}>Page last reviewed {reviewed}</time></p>
+    </main>
+    <Footer />
+
+    <script>
+      const toggle = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');
+      const panel = document.querySelector<HTMLElement>('[data-nav-panel]');
+      toggle?.addEventListener('click', () => {
+        const open = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.setAttribute('aria-expanded', String(!open));
+        panel?.classList.toggle('is-open', !open);
+        document.body.classList.toggle('nav-open', !open);
+      });
+
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const items = document.querySelectorAll('[data-reveal]');
+      if (reduce || !('IntersectionObserver' in window)) {
+        items.forEach((el) => el.classList.add('is-visible'));
+      } else {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add('is-visible');
+              io.unobserve(e.target);
+            }
+          });
+        }, { rootMargin: '0px 0px -10% 0px' });
+        items.forEach((el) => io.observe(el));
+      }
+
+      const root = document.documentElement;
+      const fields = document.querySelectorAll<HTMLElement>('[data-motion]');
+      let ticking = false;
+      const setMotion = () => {
+        ticking = false;
+        const max = root.scrollHeight - window.innerHeight;
+        const p = max > 0 ? window.scrollY / max : 0;
+        root.style.setProperty('--scroll', p.toFixed(4));
+        fields.forEach((el) => {
+          const r = el.getBoundingClientRect();
+          const span = window.innerHeight + r.height;
+          const local = span > 0 ? (window.innerHeight - r.top) / span : 0;
+          el.style.setProperty('--local', Math.min(1, Math.max(0, local)).toFixed(4));
+        });
+      };
+      const onScroll = () => {
+        if (reduce) return;
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(setMotion);
+        }
+      };
+      if (reduce) {
+        root.style.setProperty('--scroll', '0');
+      } else {
+        setMotion();
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll);
+      }
+
+      document.querySelectorAll<HTMLElement>('[data-track]').forEach((el) => {
+        el.addEventListener('click', () => {
+          const w = window as unknown as { gtag?: (...a: unknown[]) => void };
+          w.gtag?.('event', 'cta_click', { label: el.dataset.track });
+        });
+      });
+    </script>
+  </body>
+</html>

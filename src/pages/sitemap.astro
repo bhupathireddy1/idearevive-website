@@ -1,0 +1,60 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { services } from '../data/services';
+import { locations } from '../data/locations';
+import { cities } from '../data/cities';
+import { industries } from '../data/industries';
+import { posts } from '../data/posts';
+import { site } from '../data/site';
+
+const crumbs = [{ name: 'Sitemap', path: '/sitemap/' }];
+const groups = [
+  { title: 'Main pages', links: [
+    ['Home', '/'], ['About IdeaRevive', '/about/'], ['Pricing', '/pricing/'], ['Case studies', '/case-studies/'],
+    ['Contact', '/contact/'], ['Free growth audit', '/free-audit/'],
+  ] },
+  { title: 'Services', links: [['All services', '/services/'], ...services.map((s) => [s.h1, `/services/${s.slug}/`])] },
+  { title: 'Cities across India', links: [['All cities', '/cities/'], ...cities.map((c) => [`Digital marketing in ${c.name}`, `/cities/${c.slug}/`])] },
+  { title: 'Hyderabad neighbourhoods', links: [['All Hyderabad areas', '/locations/'], ...locations.map((l) => [l.h1, `/locations/${l.slug}/`])] },
+  { title: 'Industries', links: [['All industries', '/industries/'], ...industries.map((i) => [i.name, `/industries/${i.slug}/`])] },
+  { title: 'Blog and guides', links: [['All articles', '/blog/'], ...posts.map((p) => [p.title, `/blog/${p.slug}/`])] },
+  { title: 'Legal and policies', links: [
+    ['Privacy policy', '/privacy-policy/'], ['Terms of use', '/terms/'], ['Cookie policy', '/cookie-policy/'], ['Accessibility statement', '/accessibility/'],
+  ] },
+];
+---
+<BaseLayout title="HTML Sitemap of Every IdeaRevive Page" description="A full list of IdeaRevive pages: digital marketing services, Hyderabad neighbourhoods, cities across India, industries, guides, company pages and policies." crumbs={crumbs}>
+  <PageHero
+    title="HTML sitemap of the IdeaRevive website"
+    answer="This page lists every page on the IdeaRevive website, grouped by section: services, cities across India, Hyderabad neighbourhoods, industries, blog guides, company pages and policies."
+    answerLabel="Summary"
+    crumbs={crumbs}
+    showCover={false}
+  />
+  <section class="section">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">How to use this page</p>
+        <h2 class="heading-2">What is on the IdeaRevive website?</h2>
+        <p class="body-lg text-muted">
+          IdeaRevive is a Hyderabad digital marketing agency with {site.proof.years} years of experience and {site.proof.clients} clients.
+          Use the lists below to jump to a service, a Hyderabad neighbourhood, an Indian city, an industry, a guide or a policy page.
+          Each service and city page has its own FAQs, a direct answer at the top, and a path to a free audit.
+          If you arrived here from a search engine or an AI assistant, start with Services or Cities across India, then open the page that matches the job you need done.
+          The HTML sitemap is a human-readable map; search engines also receive an XML sitemap at /sitemap.xml, and AI crawlers can read /llms.txt and /llms-full.txt.
+        </p>
+      </div>
+    <div class="card-grid" style="border-top:0;gap:var(--space-12)">
+      {groups.map((g) => (
+        <nav aria-label={g.title}>
+          <h2 class="heading-4" style="margin-bottom:var(--space-4)">{g.title}</h2>
+          <ul class="prose" style="font-size:var(--text-base)">
+            {g.links.map(([label, href]) => <li><a href={href}>{label}</a></li>)}
+          </ul>
+        </nav>
+      ))}
+    </div>
+    </div>
+  </section>
+</BaseLayout>

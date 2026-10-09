@@ -1,0 +1,141 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import Process from '../../components/Process.astro';
+import FAQ from '../../components/FAQ.astro';
+import NextSteps from '../../components/NextSteps.astro';
+import Figure from '../../components/Figure.astro';
+import CTA from '../../components/CTA.astro';
+import { services, type Service } from '../../data/services';
+import { industries } from '../../data/industries';
+import { cities } from '../../data/cities';
+import { site } from '../../data/site';
+import { serviceSchema, faqSchema } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return services.map((service) => ({ params: { slug: service.slug }, props: { service } }));
+}
+
+const { service } = Astro.props as { service: Service };
+const path = `/services/${service.slug}/`;
+const crumbs = [
+  { name: 'Services', path: '/services/' },
+  { name: service.name, path },
+];
+const related = services.filter((s) => s.slug !== service.slug).slice(0, 3);
+const relatedIndustries = industries.filter((i) => i.services.includes(service.slug));
+---
+<BaseLayout
+  title={service.metaTitle}
+  description={service.metaDescription}
+  crumbs={crumbs}
+  schema={[serviceSchema({ name: service.h1, description: service.answer, path }), faqSchema(service.faqs)]}
+>
+  <PageHero
+    eyebrow={service.name}
+    title={service.h1}
+    answer={service.answer}
+    crumbs={crumbs}
+    secondary={{ label: 'View Pricing', href: '/pricing/' }}
+  />
+
+  <section class="section">
+    <div class="container split">
+      <div>
+        <div data-reveal>
+          <h2 class="heading-1">What’s included in our {service.shortName} service?</h2>
+          <p class="body-lg text-muted" style="margin-top:var(--space-4)">{service.intro}</p>
+        </div>
+        <ul class="feature-list" style="margin-top:var(--space-10)">
+          {service.included.map((item) => (
+            <li class="feature" data-reveal>
+              <div><h3>{item.title}</h3><p>{item.text}</p></div>
+            </li>
+          ))}
+        </ul>
+        {service.slug === 'app-install-campaigns-hyderabad' && (
+          <Figure
+            kind="product"
+            caption="Fig. 1 — Installs only count if they open, return and stay."
+          />
+        )}
+      </div>
+
+      <aside class="sticky-aside" data-reveal>
+        <div class="info-card">
+          <h2 class="heading-4">Deliverables</h2>
+          <ul class="check-list">
+            {service.deliverables.map((d) => <li>{d}</li>)}
+          </ul>
+          <dl class="key-facts" style="grid-template-columns:1fr">
+            <div class="key-fact"><dt>Typical timeline</dt><dd>{service.timeline}</dd></div>
+            <div class="key-fact"><dt>Pricing</dt><dd>Fixed monthly quote after a free audit · <a href="/pricing/">see packages</a></dd></div>
+          </dl>
+          <a href="/free-audit/" class="btn btn-primary btn-lg btn-block" style="margin-top:var(--space-6)" data-track={`service-${service.slug}`}>
+            Get a free {service.shortName} audit
+          </a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section-ink" aria-labelledby="why-title">
+    <div class="container split">
+      <div data-reveal>
+        <p class="eyebrow">Why us</p>
+        <h2 id="why-title" class="heading-1" style="margin:var(--space-4) 0 var(--space-6)">Why choose IdeaRevive for {service.shortName}?</h2>
+        <p class="body-lg" style="color:var(--on-ink-2)">
+          IdeaRevive has {site.proof.years} years of digital marketing experience and has worked with {site.proof.clients} clients, from
+          Hyderabad start-ups to eCommerce brands selling around the world. The same team that plans your {service.shortName} also builds
+          websites, SaaS products and mobile apps, so strategy, build and growth are never split across vendors.
+        </p>
+      </div>
+      <ul class="check-list" data-reveal>
+        <li>One senior lead who owns your results, not a rotating account team</li>
+        <li>A written plan with the numbers we agree to be judged on</li>
+        <li>Your accounts, data and code stay in your name from day one</li>
+        <li>Monthly reporting in leads, cost per result and revenue</li>
+        <li>Clients across Hyderabad, {cities.length} Indian cities and abroad</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Best for</p>
+        <h2 class="heading-1">Who is {service.shortName} right for?</h2>
+      </div>
+      <ul class="tag-list" data-reveal>
+        {service.bestFor.map((b) => <li><span>{b}</span></li>)}
+        {relatedIndustries.map((i) => <li><a href={`/industries/${i.slug}/`}>{i.name} marketing</a></li>)}
+      </ul>
+      <h3 class="heading-4" style="margin:var(--space-12) 0 var(--space-4)">Where do we deliver {service.shortName}?</h3>
+      <p class="text-muted" style="margin-bottom:var(--space-4)">In Hyderabad and remotely for businesses across India and abroad, including:</p>
+      <ul class="tag-list">
+        <li><a href="/locations/">Hyderabad</a></li>
+        {cities.map((c) => <li><a href={`/cities/${c.slug}/`}>{c.name}</a></li>)}
+        <li><a href="/cities/">All cities</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <Process title={`Our ${service.shortName} process`} />
+  <FAQ faqs={service.faqs} title={`${service.name} FAQs`} />
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Keep exploring</p>
+        <h2 class="heading-2">Which services sit next to this one?</h2>
+      </div>
+      <ul class="index-list">
+        {related.map((s) => <ServiceCard href={`/services/${s.slug}/`} index={services.indexOf(s)} icon={s.icon} title={s.name} text={s.card} />)}
+      </ul>
+    </div>
+  </section>
+
+  <NextSteps />
+  <CTA />
+</BaseLayout>

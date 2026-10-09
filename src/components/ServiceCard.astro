@@ -1,0 +1,17 @@
+---
+import Icon from './Icon.astro';
+interface Props { href: string; title: string; text: string; index?: number; icon?: string; cta?: string }
+const { href, title, text, index, icon } = Astro.props;
+---
+<li data-reveal>
+  <a href={href} class="row">
+    {icon ? (
+      <span class="row-icon" aria-hidden="true"><Icon name={icon} size={18} /></span>
+    ) : (
+      <span class="row-num">{index !== undefined ? String(index + 1).padStart(2, '0') : '—'}</span>
+    )}
+    <span class="row-title">{title}</span>
+    <span class="row-text">{text}</span>
+    <span class="row-arrow" aria-hidden="true">→</span>
+  </a>
+</li>

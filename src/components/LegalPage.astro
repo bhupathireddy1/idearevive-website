@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from './PageHero.astro';
+import { site } from '../data/site';
+interface Props { title: string; heading: string; description: string; path: string; summary: string }
+const { title, heading, description, path, summary } = Astro.props;
+const crumbs = [{ name: heading, path }];
+const related = [
+  { label: 'Privacy policy', href: '/privacy-policy/' },
+  { label: 'Terms of use', href: '/terms/' },
+  { label: 'Cookie policy', href: '/cookie-policy/' },
+  { label: 'Accessibility statement', href: '/accessibility/' },
+  { label: 'About IdeaRevive', href: '/about/' },
+  { label: 'Our services', href: '/services/' },
+  { label: 'Contact us', href: '/contact/' },
+  { label: 'Home', href: '/' },
+].filter((r) => r.href !== path);
+---
+<BaseLayout title={title} description={description} crumbs={crumbs}>
+  <PageHero title={heading} answer={summary} answerLabel="Summary" crumbs={crumbs} primary={{ label: 'Contact us', href: '/contact/' }} showCover={false} />
+  <section class="section">
+    <div class="container split">
+      <div class="prose"><slot /></div>
+      <nav class="info-card sticky-aside" aria-label="Related pages">
+        <p class="eyebrow">Related pages</p>
+        <ul class="check-list">
+          {related.map((r) => <li><a href={r.href}>{r.label}</a></li>)}
+        </ul>
+        <p class="caption" style="margin-top:var(--space-6)">Questions? <a href={`mailto:${site.email}`}>{site.email}</a></p>
+      </nav>
+    </div>
+  </section>
+</BaseLayout>

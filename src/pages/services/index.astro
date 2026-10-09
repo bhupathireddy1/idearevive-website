@@ -1,0 +1,87 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import Process from '../../components/Process.astro';
+import FAQ from '../../components/FAQ.astro';
+import NextSteps from '../../components/NextSteps.astro';
+import Figure from '../../components/Figure.astro';
+import CTA from '../../components/CTA.astro';
+import { services } from '../../data/services';
+import { site } from '../../data/site';
+import { serviceSchema, faqSchema } from '../../lib/schema';
+
+const crumbs = [{ name: 'Services', path: '/services/' }];
+const title = 'Digital Marketing Services in Hyderabad | IdeaRevive';
+const description = 'SEO, ads, social, eCommerce, websites, SaaS and app installs from IdeaRevive in Hyderabad. 10+ years, 50+ clients. See every service.';
+
+const faqs = [
+  { q: 'How many services does IdeaRevive offer?', a: 'Twelve, covering SEO, local SEO, Google Ads, social, content, websites, branding, performance marketing, eCommerce, SaaS product development, mobile app development and app install campaigns. You can hire one or all of them.' },
+  { q: 'Can I start with one service and add more later?', a: 'Yes. Many clients start with Google Ads or local SEO, then add content, a website rebuild or an app once the first channel is working. The plan is written so extra channels slot in without starting over.' },
+  { q: 'Do you handle both marketing and product development?', a: 'Yes. Marketing, websites, SaaS products and mobile apps sit on the same team, which is why tracking, onboarding and launch campaigns are designed together instead of handed between vendors.' },
+];
+
+const itemList = {
+  '@type': 'ItemList',
+  name: 'IdeaRevive digital marketing services',
+  itemListElement: services.map((s, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    item: serviceSchema({ name: s.name, description: s.answer, path: `/services/${s.slug}/` }),
+  })),
+};
+---
+<BaseLayout title={title} description={description} crumbs={crumbs} schema={[itemList, faqSchema(faqs)]} pageType="CollectionPage">
+  <PageHero
+    eyebrow="Services"
+    title="Digital marketing services in Hyderabad"
+    answer={`IdeaRevive offers ${services.length} services — SEO, ads, social, content, websites, branding, eCommerce, SaaS, mobile apps and app installs — that can run on their own or as one programme. The team behind them has ${site.proof.years} years of experience and ${site.proof.clients} clients.`}
+    crumbs={crumbs}
+    secondary={{ label: 'See Pricing', href: '/pricing/' }}
+  />
+
+  <section class="section">
+    <div class="container">
+      <ul class="index-list">
+        {services.map((s, i) => (
+          <ServiceCard href={`/services/${s.slug}/`} index={i} icon={s.icon} title={s.name} text={s.card} />
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Not sure where to start?</p>
+        <h2 class="heading-1">Which digital marketing service do I need?</h2>
+      </div>
+      <div class="prose" style="max-width:none" data-reveal>
+        <table>
+          <thead><tr><th>If your goal is…</th><th>Start with</th></tr></thead>
+          <tbody>
+            <tr><td>Leads this month</td><td><a href="/services/google-ads-ppc-hyderabad/">Google Ads</a> or <a href="/services/performance-marketing-lead-generation-hyderabad/">performance marketing</a></td></tr>
+            <tr><td>Walk-ins and calls from nearby customers</td><td><a href="/services/local-seo-hyderabad/">Local SEO</a></td></tr>
+            <tr><td>Sustainable, lower-cost leads long term</td><td><a href="/services/seo-services-hyderabad/">SEO</a> and <a href="/services/content-marketing-hyderabad/">content marketing</a></td></tr>
+            <tr><td>Brand awareness and community</td><td><a href="/services/social-media-marketing-hyderabad/">Social media marketing</a></td></tr>
+            <tr><td>A website that actually converts</td><td><a href="/services/website-design-development-hyderabad/">Website design & development</a></td></tr>
+            <tr><td>Looking credible and distinctive</td><td><a href="/services/branding-creative-design-hyderabad/">Branding & creative design</a></td></tr>
+            <tr><td>Online store revenue</td><td><a href="/services/ecommerce-marketing-hyderabad/">eCommerce marketing</a></td></tr>
+            <tr><td>A SaaS product to launch</td><td><a href="/services/saas-product-development-hyderabad/">SaaS product development</a></td></tr>
+            <tr><td>An iOS or Android app</td><td><a href="/services/mobile-app-development-hyderabad/">Mobile app development</a></td></tr>
+            <tr><td>More quality app installs</td><td><a href="/services/app-install-campaigns-hyderabad/">App install campaigns & ASO</a></td></tr>
+          </tbody>
+        </table>
+        <Figure
+          kind="search"
+          caption="Fig. 1 — Channels we run live in Search, Maps and AI answers — not in a slide deck."
+        />
+      </div>
+    </div>
+  </section>
+
+  <Process />
+  <FAQ faqs={faqs} title="Choosing a service" alt />
+  <NextSteps />
+  <CTA />
+</BaseLayout>

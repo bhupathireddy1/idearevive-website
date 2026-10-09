@@ -1,0 +1,45 @@
+---
+import LegalPage from '../components/LegalPage.astro';
+import { site } from '../data/site';
+---
+<LegalPage
+  title="Cookie Policy | IdeaRevive Digital Marketing"
+  heading="Cookie Policy"
+  description="Which cookies the IdeaRevive website may use, what each type of cookie does, and how you can block, delete or control cookies in your browser."
+  path="/cookie-policy/"
+  summary="The IdeaRevive website may use strictly necessary, analytics and marketing cookies. You can block or delete non-essential cookies in your browser at any time without affecting your use of the site."
+>
+  <p>Cookies are small text files stored on your device when you visit a website. This page explains which cookies {site.url} may use and why.</p>
+  <h2>Types of cookies we use</h2>
+  <table>
+    <thead><tr><th>Type</th><th>Purpose</th><th>Examples</th></tr></thead>
+    <tbody>
+      <tr><td>Strictly necessary</td><td>Core site functions such as form spam protection</td><td>Form provider session cookies</td></tr>
+      <tr><td>Analytics</td><td>Understanding how visitors use the site so we can improve it</td><td>Google Analytics 4</td></tr>
+      <tr><td>Marketing</td><td>Measuring and improving ad campaigns</td><td>Google Ads, Meta Pixel</td></tr>
+    </tbody>
+  </table>
+  <h2>How to manage cookies</h2>
+  <ul>
+    <li>Use your browser settings to block or delete cookies.</li>
+    <li>Use your browser’s private mode to avoid storing cookies after you close it.</li>
+    <li>Opt out of personalised Google ads through your Google account ad settings.</li>
+  </ul>
+  <p>Blocking analytics or marketing cookies does not affect your ability to use this website.</p>
+  <h2>Changes to this cookie policy</h2>
+  <p>If we add new tools that set cookies, we will update this page and the date shown at the top.</p>
+  <h2>Questions about cookies</h2>
+  <p>Questions about cookies or tracking can be sent to <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+  <h2>Why this page exists</h2>
+  <p>
+    Indian visitors have a right to know what is stored on their device. This cookie policy sits next to our
+    <a href="/privacy-policy/">privacy policy</a> so you can see both the data we collect through forms and the
+    data browsers may store automatically. IdeaRevive is a Hyderabad digital marketing agency; we use analytics
+    and ads tools in the same way we set them up for clients, and we keep this page honest about that.
+  </p>
+  <p>
+    If you are comparing agencies, this is a small trust test: a marketing company that hides its own tracking
+    is unlikely to be careful with yours. We would rather list the cookies, explain the purpose, and let you
+    switch them off than pretend the site uses none.
+  </p>
+</LegalPage>

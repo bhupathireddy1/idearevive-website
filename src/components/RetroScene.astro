@@ -1,0 +1,243 @@
+---
+import { sceneAlt, type SceneKind } from '../lib/scenes';
+
+interface Props {
+  kind: SceneKind;
+  ratio?: 'wide' | 'tall' | 'card';
+  framed?: boolean;
+  compact?: boolean;
+  class?: string;
+}
+const { kind, ratio = 'wide', framed = true, compact = false, class: className } = Astro.props;
+const label = sceneAlt[kind];
+const uid = `${kind}-${Math.random().toString(36).slice(2, 7)}`;
+const viewBox = compact && kind === 'hyd' ? '188 36 384 400' : '0 0 800 450';
+---
+<div class:list={['retro', `retro-${ratio}`, { 'is-framed': framed }, className]} data-kind={kind}>
+  <span class="retro-grain" aria-hidden="true"></span>
+  <svg viewBox={viewBox} role="img" aria-label={label} preserveAspectRatio="xMidYMid meet">
+    <defs>
+      <pattern id={`${uid}-dot`} width="8" height="8" patternUnits="userSpaceOnUse">
+        <circle cx="1.2" cy="1.2" r="0.9" fill="#17140f" opacity="0.18" />
+      </pattern>
+    </defs>
+    <rect width="800" height="450" fill="#f7f1e6" />
+    <rect width="800" height="450" fill={`url(#${uid}-dot)`} />
+
+    <!-- print crop marks -->
+    <g class="retro-crop" stroke="#17140f" stroke-width="1.2" fill="none" aria-hidden="true">
+      <path d="M18 36 V18 H36 M764 18 H782 V36 M18 414 V432 H36 M764 432 H782 V414" />
+    </g>
+
+    {kind === 'hyd' && (
+      <g transform={compact ? 'translate(140,8)' : 'translate(40,8)'}>
+        <g transform="translate(250 250)">
+          <circle class="retro-orbit" r="168" />
+          <circle class="retro-orbit retro-orbit-rev" r="128" />
+          <circle class="retro-orbit" r="88" />
+        </g>
+        <!-- Charminar: four minarets, two-storey body, grand arch -->
+        <g class="retro-ink" fill="none" stroke="#17140f" stroke-width="2.2" stroke-linejoin="miter" stroke-linecap="square">
+          <line x1="86" y1="392" x2="430" y2="392" />
+          <!-- back minarets -->
+          <g transform="translate(6,-18)" opacity="0.55">
+            <rect x="168" y="148" width="16" height="226" />
+            <rect x="332" y="148" width="16" height="226" />
+            <path d="M176 148 l-11 -10 11 -26 11 26z" />
+            <path d="M340 148 l-11 -10 11 -26 11 26z" />
+            <circle cx="176" cy="108" r="2.4" fill="#17140f" stroke="none" />
+            <circle cx="340" cy="108" r="2.4" fill="#17140f" stroke="none" />
+          </g>
+          <!-- front minarets -->
+          <rect x="148" y="142" width="20" height="250" />
+          <rect x="348" y="142" width="20" height="250" />
+          <line x1="148" y1="210" x2="168" y2="210" />
+          <line x1="148" y1="278" x2="168" y2="278" />
+          <line x1="148" y1="338" x2="168" y2="338" />
+          <line x1="348" y1="210" x2="368" y2="210" />
+          <line x1="348" y1="278" x2="368" y2="278" />
+          <line x1="348" y1="338" x2="368" y2="338" />
+          <path d="M158 142 l-14 -12 14 -32 14 32z" />
+          <path d="M358 142 l-14 -12 14 -32 14 32z" />
+          <circle cx="158" cy="94" r="3" fill="#17140f" stroke="none" />
+          <circle cx="358" cy="94" r="3" fill="#17140f" stroke="none" />
+          <!-- body -->
+          <rect x="168" y="198" width="180" height="194" />
+          <rect x="168" y="158" width="180" height="40" />
+          <path d="M196 392 v-92 a62 78 0 0 1 124 0 v92" />
+          <path d="M186 178 a16 16 0 0 1 32 0" />
+          <path d="M242 178 a16 16 0 0 1 32 0" />
+          <path d="M298 178 a16 16 0 0 1 32 0" />
+          <rect x="242" y="166" width="32" height="16" />
+        </g>
+        <rect class="retro-pulse" x="246" y="168" width="24" height="12" fill="#ff4d1a" />
+        <!-- signal from the crown -->
+        <g class="retro-beam" transform="translate(258 92)">
+          <path d="M0 0 c28 -28 28 -56 0 -84" fill="none" stroke="#ff4d1a" stroke-width="1.6" />
+          <path d="M8 0 c36 -36 36 -72 0 -108" fill="none" stroke="#ff4d1a" stroke-width="1.2" opacity="0.5" />
+        </g>
+        {compact && (
+          <text x="258" y="428" text-anchor="middle" class="retro-kicker">HYDERABAD  ·  SIGNAL TOWER</text>
+        )}
+        {!compact && (
+          <g class="retro-stamp" transform="translate(500 118)">
+            <rect x="0" y="0" width="236" height="236" fill="none" stroke="#17140f" stroke-width="1.6" />
+            <rect x="10" y="10" width="216" height="216" fill="none" stroke="#ff4d1a" stroke-width="1.2" class="retro-ghost-box" />
+            <text x="118" y="64" text-anchor="middle" class="retro-kicker">17°23′ N  ·  78°28′ E</text>
+            <text x="118" y="128" text-anchor="middle" class="retro-word">HYD</text>
+            <text x="118" y="168" text-anchor="middle" class="retro-kicker">SEARCH  ·  MAPS  ·  AI</text>
+            <text x="118" y="204" text-anchor="middle" class="retro-kicker">PRINT 02  ·  INK ON PAPER</text>
+          </g>
+        )}
+      </g>
+    )}
+
+    {kind === 'search' && (
+      <g>
+        <g transform="translate(400 220)"><circle class="retro-orbit" r="190" /><circle class="retro-orbit retro-orbit-rev" r="130" /></g>
+        <g class="retro-card-stack" transform="translate(168 78)">
+          <g transform="translate(0 0)"><g class="retro-sheet" style="--i:0">
+            <rect width="380" height="86" fill="#fbf8f2" stroke="#17140f" stroke-width="2" />
+            <rect x="18" y="22" width="22" height="22" fill="#ff4d1a" />
+            <text x="56" y="38" class="retro-kicker">01  ·  SEARCH</text>
+            <text x="56" y="64" class="retro-line">The result they click</text>
+          </g></g>
+          <g transform="translate(28 92)"><g class="retro-sheet" style="--i:1">
+            <rect width="380" height="86" fill="#fbf8f2" stroke="#17140f" stroke-width="2" />
+            <circle cx="29" cy="33" r="11" fill="none" stroke="#17140f" stroke-width="2" />
+            <path d="M29 24 v18 M20 33 h18" stroke="#ff4d1a" stroke-width="2" />
+            <text x="56" y="38" class="retro-kicker">02  ·  MAPS</text>
+            <text x="56" y="64" class="retro-line">The pin they call</text>
+          </g></g>
+          <g transform="translate(56 184)"><g class="retro-sheet" style="--i:2">
+            <rect width="380" height="86" fill="#fbf8f2" stroke="#17140f" stroke-width="2" />
+            <rect x="18" y="22" width="22" height="22" fill="none" stroke="#17140f" stroke-width="2" />
+            <rect x="24" y="16" width="22" height="22" fill="#ff4d1a" opacity="0.9" class="retro-pulse" />
+            <text x="56" y="38" class="retro-kicker">03  ·  AI ANSWERS</text>
+            <text x="56" y="64" class="retro-line">The name they are told</text>
+          </g></g>
+        </g>
+      </g>
+    )}
+
+    {kind === 'desk' && (
+      <g transform="translate(90 40)">
+        <g transform="translate(310 210)"><circle class="retro-orbit" r="200" /><circle class="retro-orbit retro-orbit-rev" r="140" /></g>
+        <g fill="none" stroke="#17140f" stroke-width="2.2" stroke-linejoin="miter">
+          <!-- isometric laptop -->
+          <path d="M140 250 l180 -78 180 78 -180 78z" />
+          <path d="M140 250 l0 28 180 78 180 -78 0 -28" />
+          <path d="M200 224 l120 -52 80 34 -120 54z" fill="#fbf8f2" />
+          <rect class="retro-pulse" x="268" y="198" width="36" height="22" fill="#ff4d1a" stroke="none" transform="skewX(-28)" />
+          <!-- type bar -->
+          <path d="M80 330 h460" />
+          <rect x="80" y="318" width="70" height="24" />
+          <rect x="470" y="318" width="70" height="24" fill="#ff4d1a" stroke="#17140f" />
+        </g>
+        <text x="310" y="392" text-anchor="middle" class="retro-kicker">WORK  ·  NO STOCK PHOTO  ·  INK DESK</text>
+      </g>
+    )}
+
+    {kind === 'map' && (
+      <g>
+        <g fill="none" stroke="#17140f" stroke-width="1.1" opacity="0.35">
+          {Array.from({ length: 8 }, (_, i) => <line x1="80" y1={70 + i * 42} x2="720" y2={70 + i * 42} />)}
+          {Array.from({ length: 12 }, (_, i) => <line x1={90 + i * 52} y1="50" x2={90 + i * 52} y2="400" />)}
+        </g>
+        <path d="M120 300 C 220 180, 340 140, 430 210 S 620 250, 680 180" fill="none" stroke="#17140f" stroke-width="2" stroke-dasharray="4 8" class="retro-route" />
+        {[
+          [210, 240], [320, 168], [430, 210], [540, 156], [620, 248], [280, 312],
+        ].map(([x, y], i) => (
+          <g transform={`translate(${x} ${y})`}>
+            <g class="retro-pin" style={`--i:${i}`}>
+              <path d="M0 -22 a12 12 0 1 1 0 0.01 L0 0z" fill={i === 2 ? '#ff4d1a' : '#fbf8f2'} stroke="#17140f" stroke-width="2" />
+              <circle cy="-22" r="3.5" fill="#17140f" />
+            </g>
+          </g>
+        ))}
+        <text x="400" y="418" text-anchor="middle" class="retro-kicker">LOCAL PACK  ·  RADIUS NOT THE WHOLE CITY</text>
+      </g>
+    )}
+
+    {kind === 'india' && (
+      <g transform="translate(40 10)">
+        <g transform="translate(250 230)"><circle class="retro-orbit" r="180" /><circle class="retro-orbit retro-orbit-rev" r="120" /></g>
+        <!-- schematic peninsula -->
+        <path
+          class="retro-ink"
+          d="M210 70 l70 8 40 36 18 70 -10 50 36 40 -8 48 -54 36 -40 70 -28 -10 6 -54 -48 -40 -20 -70 12 -80 26 -54z"
+          fill="#fbf8f2"
+          stroke="#17140f"
+          stroke-width="2.2"
+        />
+        <circle class="retro-pulse" cx="248" cy="210" r="10" fill="#ff4d1a" stroke="#17140f" stroke-width="2" />
+        <text x="268" y="206" class="retro-kicker">HYD</text>
+        <g class="retro-stamp" transform="translate(470 90)">
+          <rect width="250" height="250" fill="none" stroke="#17140f" stroke-width="1.6" />
+          <text x="125" y="80" text-anchor="middle" class="retro-word" style="font-size:64px">IN</text>
+          <text x="125" y="130" text-anchor="middle" class="retro-kicker">18 CITIES  ·  ONE DESK</text>
+          <text x="125" y="168" text-anchor="middle" class="retro-kicker">TELUGU  ·  HINDI  ·  ENGLISH</text>
+          <text x="125" y="214" text-anchor="middle" class="retro-kicker">HUB: HYDERABAD</text>
+        </g>
+      </g>
+    )}
+
+    {kind === 'shop' && (
+      <g transform="translate(150 36)">
+        <g transform="translate(250 240)"><circle class="retro-orbit" r="210" /><circle class="retro-orbit retro-orbit-rev" r="150" /></g>
+        <g fill="none" stroke="#17140f" stroke-width="2.2">
+          <rect x="80" y="140" width="340" height="230" />
+          <path d="M60 140 l190 -70 190 70" fill="#fbf8f2" />
+          <rect x="80" y="140" width="340" height="36" fill="#17140f" stroke="none" />
+          <rect x="118" y="196" width="110" height="88" />
+          <rect x="272" y="196" width="110" height="88" />
+          <rect x="210" y="300" width="80" height="70" />
+          <line x1="118" y1="240" x2="228" y2="240" />
+          <line x1="173" y1="196" x2="173" y2="284" />
+        </g>
+        <rect class="retro-pulse" x="292" y="214" width="70" height="18" fill="#ff4d1a" />
+        <text x="250" y="164" text-anchor="middle" class="retro-kicker retro-kicker-light">OPEN  ·  ON MAPS</text>
+        <text x="250" y="412" text-anchor="middle" class="retro-kicker">STOREFRONT  ·  NOT A PHOTO</text>
+      </g>
+    )}
+
+    {kind === 'product' && (
+      <g transform="translate(110 50)">
+        <g><g class="retro-sheet" style="--i:0">
+          <rect x="40" y="40" width="360" height="240" fill="#fbf8f2" stroke="#17140f" stroke-width="2" />
+          <rect x="40" y="40" width="360" height="28" fill="#17140f" />
+          <circle cx="58" cy="54" r="5" fill="#ff4d1a" />
+          <circle cx="76" cy="54" r="5" fill="#f2ede3" />
+          <path d="M70 120 h280 M70 150 h220 M70 180 h250" stroke="#17140f" stroke-width="2" />
+        </g></g>
+        <g transform="translate(160 70)"><g class="retro-sheet" style="--i:1">
+          <rect width="320" height="210" fill="#fbf8f2" stroke="#17140f" stroke-width="2" />
+          <rect width="320" height="28" fill="#17140f" />
+          <rect class="retro-pulse" x="24" y="56" width="90" height="120" fill="#ff4d1a" />
+          <rect x="132" y="56" width="160" height="28" fill="none" stroke="#17140f" stroke-width="2" />
+          <rect x="132" y="100" width="160" height="76" fill="none" stroke="#17140f" stroke-width="2" />
+        </g></g>
+        <text x="300" y="370" text-anchor="middle" class="retro-kicker">BUILD  ·  LAUNCH  ·  INSTALL</text>
+      </g>
+    )}
+
+    {kind === 'meet' && (
+      <g transform="translate(80 30)">
+        <g transform="translate(320 210)"><circle class="retro-orbit" r="190" /><circle class="retro-orbit retro-orbit-rev" r="130" /></g>
+        <g fill="none" stroke="#17140f" stroke-width="2.2">
+          <path d="M160 260 l180 -40 180 40 -180 70z" fill="#fbf8f2" />
+          <path d="M160 260 v18 l180 70 180 -70 v-18" />
+          <!-- chairs -->
+          <rect x="200" y="300" width="70" height="46" />
+          <rect x="390" y="300" width="70" height="46" />
+          <line x1="200" y1="300" x2="200" y2="360" />
+          <line x1="270" y1="300" x2="270" y2="360" />
+          <line x1="390" y1="300" x2="390" y2="360" />
+          <line x1="460" y1="300" x2="460" y2="360" />
+        </g>
+        <circle class="retro-pulse" cx="340" cy="248" r="14" fill="#ff4d1a" stroke="#17140f" stroke-width="2" />
+        <text x="320" y="400" text-anchor="middle" class="retro-kicker">KICK-OFF  ·  HYDERABAD OR VIDEO</text>
+      </g>
+    )}
+  </svg>
+</div>

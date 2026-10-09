@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import FAQ from '../../components/FAQ.astro';
+import NextSteps from '../../components/NextSteps.astro';
+import CTA from '../../components/CTA.astro';
+import IndustryTile from '../../components/IndustryTile.astro';
+import { industries, industryGroups, industriesIn } from '../../data/industries';
+import { site } from '../../data/site';
+import { faqSchema } from '../../lib/schema';
+
+const crumbs = [{ name: 'Industries', path: '/industries/' }];
+const title = 'Industries We Market in Hyderabad | IdeaRevive';
+const description = 'Digital marketing for interiors, landscaping, real estate, healthcare, education, IT, eCommerce, hospitality, manufacturing and local services in Hyderabad.';
+
+const faqs = [
+  { q: 'Which industries does IdeaRevive specialise in?', a: 'Interiors, landscaping, architecture and construction, real estate, healthcare, education, IT and SaaS, eCommerce, hospitality, fitness, salons, professional services, automotive, manufacturing, jewellery and home services. If the buying process is clear, we can work outside this list too.' },
+  { q: 'Do you need industry experience to market my business?', a: 'You need to understand how the buyer chooses. That is why each industry page lists the real constraints: RERA for property, healthcare ad policy for clinics, portfolio-to-visit flow for interiors, seasonal planting for landscaping, and RFQs for manufacturers.' },
+  { q: 'Can IdeaRevive market an eCommerce brand outside India?', a: 'Yes. We have worked with eCommerce brands across India and in international markets, with feeds, ads and marketplaces set up for the country they sell into.' },
+];
+---
+<BaseLayout title={title} description={description} crumbs={crumbs} schema={[faqSchema(faqs)]} pageType="CollectionPage">
+  <PageHero
+    eyebrow="Industries"
+    title="Industries we market in Hyderabad"
+    answer={`Every industry has different buyers, rules and sales cycles. IdeaRevive, with ${site.proof.years} years and ${site.proof.clients} clients, tailors strategy for interiors, landscaping, real estate, healthcare, education, IT, eCommerce, hospitality, manufacturing and local services.`}
+    crumbs={crumbs}
+  />
+  <section class="section">
+    <div class="container">
+      <dl class="key-facts" style="margin-bottom:var(--space-10)">
+        <div class="key-fact"><dt>Industries</dt><dd>{industries.length} specialised pages</dd></div>
+        <div class="key-fact"><dt>Experience</dt><dd>{site.proof.years} years · {site.proof.clients} clients</dd></div>
+        <div class="key-fact"><dt>Also</dt><dd>eCommerce brands in India and abroad</dd></div>
+      </dl>
+      {industryGroups.map((group) => (
+        <div class="industry-group">
+          <p class="eyebrow">{group.title}</p>
+          <ul class="industry-grid">
+            {industriesIn(group.slugs).map((i) => (
+              <IndustryTile slug={i.slug} name={i.name} text={`${i.answer.split('. ')[0].replace(/\.$/, '')}.`} />
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+  <FAQ faqs={faqs} title="Industry questions" alt />
+  <NextSteps />
+  <CTA />
+</BaseLayout>

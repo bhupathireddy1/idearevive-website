@@ -1,0 +1,33 @@
+---
+import Icon from './Icon.astro';
+import RetroScene from './RetroScene.astro';
+
+const nodes = [
+  { icon: 'search', label: 'Search', text: 'The result they click' },
+  { icon: 'pin', label: 'Maps', text: 'The pin they call' },
+  { icon: 'spark', label: 'AI answers', text: 'The name they are told' },
+];
+---
+<figure class="vector-plate" data-reveal data-motion>
+  <div class="vector-plate-grid">
+    <RetroScene kind="hyd" ratio="wide" framed={false} />
+    <ol class="vector-nodes">
+      {nodes.map((n, i) => (
+        <li style={`--i:${i}`}>
+          <span class="vector-node-icon" aria-hidden="true">
+            <Icon name={n.icon} size={22} />
+          </span>
+          <span>
+            <b>{n.label}</b>
+            <span>{n.text}</span>
+          </span>
+        </li>
+      ))}
+    </ol>
+  </div>
+  <svg class="vector-route" viewBox="0 0 960 24" preserveAspectRatio="none" aria-hidden="true">
+    <line class="vector-route-line" x1="8" y1="12" x2="952" y2="12" />
+    <rect class="vector-route-runner" x="8" y="4" width="16" height="16" />
+  </svg>
+  <figcaption><b>Fig. 2</b> — Hyderabad drawn as a signal tower. Search, Maps and AI answers as the work.</figcaption>
+</figure>

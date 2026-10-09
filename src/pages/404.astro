@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+---
+<BaseLayout title="Page not found | IdeaRevive" description="The page you are looking for could not be found." noindex>
+  <PageHero
+    eyebrow="404"
+    title="This page doesn’t exist"
+    answer="The link may be broken or the page may have moved. Try one of these instead."
+    primary={{ label: 'Back to Home', href: '/' }}
+    secondary={{ label: 'View Services', href: '/services/' }}
+    showCover={false}
+  />
+</BaseLayout>

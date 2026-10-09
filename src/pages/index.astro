@@ -1,0 +1,228 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import Process from '../components/Process.astro';
+import FAQ from '../components/FAQ.astro';
+import CTA from '../components/CTA.astro';
+import CityMap from '../components/CityMap.astro';
+import IndiaMap from '../components/IndiaMap.astro';
+import Proof from '../components/Proof.astro';
+import NextSteps from '../components/NextSteps.astro';
+import MotionField from '../components/MotionField.astro';
+import VectorPlate from '../components/VectorPlate.astro';
+import SerpDemo from '../components/SerpDemo.astro';
+import Icon from '../components/Icon.astro';
+import { services } from '../data/services';
+import { locations } from '../data/locations';
+import { cities } from '../data/cities';
+import { industryGroups, industriesIn } from '../data/industries';
+import IndustryTile from '../components/IndustryTile.astro';
+import { posts } from '../data/posts';
+import { site } from '../data/site';
+import { faqSchema } from '../lib/schema';
+
+const title = 'Get Found on Google, Maps & AI | IdeaRevive';
+const description =
+  'IdeaRevive helps Hyderabad businesses get found on Google, Maps and AI answers. 10+ years, 50+ clients, SEO, ads, apps. Free audit.';
+
+const faqs = [
+  { q: 'What does IdeaRevive actually do for a Hyderabad business?', a: 'IdeaRevive plans, runs and reports SEO, Google Ads, social, content, websites, eCommerce, SaaS builds and app install campaigns as one system. Success is measured in qualified leads and revenue, not in reports.' },
+  { q: 'How long has IdeaRevive been doing this work?', a: 'The team has 10+ years of digital marketing experience and has worked with 50+ clients, including eCommerce brands in India and abroad, plus SaaS products and mobile apps we have built and launched.' },
+  { q: 'Do you work only in Hyderabad?', a: 'Hyderabad is our base. We also work with businesses in Bengaluru, Mumbai, Delhi NCR, Gurugram, Pune and Chennai, plus international eCommerce and SaaS brands. Day-to-day work is remote; we visit in person when a kick-off or shoot needs it.' },
+  { q: 'Can you build a product as well as market it?', a: 'Yes. Alongside marketing we design and develop SaaS products and iOS and Android apps, then run the launch and install campaigns, so build and growth stay on the same team.' },
+  { q: 'How soon will I see results from IdeaRevive?', a: 'Paid ads can bring leads within days of launch. SEO and content usually take 3–6 months to show meaningful gains. We agree monthly leading indicators so progress is visible from the first report.' },
+  { q: 'Do you work on Google AI Overviews and ChatGPT mentions?', a: 'Yes. Every engagement includes GEO and AEO: a clear entity, citable answers, FAQs and structured data so AI assistants can understand and cite your business by name.' },
+];
+
+const marquee = ['SEO', 'Local SEO', 'Google Ads', 'Meta Ads', 'eCommerce', 'SaaS', 'Apps', 'ASO', 'Content', 'Websites', 'Branding', 'AI search'];
+
+const surfaces = [
+  { name: 'Google Search', icon: 'search', text: 'People search before they call. We make sure the pages that answer their questions are yours.', does: ['Technical SEO', 'Service & location pages', 'Google Ads'] },
+  { name: 'Google Maps', icon: 'pin', text: '“Near me” searches end in a phone call or a visit. The map pack decides who gets it.', does: ['Business Profile', 'Reviews', 'Local citations'] },
+  { name: 'AI answers', icon: 'spark', text: 'ChatGPT, Gemini and AI Overviews now recommend businesses by name. They need clear facts to cite you.', does: ['Entity & schema', 'Citable answers', 'Trusted mentions'] },
+];
+
+const wont = [
+  { no: 'Promise you #1 on Google.', yes: 'Nobody controls Google. We commit to a written plan and the numbers we’ll be judged on.' },
+  { no: 'Buy reviews or cheap backlinks.', yes: 'They work until they get you penalised. We earn reviews and links that last.' },
+  { no: 'Keep your accounts in our name.', yes: 'Your website, ad accounts and analytics are yours from day one. Leave whenever you like.' },
+  { no: 'Report likes and impressions.', yes: 'You get leads, cost per lead and revenue. If a number doesn’t pay rent, it isn’t on the report.' },
+];
+
+const fmt = (d: string) => new Date(d).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
+---
+<BaseLayout title={title} description={description} schema={[faqSchema(faqs)]}>
+  <section class="hero">
+    <MotionField />
+    <div class="wrap">
+      <div class="hero-meta eyebrow">
+        <span>Digital marketing agency</span>
+        <span class="hide-xs">SEO / Ads / Social / Web / Apps / AI search</span>
+      </div>
+
+      <h1 class="hero-title">
+        <span class="line"><span>Get found on</span></span>
+        <span class="line"><span>Google, on Maps,</span></span>
+        <span class="line"><span>in <em>AI answers.</em></span></span>
+      </h1>
+
+      <div class="hero-grid">
+        <div class="hero-left">
+          <p class="hero-lead" data-speakable>
+            IdeaRevive is a Hyderabad digital marketing agency with 10+ years of experience and 50+ clients.
+            We run SEO, ads, social, websites, eCommerce, SaaS and apps as one system — and measure it in leads.
+          </p>
+          <div class="hero-ctas">
+            <a href="/free-audit/" class="btn btn-primary btn-lg" data-track="home-hero-audit">Get a free growth audit <span class="arrow" aria-hidden="true">→</span></a>
+            <a href="/services/" class="link-arrow">See what we do →</a>
+          </div>
+          <dl class="hero-facts">
+            <div><dt class="eyebrow">Experience</dt><dd>{site.proof.years} years</dd></div>
+            <div><dt class="eyebrow">Clients</dt><dd>{site.proof.clients} served</dd></div>
+            <div><dt class="eyebrow">You keep</dt><dd>Every account</dd></div>
+          </dl>
+        </div>
+
+        <SerpDemo />
+      </div>
+    </div>
+  </section>
+
+  <section class="section-tight" aria-label="Hyderabad and the three surfaces">
+    <div class="wrap">
+      <VectorPlate />
+    </div>
+  </section>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      {[0, 1].map(() => <ul>{marquee.map((m) => <li>{m}</li>)}</ul>)}
+    </div>
+  </div>
+
+  <section class="section" aria-labelledby="services-title">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Services · {String(services.length).padStart(2, '0')}</p>
+        <h2 id="services-title" class="heading-1" data-reveal>What can IdeaRevive run for your business?</h2>
+        <p class="body-lg text-muted" data-reveal>Hire us for one channel, or let us run marketing, websites, SaaS and apps as one plan. Either way, it is reported as one.</p>
+      </div>
+      <ul class="index-list">
+        {services.map((s, i) => <ServiceCard href={`/services/${s.slug}/`} index={i} icon={s.icon} title={s.name} text={s.card} />)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section-ink" aria-labelledby="surfaces-title">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Why it matters</p>
+        <h2 id="surfaces-title" class="heading-1" data-reveal>Where do customers look before they pick a business?</h2>
+        <p class="body-lg" data-reveal style="color:var(--on-ink-2)">They check Search, Maps and AI answers. Most businesses only show up in one. We put you in all three.</p>
+      </div>
+      <div class="surfaces">
+        {surfaces.map((s, i) => (
+          <div class="surface" data-reveal>
+            <span class="surface-icon" aria-hidden="true"><Icon name={s.icon} size={22} /></span>
+            <span class="surface-num">0{i + 1}</span>
+            <h3>{s.name}</h3>
+            <p>{s.text}</p>
+            <ul>{s.does.map((d) => <li>{d}</li>)}</ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="wont-title">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Ground rules</p>
+        <h2 id="wont-title" class="heading-1" data-reveal>What will IdeaRevive never do?</h2>
+      </div>
+      <ul class="wont">
+        {wont.map((w) => (
+          <li data-reveal><s>{w.no}</s><span>{w.yes}</span></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <Process alt />
+
+  <section class="section" aria-labelledby="industries-title">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Industries</p>
+        <h2 id="industries-title" class="heading-2" data-reveal>Which industries do we know how to sell to?</h2>
+      </div>
+      {industryGroups.map((group) => (
+        <div class="industry-group" data-reveal>
+          <p class="eyebrow">{group.title}</p>
+          <ul class="industry-grid">
+            {industriesIn(group.slugs).map((i) => (
+              <IndustryTile slug={i.slug} name={i.name} />
+            ))}
+          </ul>
+        </div>
+      ))}
+      <p class="industry-all"><a href="/industries/" class="link-arrow">See how we approach each industry →</a></p>
+    </div>
+  </section>
+
+  <section class="section section-alt" aria-labelledby="areas-title">
+    <div class="wrap city">
+      <div>
+        <p class="eyebrow">Across Hyderabad</p>
+        <h2 id="areas-title" class="heading-1" style="margin:var(--space-4) 0 var(--space-6)" data-reveal>Which Hyderabad neighbourhoods do we serve?</h2>
+        <p class="body-lg text-muted" data-reveal>B2B buyers in HITEC City don’t behave like families shopping in Dilsukhnagar or Kothapet. Pick your area to see how we’d approach it.</p>
+        <ul class="tag-list" style="margin-top:var(--space-8)">
+          {locations.map((l) => <li><a href={`/locations/${l.slug}/`}>{l.name}</a></li>)}
+        </ul>
+      </div>
+      <div data-reveal><CityMap /></div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="india-title">
+    <div class="wrap city">
+      <div>
+        <p class="eyebrow">Across India</p>
+        <h2 id="india-title" class="heading-1" style="margin:var(--space-4) 0 var(--space-6)" data-reveal>Which Indian cities can we work with from Hyderabad?</h2>
+        <p class="body-lg text-muted" data-reveal>{cities.length} Indian cities with their own pages. Same team, same reporting, local languages where they matter.</p>
+        <ul class="tag-list" style="margin-top:var(--space-8)">
+          {cities.map((c) => <li><a href={`/cities/${c.slug}/`}>{c.name}</a></li>)}
+        </ul>
+      </div>
+      <div data-reveal><IndiaMap /></div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="blog-title">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Notes</p>
+        <h2 id="blog-title" class="heading-2" data-reveal>Which guides should you read first?</h2>
+      </div>
+      <ul class="index-list">
+        {posts.map((p) => (
+          <li data-reveal>
+            <a href={`/blog/${p.slug}/`} class="row">
+              <span class="row-num">{fmt(p.published)}</span>
+              <span class="row-title" style="font-size:clamp(1.25rem,2.2vw,1.75rem)">{p.title}</span>
+              <span class="row-text">{p.category} · {p.readingMinutes} min read</span>
+              <span class="row-arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="wrap"><Proof title="In numbers" /></div>
+  </section>
+  <FAQ faqs={faqs} title="Before you get in touch" alt />
+  <NextSteps />
+  <CTA />
+</BaseLayout>

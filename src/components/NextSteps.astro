@@ -1,0 +1,26 @@
+---
+interface Props { current?: string; title?: string; alt?: boolean }
+const { current = Astro.url.pathname, title = 'Where should you go next?', alt = false } = Astro.props;
+const links = [
+  { href: '/services/', label: 'All digital marketing services' },
+  { href: '/services/seo-services-hyderabad/', label: 'SEO services' },
+  { href: '/services/google-ads-ppc-hyderabad/', label: 'Google Ads management' },
+  { href: '/industries/', label: 'Industries we serve' },
+  { href: '/locations/', label: 'Hyderabad neighbourhoods' },
+  { href: '/cities/', label: 'Cities across India' },
+  { href: '/pricing/', label: 'Pricing and packages' },
+  { href: '/case-studies/', label: 'How we report results' },
+  { href: '/blog/', label: 'Guides and articles' },
+  { href: '/about/', label: 'About IdeaRevive' },
+  { href: '/free-audit/', label: 'Free growth audit' },
+  { href: '/contact/', label: 'Contact the team' },
+].filter((l) => l.href !== current);
+---
+<section class:list={['section-tight', { 'section-alt': alt }]} aria-labelledby="next-title">
+  <div class="container">
+    <h2 id="next-title" class="heading-3" style="margin-bottom:var(--space-6)">{title}</h2>
+    <ul class="tag-list">
+      {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+    </ul>
+  </div>
+</section>

@@ -1,0 +1,110 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import FAQ from '../../components/FAQ.astro';
+import CTA from '../../components/CTA.astro';
+import CityMap from '../../components/CityMap.astro';
+import NextSteps from '../../components/NextSteps.astro';
+import { site } from '../../data/site';
+import { locations, getLocation, type Location } from '../../data/locations';
+import { servicesForLocation } from '../../lib/area-services';
+import { faqSchema, serviceSchema } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return locations.map((location) => ({ params: { slug: location.slug }, props: { location } }));
+}
+
+const { location } = Astro.props as { location: Location };
+const path = `/locations/${location.slug}/`;
+const crumbs = [
+  { name: 'Locations', path: '/locations/' },
+  { name: location.name, path },
+];
+const nearby = location.nearby.map(getLocation).filter((l): l is Location => Boolean(l));
+const areaServices = servicesForLocation(location.slug);
+const searches = location.businesses.map((b) => `${b} in ${location.name}`);
+const lc = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
+const faqs = [
+  ...location.faqs,
+  {
+    q: `Where should a ${location.name} business start with digital marketing?`,
+    a: `Usually with ${lc(location.focus[0])} and ${lc(location.focus[1])}, because that is how ${lc(location.businesses[0])} and ${lc(location.businesses[1])} in ${location.name} tend to be found. A free audit confirms the priorities, then we build a 90-day plan around the channels most likely to bring enquiries first.`,
+  },
+];
+---
+<BaseLayout
+  title={location.metaTitle}
+  description={location.metaDescription}
+  crumbs={crumbs}
+  schema={[
+    serviceSchema({ name: `Digital marketing in ${location.name}, Hyderabad`, description: location.answer, path, area: `${location.name}, Hyderabad` }),
+    faqSchema(faqs),
+  ]}
+>
+  <PageHero eyebrow={`${location.name}, Hyderabad`} title={location.h1} answer={location.answer} crumbs={crumbs} />
+
+  <section class="section">
+    <div class="container split">
+      <div data-reveal>
+        <h2 class="heading-1">What is marketing in {location.name} like?</h2>
+        <p class="body-lg text-muted" style="margin-top:var(--space-4)">{location.context}</p>
+        <h3 class="heading-3" style="margin:var(--space-10) 0 var(--space-4)">What we focus on in {location.name}</h3>
+        <ul class="check-list">
+          {location.focus.map((f) => <li>{f}</li>)}
+        </ul>
+        <h3 class="heading-3" style="margin:var(--space-10) 0 var(--space-4)">What do people in {location.name} search?</h3>
+        <ul class="check-list">
+          {searches.map((s) => <li>{s}</li>)}
+        </ul>
+        <p class="body-lg text-muted" style="margin-top:var(--space-8)">A citywide campaign that ignores how {location.name} actually buys usually wastes spend. We write pages and ads for this neighbourhood first, then expand only if the numbers justify it.</p>
+      </div>
+      <aside class="info-card" data-reveal>
+        <h2 class="heading-4">Businesses we help in {location.name}</h2>
+        <ul class="check-list">
+          {location.businesses.map((b) => <li>{b}</li>)}
+        </ul>
+        <dl class="key-facts" style="grid-template-columns:1fr">
+          <div class="key-fact"><dt>Area</dt><dd>{location.name}, Hyderabad, Telangana</dd></div>
+          <div class="key-fact"><dt>Nearby areas</dt><dd>{nearby.map((n) => n.name).join(', ')}</dd></div>
+          <div class="key-fact"><dt>Experience</dt><dd>{site.proof.years} years · {site.proof.clients} clients</dd></div>
+          <div class="key-fact"><dt>Meetings</dt><dd>In person in {location.name} or over video</dd></div>
+        </dl>
+        <a href="/free-audit/" class="btn btn-primary btn-lg btn-block" style="margin-top:var(--space-8)" data-track={`location-${location.slug}`}>
+          Free audit for my {location.name} business
+        </a>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Where we start in {location.name}</p>
+        <h2 class="heading-1">Which services matter first in {location.name}?</h2>
+      </div>
+      <ul class="index-list">
+        {areaServices.map((s, i) => <ServiceCard href={`/services/${s.slug}/`} index={i} icon={s.icon} title={s.name} text={s.card} />)}
+      </ul>
+    </div>
+  </section>
+
+  <FAQ faqs={faqs} title={`Digital marketing in ${location.name}: FAQs`} alt />
+
+  <section class="section">
+    <div class="container city">
+      <div>
+        <p class="eyebrow">Nearby</p>
+        <h2 class="heading-2" style="margin:var(--space-4) 0 var(--space-8)">Which nearby areas do we also serve?</h2>
+        <ul class="tag-list">
+          {nearby.map((n) => <li><a href={`/locations/${n.slug}/`}>{n.name}</a></li>)}
+          <li><a href="/locations/">All Hyderabad locations</a></li>
+        </ul>
+      </div>
+      <div data-reveal><CityMap active={location.slug} /></div>
+    </div>
+  </section>
+
+  <NextSteps />
+  <CTA />
+</BaseLayout>

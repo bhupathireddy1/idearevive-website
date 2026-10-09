@@ -1,0 +1,22 @@
+---
+import type { FAQ } from '../data/services';
+interface Props { faqs: FAQ[]; title?: string; intro?: string; alt?: boolean }
+const { faqs, title = 'Questions people ask us', intro, alt = false } = Astro.props;
+---
+<section class:list={['section', { 'section-alt': alt }]} aria-labelledby="faq-title">
+  <div class="wrap faq">
+    <div class="faq-head">
+      <p class="eyebrow">FAQ · {String(faqs.length).padStart(2, '0')} questions</p>
+      <h2 id="faq-title" class="heading-2">{title}</h2>
+      {intro && <p>{intro}</p>}
+    </div>
+    <div class="faq-list">
+      {faqs.map((f, i) => (
+        <details class="faq-item" open={i === 0}>
+          <summary><h3>{f.q}</h3><span class="faq-icon" aria-hidden="true"></span></summary>
+          <p>{f.a}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>

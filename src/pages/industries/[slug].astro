@@ -1,0 +1,109 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import Process from '../../components/Process.astro';
+import FAQ from '../../components/FAQ.astro';
+import NextSteps from '../../components/NextSteps.astro';
+import CTA from '../../components/CTA.astro';
+import IndustryTile from '../../components/IndustryTile.astro';
+import { industries, industryMetrics, type Industry } from '../../data/industries';
+import { getService, type Service } from '../../data/services';
+import { site } from '../../data/site';
+import { serviceSchema, faqSchema } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return industries.map((industry) => ({ params: { slug: industry.slug }, props: { industry } }));
+}
+
+const { industry } = Astro.props as { industry: Industry };
+const path = `/industries/${industry.slug}/`;
+const crumbs = [
+  { name: 'Industries', path: '/industries/' },
+  { name: industry.name, path },
+];
+const recommended = industry.services.map(getService).filter((s): s is Service => Boolean(s));
+const others = industries.filter((i) => i.slug !== industry.slug);
+---
+<BaseLayout
+  title={industry.metaTitle}
+  description={industry.metaDescription}
+  crumbs={crumbs}
+  schema={[
+    serviceSchema({ name: `${industry.name} digital marketing`, description: industry.answer, path, area: ['Hyderabad', 'India'] }),
+    faqSchema(industry.faqs),
+  ]}
+>
+  <PageHero eyebrow="Industry" title={`${industry.name} marketing in Hyderabad`} answer={industry.answer} crumbs={crumbs} />
+
+  <section class="section" aria-labelledby="problem-title">
+    <div class="container grid-2">
+      <div data-reveal>
+        <p class="eyebrow">The problem</p>
+        <h2 id="problem-title" class="heading-2" style="margin:var(--space-4) 0 var(--space-8)">What makes {industry.name} marketing hard?</h2>
+        <ul class="feature-list">
+          {industry.challenges.map((c) => <li class="feature"><p style="color:var(--ink)">{c}</p></li>)}
+        </ul>
+      </div>
+      <div class="info-card" data-reveal>
+        <p class="eyebrow">Our approach</p>
+        <h2 class="heading-3" style="margin:var(--space-3) 0 var(--space-2)">How IdeaRevive handles it</h2>
+        <ul class="check-list">
+          {industry.approach.map((a) => <li>{a}</li>)}
+        </ul>
+        <dl class="key-facts" style="grid-template-columns:1fr">
+          <div class="key-fact"><dt>Core channels</dt><dd>{recommended.map((s) => s.name).join(', ')}</dd></div>
+          <div class="key-fact"><dt>Experience</dt><dd>{site.proof.years} years · {site.proof.clients} clients across India and abroad</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" aria-labelledby="rec-title">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Where we’d start</p>
+        <h2 id="rec-title" class="heading-1">Which services work best for {industry.name}?</h2>
+      </div>
+      <ul class="index-list">
+        {recommended.map((s, i) => <ServiceCard href={`/services/${s.slug}/`} index={i} icon={s.icon} title={s.name} text={s.card} />)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="metrics-title">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Reporting</p>
+        <h2 id="metrics-title" class="heading-1">What do we measure for {industry.name} clients?</h2>
+        <p class="body-lg text-muted">Every monthly report leads with these numbers, because they connect marketing spend to revenue.</p>
+      </div>
+      <div class="prose" style="max-width:none" data-reveal>
+        <table>
+          <thead><tr><th scope="col">Metric</th><th scope="col">Why it matters</th></tr></thead>
+          <tbody>
+            {(industryMetrics[industry.slug] ?? []).map((m) => <tr><td><strong>{m.metric}</strong></td><td>{m.why}</td></tr>)}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <Process title={`What the first 90 days look like for ${industry.name} clients`} alt />
+  <FAQ faqs={industry.faqs} title={`${industry.name} marketing FAQs`} />
+
+  <section class="section-tight">
+    <div class="container">
+      <h2 class="heading-3" style="margin-bottom:var(--space-6)">Which other industries do we work with?</h2>
+      <ul class="industry-grid industry-grid-compact">
+        {others.slice(0, 8).map((o) => (
+          <IndustryTile slug={o.slug} name={o.name} />
+        ))}
+      </ul>
+      <p class="industry-all"><a href="/industries/" class="link-arrow">All industries →</a></p>
+    </div>
+  </section>
+
+  <NextSteps />
+  <CTA />
+</BaseLayout>

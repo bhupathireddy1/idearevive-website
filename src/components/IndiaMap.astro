@@ -1,0 +1,48 @@
+---
+import { cities } from '../data/cities';
+import { site } from '../data/site';
+
+interface Props { active?: string }
+const { active } = Astro.props;
+
+const W = 600, H = 680;
+const project = (lat: number, lng: number) => ({ x: ((lng - 68) / 24) * W, y: ((32 - lat) / 25) * H });
+const hq = project(site.geo.lat, site.geo.lng);
+
+type Side = 'start' | 'end' | 'none';
+const sides: Record<string, Side> = {
+  mumbai: 'end', surat: 'end', ahmedabad: 'end', bengaluru: 'end', coimbatore: 'end', kochi: 'end',
+  gurugram: 'none', noida: 'none',
+};
+const names: Record<string, string> = { delhi: 'Delhi NCR' };
+
+const pins = cities.map((c) => {
+  const p = project(c.lat, c.lng);
+  const side = sides[c.slug] ?? 'start';
+  return { ...c, ...p, side, label: names[c.slug] ?? c.name };
+});
+---
+<svg class="city-map india-map" viewBox={`0 0 ${W} ${H}`} role="group" aria-label="Map of Indian cities IdeaRevive serves from its Hyderabad base">
+  <defs>
+    <pattern id="india-dots" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1.2" class="grid-dot" />
+    </pattern>
+  </defs>
+  <rect width={W} height={H} fill="url(#india-dots)" />
+  {pins.map((p) => <line class="route" x1={hq.x} y1={hq.y} x2={p.x} y2={p.y} />)}
+  <text class="compass" x={W - 16} y="24" text-anchor="end">N ↑</text>
+
+  {pins.map((p) => (
+    <a href={`/cities/${p.slug}/`} aria-label={`Digital marketing in ${p.name}`} class:list={{ 'is-active': p.slug === active }} aria-current={p.slug === active ? 'page' : undefined}>
+      <circle class="pin" cx={p.x} cy={p.y} r={p.side === 'none' ? 5 : 7} />
+      {p.side !== 'none' && (
+        <text class="pin-label" x={p.side === 'end' ? p.x - 13 : p.x + 13} y={p.y + 5} text-anchor={p.side}>{p.label}</text>
+      )}
+    </a>
+  ))}
+
+  <a href="/locations/" aria-label="IdeaRevive headquarters in Hyderabad">
+    <rect class="hq" x={hq.x - 9} y={hq.y - 9} width="18" height="18" />
+    <text class="pin-label hq-label" x={hq.x} y={hq.y - 18} text-anchor="middle">Hyderabad · HQ</text>
+  </a>
+</svg>

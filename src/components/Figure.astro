@@ -1,0 +1,15 @@
+---
+import RetroScene from './RetroScene.astro';
+import type { SceneKind } from '../lib/scenes';
+
+interface Props {
+  kind: SceneKind;
+  caption: string;
+  ratio?: 'wide' | 'tall';
+}
+const { kind, caption, ratio = 'wide' } = Astro.props;
+---
+<figure class="editorial-fig">
+  <RetroScene kind={kind} ratio={ratio} />
+  <figcaption>{caption}</figcaption>
+</figure>

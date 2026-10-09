@@ -1,0 +1,50 @@
+[
+  {
+    "file": "public/og/hyd.png",
+    "bytes": 28009,
+    "width": 1200,
+    "height": 630
+  },
+  {
+    "file": "public/og/search.png",
+    "bytes": 29222,
+    "width": 1200,
+    "height": 630
+  },
+  {
+    "file": "public/og/desk.png",
+    "bytes": 26254,
+    "width": 1200,
+    "height": 630
+  },
+  {
+    "file": "public/og/map.png",
+    "bytes": 33457,
+    "width": 1200,
+    "height": 630
+  },
+  {
+    "file": "public/og/india.png",
+    "bytes": 31632,
+    "width": 1200,
+    "height": 630
+  },
+  {
+    "file": "public/og/shop.png",
+    "bytes": 32079,
+    "width": 1200,
+    "height": 630
+  },
+  {
+    "file": "public/og/product.png",
+    "bytes": 26622,
+    "width": 1200,
+    "height": 630
+  },
+  {
+    "file": "public/og/meet.png",
+    "bytes": 26297,
+    "width": 1200,
+    "height": 630
+  }
+]

@@ -1,0 +1,69 @@
+---
+import type { Crumb } from '../lib/schema';
+import MotionField from './MotionField.astro';
+import RetroScene from './RetroScene.astro';
+import IndustryMark from './IndustryMark.astro';
+import { sceneFor } from '../lib/scenes';
+import { getIndustry } from '../data/industries';
+
+interface Props {
+  updated?: string;
+  eyebrow?: string;
+  title: string;
+  answer?: string;
+  answerLabel?: string;
+  crumbs?: Crumb[];
+  primary?: { label: string; href: string };
+  secondary?: { label: string; href: string };
+  showCover?: boolean;
+}
+const {
+  eyebrow, title, answer, answerLabel = 'In short', crumbs = [],
+  primary = { label: 'Get a free growth audit', href: '/free-audit/' },
+  secondary, updated: _updated, showCover = true,
+} = Astro.props;
+const parts = Astro.url.pathname.split('/').filter(Boolean);
+const industryCover = showCover && parts[0] === 'industries' && parts[1] ? getIndustry(parts[1]) : null;
+const scene = showCover && !industryCover ? sceneFor(Astro.url.pathname) : null;
+---
+<section class="page-hero">
+  <MotionField />
+  <div class="wrap">
+    <div class="page-hero-top">
+      {crumbs.length > 0 ? (
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="/">Home</a></li>
+            {crumbs.map((c, i) => (
+              <li>{i === crumbs.length - 1 ? <span aria-current="page">{c.name}</span> : <a href={c.path}>{c.name}</a>}</li>
+            ))}
+          </ol>
+        </nav>
+      ) : <span class="eyebrow">IdeaRevive</span>}
+      {eyebrow && <span class="eyebrow page-hero-meta">{eyebrow}</span>}
+    </div>
+
+    <h1 class="page-hero-title">{title}</h1>
+    <slot />
+
+    {industryCover && (
+      <figure class="page-hero-cover">
+        <IndustryMark slug={industryCover.slug} framed />
+      </figure>
+    )}
+    {scene && (
+      <figure class="page-hero-cover">
+        <RetroScene kind={scene} ratio="wide" />
+      </figure>
+    )}
+
+    <div class="page-hero-body">
+      <p class="eyebrow">{answer ? answerLabel : ''}</p>
+      <div>{answer && <p class="page-hero-answer" data-speakable>{answer}</p>}</div>
+      <div class="hero-ctas">
+        <a href={primary.href} class="btn btn-primary btn-lg" data-track={`hero-${primary.href}`}>{primary.label} <span class="arrow" aria-hidden="true">→</span></a>
+        {secondary && <a href={secondary.href} class="link-arrow">{secondary.label} →</a>}
+      </div>
+    </div>
+  </div>
+</section>

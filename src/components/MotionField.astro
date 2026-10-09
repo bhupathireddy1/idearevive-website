@@ -1,0 +1,16 @@
+---
+interface Props {
+  tone?: 'paper' | 'ink';
+}
+const { tone = 'paper' } = Astro.props;
+---
+<div class={`motion-field motion-field-${tone}`} data-motion aria-hidden="true">
+  <svg viewBox="0 0 640 640" preserveAspectRatio="xMidYMid slice">
+    <circle class="motion-ring" cx="400" cy="250" r="168" />
+    <circle class="motion-ring motion-ring-2" cx="400" cy="250" r="236" />
+    <rect class="motion-ink" x="300" y="160" width="200" height="200" />
+    <rect class="motion-signal" x="438" y="128" width="96" height="96" />
+    <path class="motion-dash" d="M40 560 H600" />
+    <rect class="motion-runner" x="40" y="548" width="24" height="24" />
+  </svg>
+</div>

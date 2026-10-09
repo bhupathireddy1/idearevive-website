@@ -1,0 +1,77 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import FAQ from '../../components/FAQ.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import NextSteps from '../../components/NextSteps.astro';
+import CTA from '../../components/CTA.astro';
+import { posts, type Post } from '../../data/posts';
+import { getService, type Service } from '../../data/services';
+import { articleSchema, faqSchema } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return posts.map((post) => ({ params: { slug: post.slug }, props: { post } }));
+}
+
+const { post } = Astro.props as { post: Post };
+const path = `/blog/${post.slug}/`;
+const crumbs = [
+  { name: 'Blog', path: '/blog/' },
+  { name: post.title, path },
+];
+const fmt = (d: string) => new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+const related = post.services.map(getService).filter((s): s is Service => Boolean(s));
+const otherPosts = posts.filter((p) => p.slug !== post.slug);
+const schema = [articleSchema({ path, ...post }), ...(post.faqs.length ? [faqSchema(post.faqs)] : [])];
+---
+<BaseLayout title={post.metaTitle} description={post.description} crumbs={crumbs} schema={schema} ogType="article" published={post.published} updated={post.updated}>
+  <PageHero eyebrow={post.category} title={post.title} crumbs={crumbs} updated={post.updated} primary={{ label: 'Get a Free Growth Audit', href: '/free-audit/' }}>
+    <div class="post-meta">
+      <span>By {post.author}</span>
+      <span>Published <time datetime={post.published}>{fmt(post.published)}</time></span>
+      <span>{post.readingMinutes} min read</span>
+    </div>
+  </PageHero>
+
+  <article class="section">
+    <div class="container">
+      <div class="answer-box tldr prose" data-speakable>
+        <p class="caption">Key takeaway</p>
+        <p>{post.tldr}</p>
+      </div>
+      <div class="prose">
+        {post.body.map((b) => {
+          if (b.type === 'p') return <p>{b.text}</p>;
+          if (b.type === 'h2') return <h2>{b.text}</h2>;
+          if (b.type === 'h3') return <h3>{b.text}</h3>;
+          if (b.type === 'ul') return <ul>{b.items.map((i) => <li>{i}</li>)}</ul>;
+          if (b.type === 'ol') return <ol>{b.items.map((i) => <li>{i}</li>)}</ol>;
+          if (b.type === 'table') return (
+            <table>
+              <thead><tr>{b.head.map((h) => <th scope="col">{h}</th>)}</tr></thead>
+              <tbody>{b.rows.map((r) => <tr>{r.map((c) => <td>{c}</td>)}</tr>)}</tbody>
+            </table>
+          );
+        })}
+      </div>
+    </div>
+  </article>
+
+  {post.faqs.length > 0 && <FAQ faqs={post.faqs} alt />}
+
+  <section class="section" aria-labelledby="related-title">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Put it into practice</p>
+        <h2 id="related-title" class="heading-2">Which services and guides help with this?</h2>
+      </div>
+      <ul class="index-list">
+        {related.map((s, i) => <ServiceCard href={`/services/${s.slug}/`} index={i} icon={s.icon} title={s.name} text={s.card} />)}
+        {otherPosts.map((p, i) => <ServiceCard href={`/blog/${p.slug}/`} index={related.length + i} title={p.title} text={p.description} />)}
+      </ul>
+    </div>
+  </section>
+
+  <NextSteps alt />
+  <CTA />
+</BaseLayout>

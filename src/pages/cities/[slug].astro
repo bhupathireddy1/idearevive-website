@@ -1,0 +1,123 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import FAQ from '../../components/FAQ.astro';
+import NextSteps from '../../components/NextSteps.astro';
+import CTA from '../../components/CTA.astro';
+import IndiaMap from '../../components/IndiaMap.astro';
+import { cities, getCity, type City } from '../../data/cities';
+import { servicesForCity } from '../../lib/area-services';
+import { site } from '../../data/site';
+import { faqSchema, serviceSchema } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return cities.map((city) => ({ params: { slug: city.slug }, props: { city } }));
+}
+
+const { city } = Astro.props as { city: City };
+const path = `/cities/${city.slug}/`;
+const crumbs = [
+  { name: 'India', path: '/cities/' },
+  { name: city.name, path },
+];
+const nearby = city.nearby.map(getCity).filter((c): c is City => Boolean(c));
+const cityServices = servicesForCity(city.slug);
+
+const steps = [
+  { title: `A free audit of your ${city.name} market`, text: `We review your website, search visibility, Google Business Profile, ads and the competitors ${city.name} customers compare you with, then share the five fixes we would make first.` },
+  { title: 'A written 90-day plan', text: 'Channels, budget, timelines and the exact numbers we will be judged on, agreed before any work starts.' },
+  { title: 'Weekly calls and a live dashboard', text: 'One senior point of contact, a shared dashboard for leads and spend, and WhatsApp for quick decisions.' },
+  { title: `On-site in ${city.name} when it matters`, text: 'We travel for kick-offs, content shoots and strategy workshops; everything else runs remotely from Hyderabad without slowing down.' },
+];
+---
+<BaseLayout
+  title={city.metaTitle}
+  description={city.metaDescription}
+  crumbs={crumbs}
+  schema={[
+    serviceSchema({ name: `Digital marketing in ${city.name}`, description: city.answer, path, area: [city.name], serviceType: 'Digital marketing' }),
+    faqSchema(city.faqs),
+  ]}
+>
+  <PageHero eyebrow={`${city.state} · Served from Hyderabad`} title={city.h1} answer={city.answer} crumbs={crumbs} secondary={{ label: 'All services', href: '/services/' }} />
+
+  <section class="section" aria-labelledby="market-title">
+    <div class="container split">
+      <div>
+        <div data-reveal>
+          <p class="eyebrow">The market</p>
+          <h2 id="market-title" class="heading-1" style="margin:var(--space-4) 0 var(--space-6)">What makes marketing in {city.name} different?</h2>
+          <p class="body-lg text-muted">{city.context}</p>
+        </div>
+        <h3 class="heading-3" style="margin:var(--space-12) 0 var(--space-2)">What we focus on in {city.name}</h3>
+        <ul class="feature-list" style="margin-top:var(--space-6)">
+          {city.focus.map((f) => (
+            <li class="feature" data-reveal><div><h4 class="heading-4">{f.title}</h4><p>{f.text}</p></div></li>
+          ))}
+        </ul>
+      </div>
+      <aside class="info-card sticky-aside" data-reveal>
+        <p class="eyebrow">{city.name} at a glance</p>
+        <dl class="key-facts" style="grid-template-columns:1fr;margin-top:var(--space-2)">
+          <div class="key-fact"><dt>State / region</dt><dd>{city.state}</dd></div>
+          <div class="key-fact"><dt>Campaign languages</dt><dd>{city.languages.join(', ')}</dd></div>
+          <div class="key-fact"><dt>Key sectors</dt><dd>{city.sectors.join(', ')}</dd></div>
+          <div class="key-fact"><dt>How we serve {city.name}</dt><dd>Remotely from {site.address.locality}, with on-site visits when needed</dd></div>
+          <div class="key-fact"><dt>Experience</dt><dd>{site.proof.years} years · {site.proof.clients} clients</dd></div>
+        </dl>
+        <a href="/free-audit/" class="btn btn-primary btn-lg btn-block" style="margin-top:var(--space-6)" data-track={`city-${city.slug}`}>
+          Free audit for my {city.name} business
+        </a>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section-alt" aria-labelledby="work-title">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Working together</p>
+        <h2 id="work-title" class="heading-1">How we work with {city.name} businesses</h2>
+        <p class="body-lg text-muted">Distance doesn’t change the process. Here’s what the first weeks look like for a {city.name} client.</p>
+      </div>
+      <ol class="feature-list">
+        {steps.map((s) => (
+          <li class="feature" data-reveal><div><h3>{s.title}</h3><p>{s.text}</p></div></li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="services-title">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Where we start in {city.name}</p>
+        <h2 id="services-title" class="heading-1">Which services matter first in {city.name}?</h2>
+        <p class="body-lg text-muted">These are the channels that usually move the needle for {city.name} businesses like the ones above. The rest of the stack is available after the first 90 days prove a channel.</p>
+      </div>
+      <ul class="index-list">
+        {cityServices.map((s, i) => <ServiceCard href={`/services/${s.slug}/`} index={i} icon={s.icon} title={s.name} text={s.card} />)}
+      </ul>
+    </div>
+  </section>
+
+  <FAQ faqs={city.faqs} title={`Digital marketing in ${city.name}: FAQs`} alt />
+
+  <section class="section" aria-labelledby="nearby-title">
+    <div class="container city">
+      <div>
+        <p class="eyebrow">Across India</p>
+        <h2 id="nearby-title" class="heading-2" style="margin:var(--space-4) 0 var(--space-8)">Other cities we serve near {city.name}</h2>
+        <ul class="tag-list">
+          {nearby.map((n) => <li><a href={`/cities/${n.slug}/`}>{n.name}</a></li>)}
+          <li><a href="/locations/">Hyderabad</a></li>
+          <li><a href="/cities/">All cities</a></li>
+        </ul>
+      </div>
+      <div data-reveal><IndiaMap active={city.slug} /></div>
+    </div>
+  </section>
+
+  <NextSteps />
+  <CTA title={`Let’s get ${city.name} customers finding you.`} />
+</BaseLayout>

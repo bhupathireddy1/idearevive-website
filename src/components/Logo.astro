@@ -1,0 +1,16 @@
+---
+interface Props {
+  on?: 'paper' | 'ink';
+  class?: string;
+}
+const { on = 'paper', class: className } = Astro.props;
+const src = on === 'ink' ? '/brand/logo-on-ink.png' : '/brand/logo.png';
+const size = on === 'ink' ? { width: 739, height: 281 } : { width: 925, height: 346 };
+---
+<img
+  class:list={['brand-logo', className]}
+  src={src}
+  alt="IdeaRevive — Strategic Digital Marketing"
+  width={size.width}
+  height={size.height}
+/>

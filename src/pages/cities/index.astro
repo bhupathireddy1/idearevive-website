@@ -1,0 +1,99 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import FAQ from '../../components/FAQ.astro';
+import NextSteps from '../../components/NextSteps.astro';
+import Figure from '../../components/Figure.astro';
+import CTA from '../../components/CTA.astro';
+import IndiaMap from '../../components/IndiaMap.astro';
+import { cities } from '../../data/cities';
+import { site } from '../../data/site';
+import { faqSchema } from '../../lib/schema';
+
+const crumbs = [{ name: 'India', path: '/cities/' }];
+const title = 'Digital Marketing Agency Across India | IdeaRevive';
+const description = `Digital marketing agency serving ${cities.length} Indian cities from Hyderabad — Bengaluru, Mumbai, Delhi NCR, Pune, Chennai and more — with SEO, ads and SaaS.`;
+
+const regions = ['South', 'West', 'North', 'East', 'Central'] as const;
+const sorted = regions.flatMap((r) => cities.filter((c) => c.region === r));
+
+const itemList = {
+  '@type': 'ItemList',
+  name: 'Cities IdeaRevive serves in India',
+  itemListElement: sorted.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, url: `${site.url}/cities/${c.slug}/` })),
+};
+
+const faqs = [
+  { q: 'Does IdeaRevive have offices outside Hyderabad?', a: 'The studio is at WeWork Krishe Emerald in Kondapur, Hyderabad. We also keep a US mailing address in Sheridan, Wyoming. Clients in other Indian cities work with us remotely, and we travel for kick-offs, shoots and workshops when being in the room makes a real difference.' },
+  { q: 'Is it effective to work with a digital marketing agency in another city?', a: 'Yes. Digital marketing is managed in online platforms, so location matters far less than communication and accountability. Weekly calls, live dashboards and a named senior contact keep remote engagements as fast as local ones.' },
+  { q: 'Do you run campaigns in regional Indian languages?', a: 'Yes. We create and test campaigns in English, Hindi, Telugu, Tamil, Kannada, Malayalam, Marathi, Gujarati, Bengali and Punjabi, with native-language review before anything goes live.' },
+];
+---
+<BaseLayout title={title} description={description} crumbs={crumbs} schema={[itemList, faqSchema(faqs)]} pageType="CollectionPage">
+  <PageHero
+    eyebrow={`${cities.length} cities · Served from Hyderabad`}
+    title="A digital marketing agency for businesses across India"
+    answer={`IdeaRevive is a Hyderabad-based digital marketing agency with dedicated pages for ${cities.length} Indian cities. With ${site.proof.years} years of experience and ${site.proof.clients} clients, we run SEO, Google and Meta Ads, eCommerce growth, SaaS and app work for companies across India — remotely from Hyderabad.`}
+    crumbs={crumbs}
+    secondary={{ label: 'See all services', href: '/services/' }}
+  />
+
+  <section class="section section-alt" aria-labelledby="map-title">
+    <div class="container city">
+      <div>
+        <p class="eyebrow">The network</p>
+        <h2 id="map-title" class="heading-1" style="margin:var(--space-4) 0 var(--space-6)" data-reveal>One team in Hyderabad. Clients in cities across India.</h2>
+        <p class="body-lg text-muted" data-reveal>Each city page is written for that market’s languages, industries and buying seasons — not a city name swapped into one template.</p>
+        <Figure
+          kind="india"
+          caption="Fig. 1 — One Hyderabad desk, clients in cities across India. A stamp map, not a stock photo."
+        />
+      </div>
+      <div data-reveal><IndiaMap /></div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="list-title">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Cities · {String(cities.length).padStart(2, '0')}</p>
+        <h2 id="list-title" class="heading-2">Which Indian cities does IdeaRevive serve?</h2>
+      </div>
+      <ul class="index-list">
+        {sorted.map((c, i) => (
+          <ServiceCard href={`/cities/${c.slug}/`} index={i} title={c.name} text={`${c.state}. ${c.context.split('. ')[0]}.`} />
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section-alt" aria-labelledby="how-title">
+    <div class="container split">
+      <div data-reveal>
+        <p class="eyebrow">Remote, not distant</p>
+        <h2 id="how-title" class="heading-1" style="margin:var(--space-4) 0 var(--space-6)">How we work with clients across India</h2>
+        <p class="body-lg text-muted">Most of our work happens inside ad platforms, analytics and your CMS, so it doesn’t need us in your office. What it does need is a clear plan, honest reporting and quick decisions.</p>
+        <ul class="check-list" style="margin-top:var(--space-8)">
+          <li>A named senior lead and a weekly call</li>
+          <li>Live dashboards for leads, spend and revenue</li>
+          <li>WhatsApp or Slack for day-to-day decisions</li>
+          <li>On-site visits for kick-offs, shoots and workshops</li>
+        </ul>
+      </div>
+      <aside class="info-card" data-reveal>
+        <p class="eyebrow">At a glance</p>
+        <dl class="key-facts" style="grid-template-columns:1fr;margin-top:var(--space-2)">
+          <div class="key-fact"><dt>Base</dt><dd>{site.address.locality}, {site.address.region}</dd></div>
+          <div class="key-fact"><dt>City pages</dt><dd>{cities.length} across India</dd></div>
+          <div class="key-fact"><dt>Experience</dt><dd>{site.proof.years} years · {site.proof.clients} clients</dd></div>
+          <div class="key-fact"><dt>Languages</dt><dd>English, Hindi, Telugu, Tamil, Kannada, Malayalam, Marathi, Gujarati, Bengali, Punjabi</dd></div>
+        </dl>
+      </aside>
+    </div>
+  </section>
+
+  <FAQ faqs={faqs} title="Working with us from another city" />
+  <NextSteps />
+  <CTA />
+</BaseLayout>

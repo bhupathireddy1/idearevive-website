@@ -1,0 +1,86 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import FAQ from '../components/FAQ.astro';
+import NextSteps from '../components/NextSteps.astro';
+import CTA from '../components/CTA.astro';
+import { site } from '../data/site';
+import { faqSchema } from '../lib/schema';
+
+const crumbs = [{ name: 'Pricing', path: '/pricing/' }];
+const title = 'Digital Marketing Packages in Hyderabad | IdeaRevive';
+const description = 'IdeaRevive digital marketing packages in Hyderabad: Starter, Growth and Scale. Fixed quotes after a free audit, with 10+ years and 50+ clients.';
+
+// Set `price` to a real figure (e.g. '₹25,000') when you are ready to publish pricing.
+const plans = [
+  {
+    name: 'Starter',
+    for: 'Local businesses and start-ups building a strong foundation.',
+    price: 'Custom quote',
+    features: ['Google Business Profile optimisation', 'Technical SEO audit and fixes', 'One paid channel (Google or Meta)', 'Conversion tracking setup', 'Monthly report and review call'],
+  },
+  {
+    name: 'Growth',
+    for: 'Established businesses ready to scale leads across channels.',
+    price: 'Custom quote',
+    featured: true,
+    features: ['Everything in Starter', 'Ongoing SEO and content each month', 'Google Ads + Meta Ads management', 'Landing page design and testing', 'AEO / GEO optimisation and schema', 'Fortnightly strategy calls'],
+  },
+  {
+    name: 'Scale',
+    for: 'Multi-location and high-growth brands needing a full team.',
+    price: 'Custom quote',
+    features: ['Everything in Growth', 'Full-funnel performance marketing', 'Social media content production', 'CRM and marketing automation', 'Dedicated account lead', 'Weekly reporting and quarterly planning'],
+  },
+];
+
+const faqs = [
+  { q: 'Why don’t you list fixed prices?', a: 'Costs depend on your competition, number of locations, channels and how much content and creative is needed. After a free audit we give you a fixed monthly quote with every deliverable listed, so there are no surprises.' },
+  { q: 'Is ad spend included in the package?', a: 'No. Ad spend is paid directly from your own Google, Meta or LinkedIn account. Our management fee is separate and agreed upfront.' },
+  { q: 'Is there a minimum contract?', a: 'SEO and content engagements usually start with a three-month commitment because results compound over time. Paid media and project work can be shorter. Terms are always agreed in writing before work begins.' },
+  { q: 'Do you offer one-off projects?', a: 'Yes. Website builds, brand identity, SEO audits and tracking setups are available as fixed-scope projects.' },
+];
+---
+<BaseLayout title={title} description={description} crumbs={crumbs} schema={[faqSchema(faqs)]}>
+  <PageHero
+    eyebrow="Pricing"
+    title="Digital marketing packages in Hyderabad"
+    answer={`IdeaRevive offers three packages — Starter, Growth and Scale — plus fixed-scope website, SaaS and app projects. After a free audit you get a fixed quote with every deliverable listed. Ad spend stays in your own accounts. The team has ${site.proof.years} years and ${site.proof.clients} clients.`}
+    crumbs={crumbs}
+  />
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Packages</p>
+        <h2 class="heading-2">What is included in each IdeaRevive package?</h2>
+      </div>
+      <div class="pricing-grid">
+        {plans.map((p) => (
+          <article class:list={['plan', { featured: p.featured }]} data-reveal>
+            {p.featured && <span class="plan-badge">Most popular</span>}
+            <h3>{p.name} package</h3>
+            <p class="plan-for">{p.for}</p>
+            <p class="plan-price">{p.price} {p.price.startsWith('₹') && <small>/ month</small>}</p>
+            <ul class="check-list">
+              {p.features.map((f) => <li>{f}</li>)}
+            </ul>
+            <a href="/free-audit/" class:list={['btn btn-lg btn-block', p.featured ? 'btn-primary' : 'btn-secondary']} data-track={`pricing-${p.name}`}>
+              Get my {p.name} quote
+            </a>
+          </article>
+        ))}
+      </div>
+      <dl class="key-facts" style="margin-top:var(--space-12)">
+        <div class="key-fact"><dt>Quote</dt><dd>Fixed after a free audit</dd></div>
+        <div class="key-fact"><dt>Ad spend</dt><dd>Paid from your own accounts</dd></div>
+        <div class="key-fact"><dt>Projects</dt><dd>Websites, SaaS and apps as fixed-scope work</dd></div>
+        <div class="key-fact"><dt>Experience</dt><dd>{site.proof.years} years · {site.proof.clients} clients</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <FAQ faqs={faqs} title="Pricing FAQs" />
+  <NextSteps />
+  <CTA />
+</BaseLayout>

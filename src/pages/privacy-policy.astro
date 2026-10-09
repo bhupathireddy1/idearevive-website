@@ -1,0 +1,33 @@
+---
+import LegalPage from '../components/LegalPage.astro';
+import { site } from '../data/site';
+---
+<LegalPage
+  title="Privacy Policy | IdeaRevive Digital Marketing"
+  heading="Privacy Policy"
+  description="IdeaRevive privacy policy: what personal data we collect, how we use and share it, how long we keep it, and how to exercise your DPDP Act rights."
+  path="/privacy-policy/"
+  summary="IdeaRevive collects only the personal data needed to answer enquiries, deliver services and improve the website. We never sell personal data, and you can ask us to access, correct or erase it at any time."
+>
+  <p>This policy explains how {site.legalName} (“we”, “us”) collects and uses personal data when you visit {site.url} or contact us. We process personal data in line with India’s Digital Personal Data Protection Act, 2023 (DPDP Act).</p>
+  <h2>What personal data we collect</h2>
+  <ul>
+    <li><strong>Information you give us:</strong> name, email, phone number, website and message when you submit a form, email or call us.</li>
+    <li><strong>Usage data:</strong> pages visited, device and browser type and approximate location, collected through analytics cookies where you have consented.</li>
+  </ul>
+  <h2>How we use personal data</h2>
+  <ul>
+    <li>To respond to your enquiry and provide requested audits or proposals.</li>
+    <li>To deliver services under a contract with you.</li>
+    <li>To understand and improve how our website performs.</li>
+    <li>To send marketing emails only where you have opted in; you can unsubscribe at any time.</li>
+  </ul>
+  <h2>Who we share data with</h2>
+  <p>We do not sell personal data. We share it only with service providers who help us operate (for example form processing, email, analytics and hosting), under appropriate confidentiality obligations, or where required by law.</p>
+  <h2>How long we keep data</h2>
+  <p>We keep enquiry data for as long as needed to respond and for a reasonable period afterwards for record-keeping, and client data for the duration of our engagement plus any legally required period.</p>
+  <h2>Your rights under the DPDP Act</h2>
+  <p>You may request access to, correction of or erasure of your personal data, withdraw consent, and nominate another person to exercise your rights. To do so, email <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+  <h2>Privacy questions and grievances</h2>
+  <p>For privacy questions or grievances, contact us at <a href={`mailto:${site.email}`}>{site.email}</a>. We aim to respond within seven business days.</p>
+</LegalPage>

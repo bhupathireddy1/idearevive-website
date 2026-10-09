@@ -1,0 +1,101 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import LeadForm from '../components/LeadForm.astro';
+import FAQ from '../components/FAQ.astro';
+import Proof from '../components/Proof.astro';
+import NextSteps from '../components/NextSteps.astro';
+import { site, formatInAddress, formatUsAddress } from '../data/site';
+import { faqSchema } from '../lib/schema';
+
+const crumbs = [{ name: 'Contact', path: '/contact/' }];
+const title = 'Contact IdeaRevive | Digital Marketing Agency in Hyderabad';
+const description = `Contact IdeaRevive in Hyderabad: email ${site.email}${site.phone ? ` or call ${site.phone}` : ''} or send the form. We reply in one business day with a free audit path.`;
+
+const address = formatInAddress();
+const usAddress = formatUsAddress();
+const mapQuery = encodeURIComponent(address);
+const wa = site.whatsapp ? `https://wa.me/${site.whatsapp.replace(/\D/g, '')}` : '';
+
+const steps = [
+  { title: 'We read your message', text: 'A senior strategist reviews your goals, website and current marketing before replying, so the first call is useful.' },
+  { title: 'A 30-minute discovery call', text: 'We ask about revenue goals, margins, sales process and what has or has not worked so far.' },
+  { title: 'A free audit and recommended plan', text: 'You get a written summary of the biggest opportunities and a suggested 90-day plan with a budget range.' },
+  { title: 'You decide', text: 'No pressure and no lock-in. If it is not the right fit, the audit is yours to keep.' },
+];
+
+const faqs = [
+  { q: 'How quickly will you respond?', a: 'We reply to all enquiries within one business day, usually much sooner during office hours.' },
+  { q: 'What happens after I get in touch?', a: 'We schedule a 30-minute discovery call to understand your goals, then share a free audit and recommended plan. There is no obligation to proceed.' },
+  { q: 'Can we meet in person?', a: 'Yes. The studio is at WeWork Krishe Emerald, Kondapur, Hyderabad. We can meet there or at your office for strategy sessions. We also keep a US mailing address in Sheridan, Wyoming. Clients in other cities and countries work with us over video calls.' },
+];
+---
+<BaseLayout title={title} description={description} crumbs={crumbs} schema={[faqSchema(faqs)]} pageType="ContactPage">
+  <PageHero
+    eyebrow="Let’s talk about your growth"
+    title="Contact IdeaRevive, a digital marketing agency in Hyderabad"
+    answer={`Tell IdeaRevive about your business and goals. We reply within one business day with next steps, usually a short discovery call and a free audit, drawing on ${site.proof.years} years of digital marketing experience with ${site.proof.clients} clients.`}
+    crumbs={crumbs}
+    primary={{ label: 'Jump to the form', href: '#contact-form' }}
+  />
+
+  <section class="section">
+    <div class="container split">
+      <div class="form-card" id="contact-form">
+        <h2 class="heading-2" style="margin-bottom:var(--space-6)">How can we help your business grow?</h2>
+        <LeadForm id="contact" />
+      </div>
+      <aside class="grid" style="gap:var(--space-6)">
+        <div class="info-card">
+          <h2 class="heading-4">Contact details</h2>
+          <ul class="info-list">
+            <li><Icon name="mail" size={18} /><a href={`mailto:${site.email}`}>{site.email}</a></li>
+            {site.phone && <li><Icon name="phone" size={18} /><a href={`tel:${site.phone.replace(/\s/g, '')}`}>{site.phone}</a></li>}
+            {wa && <li><Icon name="whatsapp" size={18} /><a href={wa}>Chat on WhatsApp</a></li>}
+            <li><Icon name="pin" size={18} /><span>Hyderabad studio: {address}</span></li>
+            <li><Icon name="pin" size={18} /><span>US mailing: {usAddress}</span></li>
+            <li><Icon name="clock" size={18} /><span>{site.hoursLabel}</span></li>
+          </ul>
+          {site.bookingUrl && <a href={site.bookingUrl} class="btn btn-primary btn-block" style="margin-top:var(--space-6)">Book a strategy call</a>}
+        </div>
+        <div class="info-card" style="padding:0;overflow:hidden">
+          <iframe
+            title="IdeaRevive location on Google Maps"
+            src={`https://www.google.com/maps?q=${mapQuery}&output=embed`}
+            width="100%" height="300" style="border:0;display:block;filter:grayscale(1) sepia(.15) contrast(1.05)" loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section-alt" aria-labelledby="after-title">
+    <div class="container split">
+      <div data-reveal>
+        <p class="eyebrow">After you hit send</p>
+        <h2 id="after-title" class="heading-1" style="margin:var(--space-4) 0 var(--space-8)">What happens after you contact IdeaRevive?</h2>
+        <ol class="feature-list">
+          {steps.map((s) => <li class="feature"><h3 class="heading-4">{s.title}</h3><p>{s.text}</p></li>)}
+        </ol>
+      </div>
+      <aside class="info-card" data-reveal>
+        <h2 class="heading-4">Working with us</h2>
+        <dl class="key-facts" style="grid-template-columns:1fr;margin-top:0">
+          <div class="key-fact"><dt>Reply time</dt><dd>Within one business day</dd></div>
+          <div class="key-fact"><dt>Studio</dt><dd>WeWork Krishe Emerald, Kondapur, Hyderabad</dd></div>
+          <div class="key-fact"><dt>Clients in</dt><dd>Hyderabad, <a href="/cities/">cities across India</a> and worldwide</dd></div>
+          <div class="key-fact"><dt>Services</dt><dd><a href="/services/">Marketing, websites, SaaS and apps</a></dd></div>
+          <div class="key-fact"><dt>Packages</dt><dd><a href="/pricing/">See pricing</a></dd></div>
+        </dl>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="container"><Proof /></div>
+  </section>
+
+  <FAQ faqs={faqs} title="Questions before you get in touch" alt />
+  <NextSteps />
+</BaseLayout>

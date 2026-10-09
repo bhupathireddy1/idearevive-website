@@ -1,0 +1,34 @@
+---
+import LegalPage from '../components/LegalPage.astro';
+import { site } from '../data/site';
+---
+<LegalPage
+  title="Terms of Use | IdeaRevive Digital Marketing"
+  heading="Terms of Use"
+  description="The terms that govern use of the IdeaRevive website and its content, including intellectual property, client engagements, liability and governing law."
+  path="/terms/"
+  summary="These terms explain how you may use the IdeaRevive website. Client work is governed by a separate written agreement, and these terms are subject to the laws of India with courts in Hyderabad having jurisdiction."
+>
+  <p>By using {site.url} you agree to these terms. If you do not agree, please do not use the website.</p>
+  <h2>Website content and accuracy</h2>
+  <p>Content on this website is provided for general information. It is not a guarantee of any particular marketing outcome. Search engines and advertising platforms are operated by third parties, and results depend on many factors outside our control.</p>
+  <p>We review content regularly, but we do not promise that every page is complete or current at all times.</p>
+  <h2>Intellectual property</h2>
+  <p>All text, graphics, logos and design on this site belong to {site.legalName} unless stated otherwise. You may share links to our pages but may not copy or republish content without permission.</p>
+  <h2>Client engagements and proposals</h2>
+  <p>Services are governed by a separate written proposal or agreement, which takes precedence over these terms. Free audits are provided without obligation.</p>
+  <h2>Acceptable use of the website</h2>
+  <ul>
+    <li>Do not attempt to disrupt, overload or gain unauthorised access to the website.</li>
+    <li>Do not submit false, misleading or unlawful information through our forms.</li>
+    <li>Do not scrape the site in a way that degrades performance for other visitors.</li>
+  </ul>
+  <h2>Third-party links</h2>
+  <p>We are not responsible for the content or practices of websites we link to.</p>
+  <h2>Limitation of liability</h2>
+  <p>To the extent permitted by law, we are not liable for any indirect or consequential loss arising from use of this website.</p>
+  <h2>Governing law and jurisdiction</h2>
+  <p>These terms are governed by the laws of India, and courts in Hyderabad, Telangana have exclusive jurisdiction.</p>
+  <h2>Questions about these terms</h2>
+  <p>Questions about these terms can be sent to <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+</LegalPage>

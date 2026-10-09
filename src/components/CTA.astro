@@ -1,0 +1,32 @@
+---
+import { site } from '../data/site';
+import Proof from './Proof.astro';
+import MotionField from './MotionField.astro';
+interface Props { title?: string; text?: string }
+const {
+  title = 'Let’s get you found.',
+  text = 'Send us your website. Within a few working days you’ll get a plain-English audit of your search, maps, ads and AI visibility — and the five fixes we’d make first. Free, no obligation.',
+} = Astro.props;
+const wa = site.whatsapp ? `https://wa.me/${site.whatsapp.replace(/\D/g, '')}` : '';
+---
+<section class="closer">
+  <MotionField tone="ink" />
+  <div class="wrap">
+    <p class="eyebrow" style="color:var(--on-ink-2);margin-bottom:var(--space-8)">Start here</p>
+    <h2 class="closer-title" data-reveal>{title}</h2>
+    <div class="closer-body">
+      <div>
+        <p>{text}</p>
+        <p style="margin-top:var(--space-6)"><a class="closer-mail" href={`mailto:${site.email}`}>{site.email}</a></p>
+      </div>
+      <div class="hero-ctas">
+        <a href="/free-audit/" class="btn btn-primary btn-lg" style="border-color:var(--signal)" data-track="cta-audit">Get my free audit <span class="arrow" aria-hidden="true">→</span></a>
+        {site.bookingUrl
+          ? <a href={site.bookingUrl} class="btn btn-outline-light btn-lg" data-track="cta-book">Book a call</a>
+          : <a href="/contact/" class="btn btn-outline-light btn-lg" data-track="cta-contact">Talk to us</a>}
+        {wa && <a href={wa} class="btn btn-outline-light btn-lg" data-track="cta-whatsapp">WhatsApp</a>}
+      </div>
+    </div>
+    <Proof dark />
+  </div>
+</section>

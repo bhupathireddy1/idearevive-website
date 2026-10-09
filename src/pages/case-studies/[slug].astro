@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import CTA from '../../components/CTA.astro';
+import { caseStudies, type CaseStudy } from '../../data/caseStudies';
+import { orgId } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return caseStudies.map((study) => ({ params: { slug: study.slug }, props: { study } }));
+}
+
+const { study } = Astro.props as { study: CaseStudy };
+const path = `/case-studies/${study.slug}/`;
+const crumbs = [
+  { name: 'Case Studies', path: '/case-studies/' },
+  { name: study.client, path },
+];
+const article = {
+  '@type': 'Article',
+  headline: study.title,
+  description: study.summary,
+  datePublished: study.published,
+  author: { '@id': orgId },
+  publisher: { '@id': orgId },
+  about: study.services,
+};
+---
+<BaseLayout title={`${study.title} | IdeaRevive Case Study`} description={study.summary} crumbs={crumbs} schema={[article]} ogType="article">
+  <PageHero eyebrow={`${study.industry} case study`} title={study.title} answer={study.summary} crumbs={crumbs} />
+
+  <section class="section">
+    <div class="container">
+      <dl class="key-facts">
+        {study.metrics.map((m) => <div class="key-fact"><dt>{m.label}</dt><dd class="heading-2">{m.value}</dd></div>)}
+        <div class="key-fact"><dt>Time frame</dt><dd>{study.timeframe}</dd></div>
+      </dl>
+      <div class="prose" style="margin-top:var(--space-12)">
+        <h2>The challenge</h2>
+        <p>{study.challenge}</p>
+        <h2>What we did</h2>
+        <ul>{study.solution.map((s) => <li>{s}</li>)}</ul>
+        <h2>Results</h2>
+        <p>{study.results}</p>
+        {study.testimonial && (
+          <blockquote class="answer-box">
+            <p>“{study.testimonial.quote}”</p>
+            <footer>— {study.testimonial.name}, {study.testimonial.role}</footer>
+          </blockquote>
+        )}
+      </div>
+    </div>
+  </section>
+  <CTA />
+</BaseLayout>

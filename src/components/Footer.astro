@@ -1,0 +1,87 @@
+---
+import { site, sameAs, formatInAddress, formatUsAddress } from '../data/site';
+import Logo from './Logo.astro';
+import { services } from '../data/services';
+import { locations } from '../data/locations';
+import { cities } from '../data/cities';
+
+const year = new Date().getFullYear();
+const updated = new Date(site.contentUpdated).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+const address = formatInAddress();
+const usAddress = formatUsAddress();
+---
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <p class="footer-brand-mark">
+          <Logo on="ink" class="footer-logo" />
+        </p>
+        <p class="footer-legal">{site.legalName}</p>
+        <p>{site.description}</p>
+        <address class="footer-contact">
+          <span>{address}</span>
+          <span>US mailing: {usAddress}</span>
+          <a href={`mailto:${site.email}`}>{site.email}</a>
+          {site.phone && <a href={`tel:${site.phone.replace(/[^\d+]/g, '')}`}>{site.phone}</a>}
+          <span>{site.hoursLabel}</span>
+        </address>
+        {sameAs.length > 0 && (
+          <ul class="footer-social">
+            {Object.entries(site.social).filter(([, url]) => url).map(([name, url]) => (
+              <li><a href={url} rel="me noopener" target="_blank">{name}</a></li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      <nav aria-label="Services">
+        <h2 class="footer-title">Services</h2>
+        <ul>
+          {services.map((s) => <li><a href={`/services/${s.slug}/`}>{s.name}</a></li>)}
+        </ul>
+      </nav>
+
+      <nav aria-label="Hyderabad">
+        <h2 class="footer-title">Hyderabad</h2>
+        <ul>
+          <li><a href="/locations/">All {locations.length} areas</a></li>
+          {locations.slice(0, 9).map((l) => <li><a href={`/locations/${l.slug}/`}>{l.name}</a></li>)}
+        </ul>
+      </nav>
+
+      <nav aria-label="India">
+        <h2 class="footer-title">India</h2>
+        <ul>
+          <li><a href="/cities/">All cities</a></li>
+          {cities.map((c) => <li><a href={`/cities/${c.slug}/`}>{c.name}</a></li>)}
+        </ul>
+      </nav>
+
+      <nav aria-label="Company">
+        <h2 class="footer-title">Company</h2>
+        <ul>
+          <li><a href="/about/">About</a></li>
+          <li><a href="/industries/">Industries</a></li>
+          <li><a href="/case-studies/">Case studies</a></li>
+          <li><a href="/pricing/">Pricing</a></li>
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/contact/">Contact</a></li>
+          <li><a href="/free-audit/">Free growth audit</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <p class="footer-giant" aria-hidden="true"><Logo on="ink" /></p>
+
+    <div class="footer-bottom">
+      <p>© {year} {site.legalName} · Kondapur, Hyderabad · {site.geo.lat.toFixed(2)}° N {site.geo.lng.toFixed(2)}° E · <time datetime={site.contentUpdated}>Updated {updated}</time></p>
+      <ul>
+        <li><a href="/privacy-policy/">Privacy</a></li>
+        <li><a href="/terms/">Terms</a></li>
+        <li><a href="/cookie-policy/">Cookies</a></li>
+        <li><a href="/accessibility/">Accessibility</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>

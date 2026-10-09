@@ -1,0 +1,23 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "idearevive",
+  "account_id": "14fc53ceac55e9eacf91cd97ec0827ec",
+  "main": "src/worker.ts",
+  "compatibility_date": "2026-10-08",
+  "workers_dev": true,
+  "preview_urls": true,
+  "observability": {
+    "enabled": true
+  },
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "html_handling": "none",
+    "run_worker_first": true
+  },
+  "routes": [
+    { "pattern": "idearevive.com/*", "zone_name": "idearevive.com" },
+    { "pattern": "www.idearevive.com/*", "zone_name": "idearevive.com" }
+  ]
+}

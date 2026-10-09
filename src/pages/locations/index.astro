@@ -1,0 +1,79 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import FAQ from '../../components/FAQ.astro';
+import NextSteps from '../../components/NextSteps.astro';
+import CTA from '../../components/CTA.astro';
+import CityMap from '../../components/CityMap.astro';
+import { locations } from '../../data/locations';
+import { services } from '../../data/services';
+import { site } from '../../data/site';
+import { faqSchema } from '../../lib/schema';
+
+const crumbs = [{ name: 'Locations', path: '/locations/' }];
+const title = 'Digital Marketing Agency Across Hyderabad | IdeaRevive';
+const description = 'IdeaRevive serves Hyderabad neighbourhoods from HITEC City, Kokapet and Nanakramguda to Dilsukhnagar, Kothapet, LB Nagar and Secunderabad.';
+
+const faqs = [
+  { q: 'Do you meet clients in person in Hyderabad?', a: 'Yes. The studio is at WeWork Krishe Emerald in Kondapur, and we can meet there or at your office for kick-offs, strategy workshops and content shoots. Most day-to-day collaboration happens over video calls, WhatsApp and shared dashboards.' },
+  { q: 'Do you work with businesses outside Hyderabad?', a: 'Yes. While our local expertise is Hyderabad and Telangana, we run campaigns for clients across India and for companies targeting international markets.' },
+  { q: 'Does my neighbourhood change how you market my business?', a: 'Often, yes. A clinic in Kukatpally competes on map rankings within a few kilometres, while a SaaS company in HITEC City sells to buyers across the world. Location shapes keywords, ad radius, language and which channels we prioritise.' },
+];
+---
+<BaseLayout title={title} description={description} crumbs={crumbs} schema={[faqSchema(faqs)]} pageType="CollectionPage">
+  <PageHero
+    eyebrow="Locations"
+    title="A digital marketing agency for all of Hyderabad"
+    answer="IdeaRevive works with businesses across Hyderabad and Secunderabad. Each neighbourhood has a different customer mix, so we tailor strategy to where your customers are — from B2B tech in HITEC City and Nanakramguda to retail in Dilsukhnagar, Kothapet and Kukatpally."
+    crumbs={crumbs}
+  />
+
+  <section class="section section-alt">
+    <div class="container city">
+      <div>
+        <p class="eyebrow">The map</p>
+        <h2 class="heading-1" style="margin:var(--space-4) 0 var(--space-6)" data-reveal>Which parts of Hyderabad do we cover?</h2>
+        <p class="body-lg text-muted" data-reveal>All of it: the IT corridor, east Hyderabad, the Old City, the ORR edges and the twin city. Tap a pin to see how marketing works in that part of town — who the customers are, what they search for, and where the competition is.</p>
+        <dl class="key-facts" style="grid-template-columns:1fr 1fr;margin-top:var(--space-8)" data-reveal>
+          <div class="key-fact"><dt>Base</dt><dd>Hyderabad, Telangana</dd></div>
+          <div class="key-fact"><dt>Areas profiled</dt><dd>{locations.length} neighbourhoods</dd></div>
+          <div class="key-fact"><dt>Experience</dt><dd>{site.proof.years} years · {site.proof.clients} clients</dd></div>
+          <div class="key-fact"><dt>Languages</dt><dd>English, Telugu, Hindi</dd></div>
+        </dl>
+      </div>
+      <div data-reveal><CityMap /></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Neighbourhoods</p>
+        <h2 class="heading-2">How does marketing differ across Hyderabad?</h2>
+      </div>
+      <ul class="index-list">
+        {locations.map((l, i) => (
+          <ServiceCard href={`/locations/${l.slug}/`} index={i} title={l.name} text={l.context.split('. ')[0] + '.'} />
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Everywhere in the city</p>
+        <h2 class="heading-2">Which services are available across Hyderabad?</h2>
+      </div>
+      <ul class="tag-list" data-reveal>
+        {services.map((s) => <li><a href={`/services/${s.slug}/`}>{s.h1}</a></li>)}
+        <li><a href="/cities/">Cities across India</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <FAQ faqs={faqs} alt={false} />
+  <NextSteps />
+  <CTA />
+</BaseLayout>

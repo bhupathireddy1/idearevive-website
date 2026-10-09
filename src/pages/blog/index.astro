@@ -1,0 +1,97 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import FAQ from '../../components/FAQ.astro';
+import NextSteps from '../../components/NextSteps.astro';
+import CTA from '../../components/CTA.astro';
+import RetroScene from '../../components/RetroScene.astro';
+import { posts } from '../../data/posts';
+import { site } from '../../data/site';
+import { faqSchema } from '../../lib/schema';
+import { sceneFor } from '../../lib/scenes';
+
+const crumbs = [{ name: 'Blog', path: '/blog/' }];
+const title = 'Digital Marketing Insights for Hyderabad Businesses';
+const description = 'Marketing guides from IdeaRevive on SEO, local SEO, AI search (GEO, AEO, LLMO), Google Ads and social media, written for Hyderabad businesses.';
+const sorted = [...posts].sort((a, b) => b.published.localeCompare(a.published));
+const fmt = (d: string) => new Date(d).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+const categories = [...new Set(posts.map((p) => p.category))];
+
+const faqs = [
+  { q: 'Who writes the IdeaRevive blog?', a: `Director ${site.founder.name} writes every guide from client work, drawing on more than 10 years of digital marketing for 50+ clients. We do not publish ghost-written filler or AI-spun articles.` },
+  { q: 'How often are the guides updated?', a: 'We review each guide when search engines or AI assistants change in a way that affects the advice, and show the last updated date at the top of every article so you know how current it is.' },
+  { q: 'Can I suggest a topic for a future guide?', a: 'Yes. Email the question your customers keep asking, or the marketing problem you are stuck on, and we will consider it for a future article. The best topics come from real questions.' },
+];
+---
+<BaseLayout title={title} description={description} crumbs={crumbs} schema={[faqSchema(faqs)]} pageType="CollectionPage">
+  <PageHero
+    eyebrow="Blog"
+    title="Marketing insights for Hyderabad businesses"
+    answer={`The IdeaRevive blog publishes practical, no-fluff guides on SEO, AI search, local marketing, paid advertising and conversion, written from ${site.proof.years} years of hands-on work with ${site.proof.clients} clients in Hyderabad, across India and abroad.`}
+    crumbs={crumbs}
+  />
+
+  <section class="section" aria-labelledby="latest-title">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Latest</p>
+        <h2 id="latest-title" class="heading-2">Which guides should you read first?</h2>
+      </div>
+      <ul class="index-list">
+        {sorted.map((p) => {
+          const kind = sceneFor(`/blog/${p.slug}/`);
+          return (
+          <li data-reveal>
+            <a href={`/blog/${p.slug}/`} class="post-card">
+              <span class="post-card-art">
+                <RetroScene kind={kind} ratio="card" />
+              </span>
+              <span class="post-card-body">
+                <span class="caption">{p.category} · {p.readingMinutes} min · <time datetime={p.published}>{fmt(p.published)}</time></span>
+                <span class="post-card-title">{p.title}</span>
+                <span class="post-card-text">{p.description}</span>
+              </span>
+            </a>
+          </li>
+          );
+        })}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section-alt" aria-labelledby="approach-title">
+    <div class="container split">
+      <div class="prose" data-reveal>
+        <h2 id="approach-title">How do we write these guides?</h2>
+        <p>
+          Every article starts from a question a client has asked us. We answer it directly in the first few lines, then explain the
+          reasoning, the steps and the trade-offs, so that a business owner can act on it the same day. Where a decision depends on
+          budget or market, we say so instead of pretending there is one right answer.
+        </p>
+        <p>
+          We avoid tactics that only work until the next algorithm update. The advice here favours things that keep paying off:
+          accurate business information, genuinely helpful pages, honest reviews, clean tracking and ads that are judged on leads and
+          sales rather than clicks.
+        </p>
+        <ul>
+          <li>Direct answer first, detail second.</li>
+          <li>Tested on real accounts before we recommend it.</li>
+          <li>Updated when Google or AI assistants change the rules.</li>
+        </ul>
+      </div>
+      <aside class="info-card" data-reveal>
+        <h2 class="heading-4">Blog at a glance</h2>
+        <dl class="key-facts" style="grid-template-columns:1fr;margin-top:0">
+          <div class="key-fact"><dt>Guides published</dt><dd>{posts.length}</dd></div>
+          <div class="key-fact"><dt>Topics</dt><dd>{categories.join(', ')}</dd></div>
+          <div class="key-fact"><dt>Written by</dt><dd>The IdeaRevive team</dd></div>
+          <div class="key-fact"><dt>Experience</dt><dd>{site.proof.years} years · {site.proof.clients} clients</dd></div>
+        </dl>
+      </aside>
+    </div>
+  </section>
+
+  <FAQ faqs={faqs} title="Questions about the blog" />
+  <NextSteps alt />
+  <CTA />
+</BaseLayout>

@@ -1,0 +1,168 @@
+---
+/** First query is the original dentist search. The rest cover every industry we serve. */
+const searches = [
+  {
+    query: 'best dentist in kondapur hyderabad',
+    ai: 'Well-reviewed options nearby include Your Business, known for same-day appointments and clear pricing…',
+    maps: ['Your Business · 4.9 ★ · Open now', 'Competitor clinic', 'Another competitor'],
+    url: 'yourbusiness.in › dentist-kondapur',
+    title: 'Dentist in Kondapur — Same-Day Appointments',
+  },
+  {
+    query: '3 bhk apartments in gachibowli hyderabad',
+    ai: 'Projects with site-visit ready listings nearby include Your Business, with 3 BHK plans and clear pricing…',
+    maps: ['Your Business · 4.8 ★ · Site visits', 'Competitor project', 'Another developer'],
+    url: 'yourbusiness.in › gachibowli-apartments',
+    title: '3 BHK Apartments in Gachibowli — Site Visits Today',
+  },
+  {
+    query: 'iit jee coaching in hyderabad',
+    ai: 'Parents comparing batches this season often see Your Business, with demo classes and published results…',
+    maps: ['Your Business · 4.7 ★ · Admissions open', 'Competitor institute', 'Another coaching centre'],
+    url: 'yourbusiness.in › iit-jee-coaching',
+    title: 'IIT JEE Coaching in Hyderabad — Enrol This Batch',
+  },
+  {
+    query: 'b2b saas companies in hitech city',
+    ai: 'Teams shortlisting software vendors in Hyderabad often cite Your Business for a clear demo and pricing…',
+    maps: ['Your Business · Book a demo', 'Competitor SaaS', 'Another IT firm'],
+    url: 'yourbusiness.in › saas-hyderabad',
+    title: 'B2B SaaS in HITEC City — Book a Product Demo',
+  },
+  {
+    query: 'buy cotton sarees online india',
+    ai: 'Shoppers looking for cotton sarees with nationwide delivery often land on Your Business…',
+    maps: ['Your Business · Ships pan-India', 'Competitor store', 'Another brand'],
+    url: 'yourbusiness.in › cotton-sarees',
+    title: 'Cotton Sarees Online — Free Shipping in India',
+  },
+  {
+    query: 'best biryani in banjara hills',
+    ai: 'Diners nearby often pick Your Business for biryani, with tables tonight and recent reviews…',
+    maps: ['Your Business · 4.6 ★ · Open now', 'Competitor restaurant', 'Another kitchen'],
+    url: 'yourbusiness.in › banjara-hills-biryani',
+    title: 'Biryani in Banjara Hills — Reserve a Table',
+  },
+  {
+    query: 'boutique hotel near hitech city',
+    ai: 'Travellers comparing stays near HITEC City often book Your Business for location and direct rates…',
+    maps: ['Your Business · 4.5 ★ · Rooms left', 'Competitor hotel', 'Another property'],
+    url: 'yourbusiness.in › hitech-city-hotel',
+    title: 'Boutique Hotel near HITEC City — Direct Booking',
+  },
+  {
+    query: 'diagnostic centre in kukatpally',
+    ai: 'Patients booking blood tests nearby include Your Business, with home collection and same-day reports…',
+    maps: ['Your Business · 4.8 ★ · Open now', 'Competitor lab', 'Another diagnostics'],
+    url: 'yourbusiness.in › kukatpally-diagnostics',
+    title: 'Diagnostic Centre in Kukatpally — Book a Test',
+  },
+];
+const first = searches[0];
+---
+<figure class="serp" data-serp aria-label="Illustration: searches for clinics, real estate, coaching, SaaS, shops, restaurants and hotels appearing in Google, Maps and AI answers">
+  <div class="serp-frame" aria-hidden="true">
+    <div class="serp-bar">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <span class="serp-query" data-serp-query>{first.query}</span>
+    </div>
+    <div class="serp-body" data-serp-body>
+      <div class="serp-block">
+        <span class="serp-tag">AI overview</span>
+        <p data-serp-ai>Well-reviewed options nearby include <mark>Your Business</mark>, known for same-day appointments and clear pricing…</p>
+      </div>
+      <div class="serp-block">
+        <span class="serp-tag">Maps</span>
+        <ul class="serp-pack" data-serp-maps>
+          {first.maps.map((row, i) => (
+            <li><span class="serp-pin"><b>{String.fromCharCode(65 + i)}</b></span> {row}</li>
+          ))}
+        </ul>
+      </div>
+      <div class="serp-block">
+        <span class="serp-tag">Results</span>
+        <p class="serp-url" data-serp-url>{first.url}</p>
+        <p class="serp-title" data-serp-title>{first.title}</p>
+      </div>
+    </div>
+  </div>
+  <figcaption><b>Fig. 1</b> — Clinics, homes, coaching, SaaS, shops, restaurants, hotels. We put you in Search, Maps and AI answers.</figcaption>
+</figure>
+
+<script define:vars={{ searches }}>
+  const root = document.querySelector('[data-serp]');
+  const queryEl = root?.querySelector('[data-serp-query]');
+  const aiEl = root?.querySelector('[data-serp-ai]');
+  const mapsEl = root?.querySelector('[data-serp-maps]');
+  const urlEl = root?.querySelector('[data-serp-url]');
+  const titleEl = root?.querySelector('[data-serp-title]');
+  const bodyEl = root?.querySelector('[data-serp-body]');
+  if (!root || !queryEl || !aiEl || !mapsEl || !urlEl || !titleEl || !bodyEl) {
+    // no-op
+  } else {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+    const paint = (item) => {
+      aiEl.innerHTML = item.ai.replaceAll('Your Business', '<mark>Your Business</mark>');
+      urlEl.textContent = item.url;
+      titleEl.textContent = item.title;
+      mapsEl.replaceChildren(
+        ...item.maps.map((row, i) => {
+          const li = document.createElement('li');
+          const pin = document.createElement('span');
+          pin.className = 'serp-pin';
+          const letter = document.createElement('b');
+          letter.textContent = String.fromCharCode(65 + i);
+          pin.append(letter);
+          li.append(pin, document.createTextNode(` ${row}`));
+          return li;
+        }),
+      );
+    };
+
+    const type = async (text) => {
+      queryEl.textContent = '';
+      for (const ch of text) {
+        queryEl.textContent += ch;
+        await sleep(22);
+      }
+    };
+
+    const erase = async () => {
+      while (queryEl.textContent.length) {
+        queryEl.textContent = queryEl.textContent.slice(0, -1);
+        await sleep(12);
+      }
+    };
+
+    const run = async () => {
+      let i = 0;
+      paint(searches[0]);
+      if (reduce) {
+        let n = 0;
+        setInterval(() => {
+          n = (n + 1) % searches.length;
+          const item = searches[n];
+          queryEl.textContent = item.query;
+          paint(item);
+        }, 5000);
+        return;
+      }
+      queryEl.textContent = '';
+      while (true) {
+        const item = searches[i];
+        bodyEl.classList.add('is-swap');
+        paint(item);
+        requestAnimationFrame(() => bodyEl.classList.remove('is-swap'));
+        await type(item.query);
+        await sleep(4200);
+        await erase();
+        await sleep(280);
+        i = (i + 1) % searches.length;
+      }
+    };
+
+    run();
+  }
+</script>

@@ -1,0 +1,170 @@
+---
+import { locations } from '../data/locations';
+
+interface Props { active?: string }
+const { active } = Astro.props;
+
+const coords: Record<string, [number, number]> = {
+  'secunderabad': [17.4399, 78.4983],
+  'ameerpet': [17.4375, 78.4482],
+  'banjara-hills': [17.4138, 78.4398],
+  'jubilee-hills': [17.4305, 78.4071],
+  'madhapur': [17.4483, 78.3915],
+  'hitech-city': [17.4435, 78.3772],
+  'kondapur': [17.4690, 78.3640],
+  'gachibowli': [17.4401, 78.3489],
+  'kukatpally': [17.4948, 78.3996],
+  'kokapet': [17.3955, 78.3348],
+  'nanakramguda': [17.4168, 78.3412],
+  'manikonda': [17.4065, 78.3890],
+  'nallagandla': [17.4712, 78.3075],
+  'miyapur': [17.4969, 78.3568],
+  'chandanagar': [17.4940, 78.3295],
+  'bachupally': [17.5430, 78.3660],
+  'tellapur': [17.4605, 78.2860],
+  'dilsukhnagar': [17.3686, 78.5247],
+  'kothapet': [17.3664, 78.5482],
+  'lb-nagar': [17.3497, 78.5520],
+  'uppal': [17.3983, 78.5584],
+  'habsiguda': [17.4186, 78.5445],
+  'vanasthalipuram': [17.3380, 78.5750],
+  'begumpet': [17.4442, 78.4663],
+  'somajiguda': [17.4234, 78.4578],
+  'himayatnagar': [17.4040, 78.4845],
+  'abids': [17.3920, 78.4778],
+  'mehdipatnam': [17.3948, 78.4372],
+  'tolichowki': [17.3995, 78.4015],
+  'attapur': [17.3570, 78.4265],
+  'old-city': [17.3616, 78.4747],
+  'kompally': [17.5448, 78.4850],
+  'alwal': [17.5045, 78.5080],
+  'nizampet': [17.5210, 78.3850],
+  'shamshabad': [17.2403, 78.4294],
+  'malakpet': [17.3735, 78.4988],
+};
+
+const hubs = new Set([
+  'hitech-city', 'gachibowli', 'madhapur', 'kondapur', 'kukatpally',
+  'banjara-hills', 'jubilee-hills', 'ameerpet', 'secunderabad',
+  'dilsukhnagar', 'kokapet', 'nanakramguda',
+]);
+
+type Side = 'start' | 'end' | 'below';
+const labelSide: Record<string, Side> = {
+  'gachibowli': 'below',
+  'hitech-city': 'below',
+  'secunderabad': 'below',
+  'nallagandla': 'end',
+  'tellapur': 'end',
+  'kokapet': 'below',
+  'lb-nagar': 'below',
+  'kothapet': 'end',
+  'vanasthalipuram': 'below',
+  'shamshabad': 'below',
+  'bachupally': 'end',
+  'kompally': 'end',
+  'chandanagar': 'end',
+  'miyapur': 'end',
+  'nizampet': 'end',
+  'alwal': 'end',
+  'uppal': 'start',
+  'habsiguda': 'start',
+  'manikonda': 'below',
+  'attapur': 'below',
+  'old-city': 'below',
+  'abids': 'start',
+  'malakpet': 'start',
+  'tolichowki': 'end',
+  'mehdipatnam': 'below',
+  'somajiguda': 'start',
+  'begumpet': 'start',
+  'himayatnagar': 'start',
+};
+
+const W = 720, H = 580;
+const lng0 = 78.24, lng1 = 78.63, lat0 = 17.20, lat1 = 17.59;
+const project = ([lat, lng]: [number, number]) => ({
+  x: ((lng - lng0) / (lng1 - lng0)) * W,
+  y: ((lat1 - lat) / (lat1 - lat0)) * H,
+});
+
+const pins = locations
+  .filter((l) => coords[l.slug])
+  .map((l) => {
+    const p = project(coords[l.slug]);
+    const side: Side = labelSide[l.slug] ?? 'start';
+    const hub = hubs.has(l.slug) || l.slug === active;
+    const label =
+      side === 'below' ? { x: p.x, y: p.y + 16, anchor: 'middle' }
+      : side === 'end' ? { x: p.x - 10, y: p.y + 4, anchor: 'end' }
+      : { x: p.x + 10, y: p.y + 4, anchor: 'start' };
+    return { ...l, ...p, label, hub };
+  });
+
+const lake = project([17.4239, 78.4738]);
+const charminar = project([17.3616, 78.4747]);
+const centre = project([17.385, 78.4867]);
+
+const coverRing = (cx: number, cy: number, pts: { x: number; y: number }[], pad = 1.12) => {
+  let rx = Math.max(...pts.map((p) => Math.abs(p.x - cx)), 1) * pad;
+  let ry = Math.max(...pts.map((p) => Math.abs(p.y - cy)), 1) * pad;
+  for (let i = 0; i < 10; i++) {
+    const worst = Math.max(...pts.map((p) => {
+      const nx = (p.x - cx) / rx;
+      const ny = (p.y - cy) / ry;
+      return nx * nx + ny * ny;
+    }));
+    if (worst <= 1) break;
+    const grow = Math.sqrt(worst) * 1.03;
+    rx *= grow;
+    ry *= grow;
+  }
+  return { rx, ry };
+};
+const outer = coverRing(centre.x, centre.y, pins, 1.16);
+const mid = { rx: outer.rx * 0.66, ry: outer.ry * 0.66 };
+const inner = { rx: outer.rx * 0.34, ry: outer.ry * 0.34 };
+const padX = 88;
+const padY = 36;
+const viewX = Math.min(-24, centre.x - outer.rx - 16, ...pins.map((p) => p.label.x - 72));
+const viewY = Math.min(-20, centre.y - outer.ry - 16, ...pins.map((p) => p.label.y - 18));
+const viewW = Math.max(W + 48, centre.x + outer.rx + 16, ...pins.map((p) => p.label.x + 72)) - viewX + padX;
+const viewH = Math.max(H + 40, centre.y + outer.ry + 16, ...pins.map((p) => p.label.y + 18)) - viewY + padY;
+
+const line = (slugs: string[]) => slugs
+  .map((s) => pins.find((p) => p.slug === s))
+  .filter((p): p is NonNullable<typeof p> => Boolean(p))
+  .map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`)
+  .join(' ');
+const corridor = line(['gachibowli', 'hitech-city', 'madhapur', 'jubilee-hills', 'banjara-hills', 'ameerpet', 'secunderabad']);
+const west = line(['tellapur', 'nallagandla', 'chandanagar', 'kokapet', 'nanakramguda', 'gachibowli']);
+const east = line(['himayatnagar', 'habsiguda', 'uppal', 'malakpet', 'dilsukhnagar', 'kothapet', 'lb-nagar', 'vanasthalipuram']);
+const north = line(['kompally', 'alwal', 'secunderabad', 'begumpet']);
+const northwest = line(['bachupally', 'nizampet', 'miyapur', 'kukatpally', 'kondapur']);
+const south = line(['shamshabad', 'attapur', 'old-city', 'abids', 'himayatnagar']);
+const innerRoad = line(['tolichowki', 'manikonda', 'mehdipatnam', 'somajiguda']);
+---
+<svg class="city-map" viewBox={`${viewX.toFixed(1)} ${viewY.toFixed(1)} ${viewW.toFixed(1)} ${viewH.toFixed(1)}`} overflow="visible" role="group" aria-labelledby="city-map-title">
+  <title id="city-map-title">Schematic map of the Hyderabad neighbourhoods IdeaRevive serves</title>
+  <ellipse class="ring" cx={centre.x} cy={centre.y} rx={outer.rx.toFixed(1)} ry={outer.ry.toFixed(1)} />
+  <ellipse class="ring" cx={centre.x} cy={centre.y} rx={mid.rx.toFixed(1)} ry={mid.ry.toFixed(1)} style="opacity:.55" />
+  <ellipse class="ring" cx={centre.x} cy={centre.y} rx={inner.rx.toFixed(1)} ry={inner.ry.toFixed(1)} style="opacity:.4" />
+  <polyline class="road" points={corridor} />
+  <polyline class="road" points={west} />
+  <polyline class="road" points={east} />
+  <polyline class="road" points={north} />
+  <polyline class="road" points={northwest} />
+  <polyline class="road" points={south} />
+  <polyline class="road" points={innerRoad} />
+  <ellipse class="lake" cx={lake.x} cy={lake.y} rx="12" ry="18" transform={`rotate(-20 ${lake.x} ${lake.y})`} />
+  <text class="lake-label" x={lake.x + 18} y={lake.y + 28}>Hussain Sagar</text>
+  <rect x={charminar.x - 4} y={charminar.y - 4} width="8" height="8" fill="var(--ink)" />
+  <text class="compass" x={W - 24} y="28" text-anchor="end">N ↑</text>
+
+  {pins.map((p) => (
+    <a href={`/locations/${p.slug}/`} aria-label={`Digital marketing in ${p.name}`} class:list={{ 'is-active': p.slug === active }} aria-current={p.slug === active ? 'page' : undefined}>
+      <circle class="pin" cx={p.x} cy={p.y} r={p.hub ? 5 : 4} />
+      <text class:list={['pin-label', { 'is-hub': p.hub }]} x={p.label.x} y={p.label.y} text-anchor={p.label.anchor}>{p.name}</text>
+    </a>
+  ))}
+</svg>

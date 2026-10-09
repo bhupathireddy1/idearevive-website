@@ -1,0 +1,96 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import LeadForm from '../components/LeadForm.astro';
+import FAQ from '../components/FAQ.astro';
+import Proof from '../components/Proof.astro';
+import NextSteps from '../components/NextSteps.astro';
+import { site } from '../data/site';
+import { faqSchema } from '../lib/schema';
+
+const crumbs = [{ name: 'Free Growth Audit', path: '/free-audit/' }];
+const title = 'Free Digital Marketing Audit in Hyderabad – IdeaRevive';
+const description = 'Free IdeaRevive audit: website, SEO, Maps, AI search, ads and tracking reviewed, plus a 90-day plan. 10+ years, 50+ clients. No obligation.';
+
+const checks = [
+  'Technical SEO health and Core Web Vitals',
+  'Keyword rankings and content gaps vs competitors',
+  'Google Business Profile and local visibility',
+  'AI-search readiness: entity clarity, schema, citable answers',
+  'Google Ads / Meta Ads account efficiency',
+  'Analytics and conversion tracking accuracy',
+  'Website conversion barriers on mobile',
+  'App store listing and install campaign efficiency, for apps',
+];
+
+const findings = [
+  { area: 'Tracking', finding: 'Conversions missing or counted twice, so ad platforms optimise for the wrong thing.' },
+  { area: 'Google Business Profile', finding: 'Wrong primary category, missing services and few recent reviews.' },
+  { area: 'Website', finding: 'Slow mobile pages and contact forms buried below the fold.' },
+  { area: 'Google Ads', finding: 'Broad match keywords with no negatives, wasting spend on irrelevant searches.' },
+  { area: 'AI search', finding: 'No clear about statement or schema, so assistants describe the business vaguely or not at all.' },
+];
+
+const faqs = [
+  { q: 'Is the IdeaRevive audit really free?', a: 'Yes. There is no fee and no obligation. We do it because it is the fastest way for both sides to see whether we can genuinely help, and the findings are yours to keep.' },
+  { q: 'How long does the free audit take?', a: 'Most audits are delivered within five business days of receiving access or your website details. Larger eCommerce stores and multi-location businesses can take a little longer.' },
+  { q: 'What access do you need for the audit?', a: 'Your website address is enough to start. Read-only access to Google Analytics, Search Console, Google Business Profile and ad accounts lets us check tracking and spend in far more depth.' },
+];
+---
+<BaseLayout title={title} description={description} crumbs={crumbs} schema={[faqSchema(faqs)]}>
+  <PageHero
+    eyebrow="Find out what’s holding your growth back"
+    title="Free digital marketing audit in Hyderabad"
+    answer="The IdeaRevive free growth audit reviews your website, search visibility, AI-search readiness, ad accounts and tracking, then gives you a prioritised list of the fixes with the biggest expected impact. It is free and there is no obligation."
+    crumbs={crumbs}
+    primary={{ label: 'Request my audit', href: '#audit-form' }}
+  />
+
+  <section class="section">
+    <div class="container split">
+      <div class="form-card" id="audit-form">
+        <h2 class="heading-2" style="margin-bottom:var(--space-6)">How do you request a free audit?</h2>
+        <LeadForm id="audit" submitLabel="Get my free audit" />
+      </div>
+      <aside class="info-card">
+        <h2 class="heading-4">What we review</h2>
+        <ul class="check-list">
+          {checks.map((c) => <li>{c}</li>)}
+        </ul>
+        <h3 class="heading-4" style="margin-top:var(--space-8)">What you receive</h3>
+        <p class="text-muted" style="margin-top:var(--space-2)">
+          A written summary of findings, a prioritised 90-day action plan and a 30-minute call to walk through it — yours to keep
+          whether or not you work with us.
+        </p>
+        <dl class="key-facts" style="grid-template-columns:1fr">
+          <div class="key-fact"><dt>Cost</dt><dd>Free, no obligation</dd></div>
+          <div class="key-fact"><dt>Turnaround</dt><dd>About five business days</dd></div>
+          <div class="key-fact"><dt>Reviewed by</dt><dd>A team with {site.proof.years} years and {site.proof.clients} clients</dd></div>
+        </dl>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section-alt" aria-labelledby="findings-title">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Common findings</p>
+        <h2 id="findings-title" class="heading-1">What does an audit usually find?</h2>
+        <p class="body-lg text-muted">After more than ten years of audits, these five problems come up most often, and fixing them is usually the cheapest growth a business can buy.</p>
+      </div>
+      <div class="prose" style="max-width:none" data-reveal>
+        <table>
+          <thead><tr><th scope="col">Area</th><th scope="col">What we often find</th></tr></thead>
+          <tbody>{findings.map((f) => <tr><td><strong>{f.area}</strong></td><td>{f.finding}</td></tr>)}</tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-tight">
+    <div class="container"><Proof /></div>
+  </section>
+
+  <FAQ faqs={faqs} title="Questions about the free audit" alt />
+  <NextSteps />
+</BaseLayout>

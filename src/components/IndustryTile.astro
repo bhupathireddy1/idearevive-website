@@ -1,0 +1,19 @@
+---
+import IndustryMark from './IndustryMark.astro';
+
+interface Props {
+  slug: string;
+  name: string;
+  text?: string;
+}
+const { slug, name, text } = Astro.props;
+---
+<li data-reveal>
+  <a href={`/industries/${slug}/`} class="industry-tile">
+    <IndustryMark slug={slug} />
+    <span class="industry-tile-body">
+      <span class="industry-tile-title">{name}</span>
+      {text && <span class="industry-tile-text">{text}</span>}
+    </span>
+  </a>
+</li>

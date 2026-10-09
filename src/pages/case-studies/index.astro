@@ -1,0 +1,85 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import FAQ from '../../components/FAQ.astro';
+import NextSteps from '../../components/NextSteps.astro';
+import CTA from '../../components/CTA.astro';
+import { caseStudies } from '../../data/caseStudies';
+import { site } from '../../data/site';
+import { faqSchema } from '../../lib/schema';
+
+const crumbs = [{ name: 'Case Studies', path: '/case-studies/' }];
+const title = 'Case Studies and Results | IdeaRevive Hyderabad';
+const description = 'How IdeaRevive publishes verified marketing results: baseline, timeframe, changes and outcome. No fake stats. 10+ years and 50+ clients of real work.';
+
+const faqs = [
+  { q: 'Why are there no case studies on the site yet?', a: 'We only publish results with the client’s written permission and numbers we can verify in analytics or ad accounts. Until those studies are live, we will walk you through relevant references on a call.' },
+  { q: 'Will IdeaRevive invent results to fill this page?', a: 'No. We will not publish fake percentages, unnamed logos or “average ROI” figures. Empty is more honest than invented, and search engines and AI assistants cross-check claims like these.' },
+  { q: 'Can I still see proof of work before hiring you?', a: 'Yes. After a discovery call we share relevant references and, where a client agrees, anonymised dashboards. The free audit is also a live sample of how we think.' },
+];
+---
+<BaseLayout title={title} description={description} crumbs={crumbs} schema={[faqSchema(faqs)]} pageType="CollectionPage">
+  <PageHero
+    eyebrow="Case Studies"
+    title="Results you can verify"
+    answer={`Every IdeaRevive case study will show the starting baseline, the time frame, what we changed and the measured outcome. We have ${site.proof.years} years of work and ${site.proof.clients} clients; we still will not invent results to fill this page.`}
+    crumbs={crumbs}
+  />
+
+  <section class="section">
+    <div class="container">
+      {caseStudies.length > 0 ? (
+        <ul class="index-list">
+          {caseStudies.map((c, i) => (
+            <li data-reveal>
+              <a href={`/case-studies/${c.slug}/`} class="row">
+                <span class="row-num">{String(i + 1).padStart(2, '0')}</span>
+                <span class="row-title">{c.title}</span>
+                <span class="row-text">{c.summary}<br /><span class="caption">{c.industry} · {c.services.join(', ')}</span></span>
+                <span class="row-arrow" aria-hidden="true">→</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div class="empty-state" data-reveal>
+          <h2 class="heading-2">Case studies are being published</h2>
+          <p class="body-lg text-muted" style="max-width:720px;margin:var(--space-4) auto 0">
+            We only publish results with our clients’ permission and verified data. IdeaRevive has {site.proof.years} years
+            of digital marketing experience and {site.proof.clients} clients, including eCommerce brands in India and abroad,
+            plus SaaS products and mobile apps we have built and launched. That work is real; it is not on this page until
+            a client agrees in writing and we can show the baseline, the time frame, the changes and the measured outcome.
+            While new studies are prepared, we will walk you through relevant references on a call, and the free audit is a
+            live sample of how we think about a business like yours.
+          </p>
+          <a href="/contact/" class="btn btn-primary btn-lg" style="margin-top:var(--space-8)">Request references</a>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Our standard</p>
+        <h2 class="heading-1">What will every IdeaRevive case study include?</h2>
+      </div>
+      <ul class="check-list" data-reveal>
+        <li>The client’s starting point and baseline metrics</li>
+        <li>The exact time frame of the engagement</li>
+        <li>The channels, tactics and changes we made</li>
+        <li>Measured results from analytics, ad platforms or CRM</li>
+        <li>What we would do differently next time</li>
+      </ul>
+      <dl class="key-facts" style="margin-top:var(--space-10)">
+        <div class="key-fact"><dt>What we publish</dt><dd>Baselines, time frames, changes, outcomes</dd></div>
+        <div class="key-fact"><dt>What we will not publish</dt><dd>Fake percentages, unnamed logos, invented ROI</dd></div>
+        <div class="key-fact"><dt>Experience</dt><dd>{site.proof.years} years · {site.proof.clients} clients</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <FAQ faqs={faqs} title="About our results" />
+  <NextSteps />
+  <CTA />
+</BaseLayout>

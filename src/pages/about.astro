@@ -1,0 +1,137 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Process from '../components/Process.astro';
+import FAQ from '../components/FAQ.astro';
+import NextSteps from '../components/NextSteps.astro';
+import Figure from '../components/Figure.astro';
+import Icon from '../components/Icon.astro';
+import CTA from '../components/CTA.astro';
+import { site, formatInAddress, formatUsAddress } from '../data/site';
+import { faqSchema } from '../lib/schema';
+
+const crumbs = [{ name: 'About', path: '/about/' }];
+const title = 'About IdeaRevive | Digital Marketing Agency, Hyderabad';
+const description = `About IdeaRevive and director ${site.founder.name}: Hyderabad digital marketing with ${site.proof.years} years, ${site.proof.clients} clients, SEO, ads, eCommerce, SaaS and apps.`;
+
+const values = [
+  { title: 'Outcomes over outputs', icon: 'chart', text: 'We measure ourselves by leads, sales and cost per acquisition — not by how many posts or reports we produce.' },
+  { title: 'Nothing hidden', icon: 'eye', text: 'You see every account, every change and every rupee. No black boxes, no lock-in.' },
+  { title: 'No shortcuts', icon: 'shield', text: 'No fake reviews, no spammy links, no guaranteed-ranking promises. Only tactics that won’t come back to bite you.' },
+  { title: 'Always testing', icon: 'spark', text: 'Search and AI platforms change monthly. We test, write down what works, and share it.' },
+];
+
+const faqs = [
+  { q: 'Who is the director of IdeaRevive?', a: `${site.founder.name} is the director of IdeaRevive, the digital marketing agency of ${site.legalName}. He has ${site.proof.years} years of digital marketing experience and has worked with ${site.proof.clients} clients in Hyderabad, across India and around the world.` },
+  { q: 'How long has IdeaRevive been doing digital marketing?', a: `${site.founder.name} and the team behind IdeaRevive have more than 10 years of hands-on digital marketing experience, across SEO, paid media, social, content, websites and app growth, for 50+ clients in India and abroad.` },
+  { q: 'Does IdeaRevive only do marketing, or build products too?', a: 'Both. Alongside marketing we design and build websites, SaaS products and iOS and Android apps, then run the launch and app install campaigns. Keeping build and growth in one team avoids hand-off problems.' },
+  { q: 'What kind of clients does IdeaRevive work with?', a: 'Local Hyderabad businesses, companies across Indian cities, and eCommerce and SaaS brands selling worldwide. Most are owner-led or have a small marketing team that wants a partner who reports on revenue.' },
+];
+---
+<BaseLayout title={title} description={description} crumbs={crumbs} schema={[faqSchema(faqs)]} pageType="AboutPage">
+  <PageHero
+    eyebrow="We revive ideas into growth"
+    title="About IdeaRevive, a Hyderabad digital marketing agency"
+    answer={`${site.name} is a digital marketing agency in Hyderabad, Telangana, with ${site.proof.years} years of experience and ${site.proof.clients} clients. We grow businesses through SEO, AI-search optimisation, paid media, social, content and websites, and we build SaaS products and mobile apps.`}
+    crumbs={crumbs}
+    secondary={{ label: 'Contact Us', href: '/contact/' }}
+  />
+
+  <section class="section">
+    <div class="container split">
+      <div class="prose" data-reveal>
+        <h2>Why was IdeaRevive started?</h2>
+        <p>
+          IdeaRevive was started with a simple belief: too many good businesses are invisible online — not because their
+          ideas are weak, but because their marketing is scattered, unmeasured or built on outdated tactics.
+        </p>
+        <p>
+          Over more than ten years we have brought search, paid media, content, design and analytics together into one accountable
+          growth system for {site.proof.clients} clients, from Hyderabad clinics and real estate developers to eCommerce brands
+          selling across the world. Every engagement starts with an honest audit, follows a written plan and is judged on results
+          you can see in your own accounts.
+        </p>
+        <h2>What makes IdeaRevive different?</h2>
+        <ul>
+          <li>One team across SEO, ads, social, content and web — no hand-offs between vendors.</li>
+          <li>Build and growth together: we design and develop <a href="/services/saas-product-development-hyderabad/">SaaS products</a> and <a href="/services/mobile-app-development-hyderabad/">mobile apps</a>, then run the <a href="/services/app-install-campaigns-hyderabad/">app install campaigns</a>.</li>
+          <li>Deep <a href="/services/ecommerce-marketing-hyderabad/">eCommerce experience</a> with brands in India and abroad.</li>
+          <li>Built for modern discovery: Google, Maps, AI Overviews, ChatGPT, Gemini and Perplexity.</li>
+          <li>Hyderabad roots, with clients in <a href="/cities/">cities across India</a> and worldwide.</li>
+        </ul>
+        <Figure
+          kind="desk"
+          caption="Fig. 1 — The work is in the accounts: SEO, ads, content and reporting. Drawn, not photographed."
+        />
+      </div>
+      <aside class="info-card" data-reveal>
+        <h2 class="heading-4">IdeaRevive at a glance</h2>
+        <dl class="key-facts" style="grid-template-columns:1fr;margin-top:0">
+          <div class="key-fact"><dt>What we are</dt><dd>Digital marketing and product agency</dd></div>
+          <div class="key-fact"><dt>Director</dt><dd>{site.founder.name}</dd></div>
+          <div class="key-fact"><dt>Hyderabad studio</dt><dd>{formatInAddress()}</dd></div>
+          <div class="key-fact"><dt>US mailing address</dt><dd>{formatUsAddress()}</dd></div>
+          <div class="key-fact"><dt>Experience</dt><dd>{site.proof.years} years in digital marketing</dd></div>
+          <div class="key-fact"><dt>Clients</dt><dd>{site.proof.clients}, across India and worldwide</dd></div>
+          {site.foundingYear && <div class="key-fact"><dt>Founded</dt><dd>{site.foundingYear}</dd></div>}
+          <div class="key-fact"><dt>Core services</dt><dd>SEO, Google Ads, social media, eCommerce, websites, SaaS and app development, app installs</dd></div>
+          <div class="key-fact"><dt>Contact</dt><dd><a href={`mailto:${site.email}`}>{site.email}</a>{site.phone && <> · <a href={`tel:${site.phone.replace(/[^\d+]/g, '')}`}>{site.phone}</a></>}</dd></div>
+        </dl>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Values</p>
+        <h2 class="heading-1">How do we work with clients?</h2>
+      </div>
+      <ul class="feature-list">
+        {values.map((v) => (
+          <li class="feature" data-reveal>
+            <span class="feature-icon" aria-hidden="true"><Icon name={v.icon} size={18} /></span>
+            <div>
+              <h3 class="heading-3">{v.title}</h3>
+              <p class="body-lg">{v.text}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="founder" aria-labelledby="founder-title">
+    <div class="container split">
+      <div data-reveal>
+        <p class="eyebrow">Founder</p>
+        <div class="prose">
+        <h2 id="founder-title">Who leads IdeaRevive?</h2>
+        <p class="body-lg" data-speakable><strong>{site.founder.name}</strong> is the director of IdeaRevive.</p>
+        <blockquote>
+          <p>{site.founder.quote}</p>
+        </blockquote>
+        {site.founder.bio.map((p) => <p>{p}</p>)}
+        </div>
+      </div>
+      <aside class="info-card" data-reveal>
+        <h2 class="heading-4">{site.founder.name}</h2>
+        <dl class="key-facts" style="grid-template-columns:1fr;margin-top:0">
+          <div class="key-fact"><dt>Role</dt><dd>{site.founder.role}, {site.name}</dd></div>
+          <div class="key-fact"><dt>Company</dt><dd>{site.legalName}</dd></div>
+          <div class="key-fact"><dt>Experience</dt><dd>{site.proof.years} years in digital marketing</dd></div>
+          <div class="key-fact"><dt>Clients</dt><dd>{site.proof.clients} around the world</dd></div>
+          <div class="key-fact"><dt>Studio</dt><dd>WeWork Krishe Emerald, Kondapur, Hyderabad</dd></div>
+          <div class="key-fact"><dt>Languages</dt><dd>English, Hindi, Telugu</dd></div>
+          <div class="key-fact"><dt>Email</dt><dd><a href={`mailto:${site.email}`}>{site.email}</a></dd></div>
+          {site.phone && <div class="key-fact"><dt>Phone</dt><dd><a href={`tel:${site.phone.replace(/[^\d+]/g, '')}`}>{site.phone}</a></dd></div>}
+        </dl>
+      </aside>
+    </div>
+  </section>
+
+  <Process />
+  <FAQ faqs={faqs} title="Questions about IdeaRevive" alt />
+  <NextSteps />
+  <CTA />
+</BaseLayout>
