@@ -80,6 +80,12 @@ export const site = {
   googleBusinessProfile: '',
   bookingUrl: '',
   formEndpoint: '/api/lead',
+  /** Search engine ownership codes, the content="" value only. DNS TXT verification needs nothing here. */
+  verification: {
+    google: '',
+    bing: '',
+    yandex: '',
+  },
   analytics: {
     cloudflareToken: '9e0bee6bf86d4d08b014f8de395d6e5e',
     /** GA4 measurement ID, e.g. G-XXXXXXX. Loads gtag only when set. */

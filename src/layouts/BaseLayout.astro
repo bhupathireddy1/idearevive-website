@@ -28,6 +28,7 @@ const { title, description, crumbs = [], schema = [], pageType, ogType = 'websit
 const path = Astro.url.pathname;
 const reviewed = updated || reviewedFor(path);
 const { cloudflareToken, ga4 } = site.analytics;
+const { verification } = site;
 const canonical = new URL(path, site.url).toString();
 const cover = coverFor(path);
 const ogPath = cover.src;
@@ -55,6 +56,9 @@ const graph = {
     <link rel="canonical" href={canonical} />
     <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1'} />
     <meta name="theme-color" content="#f2ede3" />
+    {path === '/' && verification.google && <meta name="google-site-verification" content={verification.google} />}
+    {path === '/' && verification.bing && <meta name="msvalidate.01" content={verification.bing} />}
+    {path === '/' && verification.yandex && <meta name="yandex-verification" content={verification.yandex} />}
     <meta name="geo.region" content="IN-TG" />
     <meta name="geo.placename" content="Hyderabad" />
     <meta name="geo.position" content={`${site.geo.lat};${site.geo.lng}`} />

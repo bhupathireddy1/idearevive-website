@@ -9,7 +9,8 @@
     "preview": "astro preview",
     "check": "astro check",
     "images": "node scripts/make-share-images.mjs",
-    "deploy": "npm run build && wrangler deploy"
+    "deploy": "npm run build && wrangler deploy && node scripts/indexnow.mjs",
+    "indexnow": "node scripts/indexnow.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
