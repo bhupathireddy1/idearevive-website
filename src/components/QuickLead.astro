@@ -1,0 +1,48 @@
+---
+import { site } from '../data/site';
+import { services } from '../data/services';
+import Icon from './Icon.astro';
+interface Props { id?: string; title?: string; class?: string }
+const { id = 'quick-lead', title = 'Get a call back', class: className } = Astro.props;
+const tel = site.phone.replace(/[^\d+]/g, '');
+const wa = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(`Hi IdeaRevive, I found you on ${new URL(Astro.url.pathname, site.url)}`)}`;
+---
+<form class:list={['quick-lead', className]} id={id} action={site.formEndpoint} method="post" data-lead-form>
+  <p class="quick-lead-title">{title}</p>
+  <div class="quick-lead-fields">
+    <div class="form-group">
+      <label class="form-label" for={`${id}-name`}>Name</label>
+      <input class="form-input" id={`${id}-name`} name="name" autocomplete="name" required />
+    </div>
+    <div class="form-group">
+      <label class="form-label" for={`${id}-phone`}>Phone / WhatsApp</label>
+      <input class="form-input" id={`${id}-phone`} name="phone" type="tel" autocomplete="tel" inputmode="tel" required />
+    </div>
+    <div class="form-group">
+      <label class="form-label" for={`${id}-email`}>Email</label>
+      <input class="form-input" id={`${id}-email`} name="email" type="email" autocomplete="email" />
+    </div>
+    <div class="form-group">
+      <label class="form-label" for={`${id}-service`}>Need help with</label>
+      <select class="form-input" id={`${id}-service`} name="service">
+        <option value="">Not sure yet</option>
+        {services.map((s) => <option value={s.name}>{s.shortName}</option>)}
+      </select>
+    </div>
+  </div>
+  <input type="hidden" name="page" value={Astro.url.pathname} />
+  <div class="hp" aria-hidden="true">
+    <label for={`${id}-company`}>Company</label>
+    <input id={`${id}-company`} name="_gotcha" tabindex="-1" autocomplete="off" />
+  </div>
+  <button type="submit" class="btn btn-primary btn-block" data-track="quick-lead-submit">Call me back <span class="arrow" aria-hidden="true">→</span></button>
+  <p class="quick-lead-direct">
+    <a href={`tel:${tel}`} data-track="quick-lead-call"><Icon name="phone" size={15} /> {site.phone}</a>
+    <a href={wa} target="_blank" rel="noopener" data-track="quick-lead-whatsapp"><Icon name="whatsapp" size={15} /> WhatsApp</a>
+  </p>
+  <p class="form-status" role="status" aria-live="polite" hidden></p>
+</form>
+
+<script>
+  import '../scripts/leadForms';
+</script>

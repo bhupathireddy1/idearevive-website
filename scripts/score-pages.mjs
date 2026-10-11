@@ -75,8 +75,7 @@ const exists = (href) => {
   const f = path.join(DIST, clean, clean.endsWith('/') ? 'index.html' : '');
   return fs.existsSync(f) || fs.existsSync(path.join(DIST, clean));
 };
-const PROOF = /10\+\s*years/i;
-const PROOF2 = /50\+\s*clients/i;
+const FOUNDER = /Bhupathi Reddy/;
 
 const checks = {
   SEO: [
@@ -97,7 +96,7 @@ const checks = {
     ['WebPage has datePublished + dateModified', (p) => Boolean(p.node('WebPage')?.dateModified || p.graph.find((n) => n.dateModified && n['@id']?.endsWith('#webpage')))],
     ['Direct answer (25–90 words) near top', (p) => { const a = p.paras.find((t) => words(t) >= 25); return Boolean(a) && words(a) <= 90 && p.text.indexOf(a.slice(0, 40)) < p.text.length * 0.3; }, (t) => t !== 'legal'],
     ['Brand entity named in opening answer', (p) => /IdeaRevive/.test(p.paras.find((t) => words(t) >= 25) ?? ''), (t) => !['legal', 'post'].includes(t)],
-    ['Experience facts stated on page', (p) => PROOF.test(p.text) && PROOF2.test(p.text), (t) => t !== 'legal'],
+    ['Accountable person named on page', (p) => FOUNDER.test(p.text), (t) => t !== 'legal'],
     ['Publisher / author linked to Organization', (p) => p.graph.some((n) => n.publisher?.['@id'] || n.author)],
     ['Content depth meets page-type minimum', (p) => words(p.text) >= (minWords[p.type] ?? 300)],
     ['Uses lists or tables', (p) => /<(ul|ol|table|dl)[\s>]/.test(p.main)],
@@ -124,7 +123,7 @@ const checks = {
     ['Graphics have accessible names', (p) => all(/<img [^>]*>/g, p.main).every((m) => /alt="/.test(m[0])) && all(/<svg [^>]*role="img"[^>]*>/g, p.main).every((m) => /aria-label/.test(m[0]))],
     ['Snippets allowed (max-snippet:-1)', (p) => /max-snippet:-1/.test(p.html)],
     ['Content fully server-rendered', (p) => words(p.text) >= 200],
-    ['No third-party render-blocking scripts', (p) => !/<script[^>]+src="https?:/.test(p.html)],
+    ['No third-party render-blocking scripts', (p) => all(/<script[^>]+src="https?:[^>]*>/g, p.html).every((m) => /\s(defer|async)[\s>=]/.test(m[0]))],
     ['Citable passage (80–250 word section)', (p) => p.main.split(/<h2[\s>]/).slice(1).some((s) => { const w = words(strip('<h2 ' + s)); return w >= 80 && w <= 250; }), (t) => t !== 'legal'],
   ],
   LLMO: [

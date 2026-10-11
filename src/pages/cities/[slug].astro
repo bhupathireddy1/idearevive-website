@@ -64,7 +64,7 @@ const steps = [
           <div class="key-fact"><dt>Campaign languages</dt><dd>{city.languages.join(', ')}</dd></div>
           <div class="key-fact"><dt>Key sectors</dt><dd>{city.sectors.join(', ')}</dd></div>
           <div class="key-fact"><dt>How we serve {city.name}</dt><dd>Remotely from {site.address.locality}, with on-site visits when needed</dd></div>
-          <div class="key-fact"><dt>Experience</dt><dd>{site.proof.years} years · {site.proof.clients} clients</dd></div>
+          <div class="key-fact"><dt>Who you work with</dt><dd>{site.founder.name}, director</dd></div>
         </dl>
         <a href="/free-audit/" class="btn btn-primary btn-lg btn-block" style="margin-top:var(--space-6)" data-track={`city-${city.slug}`}>
           Free audit for my {city.name} business

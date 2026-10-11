@@ -3,6 +3,7 @@ import type { Crumb } from '../lib/schema';
 import MotionField from './MotionField.astro';
 import RetroScene from './RetroScene.astro';
 import IndustryMark from './IndustryMark.astro';
+import QuickLead from './QuickLead.astro';
 import { sceneFor } from '../lib/scenes';
 import { getIndustry } from '../data/industries';
 
@@ -16,11 +17,13 @@ interface Props {
   primary?: { label: string; href: string };
   secondary?: { label: string; href: string };
   showCover?: boolean;
+  /** Four-field call-back form beside the title. Off on pages that already lead with a full form. */
+  lead?: boolean;
 }
 const {
   eyebrow, title, answer, answerLabel = 'In short', crumbs = [],
   primary = { label: 'Get a free growth audit', href: '/free-audit/' },
-  secondary, updated: _updated, showCover = true,
+  secondary, updated: _updated, showCover = true, lead = true,
 } = Astro.props;
 const parts = Astro.url.pathname.split('/').filter(Boolean);
 const industryCover = showCover && parts[0] === 'industries' && parts[1] ? getIndustry(parts[1]) : null;
@@ -43,8 +46,13 @@ const scene = showCover && !industryCover ? sceneFor(Astro.url.pathname) : null;
       {eyebrow && <span class="eyebrow page-hero-meta">{eyebrow}</span>}
     </div>
 
-    <h1 class="page-hero-title">{title}</h1>
-    <slot />
+    <div class:list={['page-hero-head', { 'has-lead': lead }]}>
+      <div>
+        <h1 class="page-hero-title">{title}</h1>
+        <slot />
+      </div>
+      {lead && <QuickLead id="hero-lead" />}
+    </div>
 
     {industryCover && (
       <figure class="page-hero-cover">

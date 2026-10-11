@@ -1,13 +1,16 @@
 ---
 import { site } from '../data/site';
+import { caseStudies } from '../data/caseStudies';
 interface Props { dark?: boolean; title?: string }
 const { dark = false, title } = Astro.props;
+const results = caseStudies.flatMap((c) => c.metrics.slice(0, 2).map((m) => ({ value: m.value, label: `${m.label} · ${c.industry}`, href: `/case-studies/${c.slug}/` }))).slice(0, 4);
+const points = results.length >= 2 ? results : site.commitments;
 ---
 <div class:list={['proof', { 'proof-dark': dark }]}>
   {title && <p class="eyebrow proof-title">{title}</p>}
   <ul>
-    {site.proof.points.map((p) => (
-      <li><strong>{p.value}</strong><span>{p.label}</span></li>
+    {points.map((p) => (
+      <li><strong>{p.value}</strong><span>{'href' in p ? <a href={p.href}>{p.label}</a> : p.label}</span></li>
     ))}
   </ul>
 </div>

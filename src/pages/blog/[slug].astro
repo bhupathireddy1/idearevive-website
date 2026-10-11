@@ -5,6 +5,7 @@ import FAQ from '../../components/FAQ.astro';
 import ServiceCard from '../../components/ServiceCard.astro';
 import NextSteps from '../../components/NextSteps.astro';
 import CTA from '../../components/CTA.astro';
+import AuthorBio from '../../components/AuthorBio.astro';
 import { posts, type Post } from '../../data/posts';
 import { getService, type Service } from '../../data/services';
 import { articleSchema, faqSchema } from '../../lib/schema';
@@ -27,8 +28,9 @@ const schema = [articleSchema({ path, ...post }), ...(post.faqs.length ? [faqSch
 <BaseLayout title={post.metaTitle} description={post.description} crumbs={crumbs} schema={schema} ogType="article" published={post.published} updated={post.updated}>
   <PageHero eyebrow={post.category} title={post.title} crumbs={crumbs} updated={post.updated} primary={{ label: 'Get a Free Growth Audit', href: '/free-audit/' }}>
     <div class="post-meta">
-      <span>By {post.author}</span>
+      <span>By <a href="/about/#founder" rel="author">{post.author}</a></span>
       <span>Published <time datetime={post.published}>{fmt(post.published)}</time></span>
+      {post.updated !== post.published && <span>Updated <time datetime={post.updated}>{fmt(post.updated)}</time></span>}
       <span>{post.readingMinutes} min read</span>
     </div>
   </PageHero>
@@ -54,6 +56,7 @@ const schema = [articleSchema({ path, ...post }), ...(post.faqs.length ? [faqSch
           );
         })}
       </div>
+      <AuthorBio />
     </div>
   </article>
 

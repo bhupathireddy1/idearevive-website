@@ -18,7 +18,7 @@ const fmt = (d: string) => new Date(d).toLocaleDateString('en-IN', { day: 'numer
 const categories = [...new Set(posts.map((p) => p.category))];
 
 const faqs = [
-  { q: 'Who writes the IdeaRevive blog?', a: `Director ${site.founder.name} writes every guide from client work, drawing on more than 10 years of digital marketing for 50+ clients. We do not publish ghost-written filler or AI-spun articles.` },
+  { q: 'Who writes the IdeaRevive blog?', a: `Director ${site.founder.name} writes every guide from client work and the accounts we run day to day. We do not publish ghost-written filler or AI-spun articles.` },
   { q: 'How often are the guides updated?', a: 'We review each guide when search engines or AI assistants change in a way that affects the advice, and show the last updated date at the top of every article so you know how current it is.' },
   { q: 'Can I suggest a topic for a future guide?', a: 'Yes. Email the question your customers keep asking, or the marketing problem you are stuck on, and we will consider it for a future article. The best topics come from real questions.' },
 ];
@@ -27,7 +27,7 @@ const faqs = [
   <PageHero
     eyebrow="Blog"
     title="Marketing insights for Hyderabad businesses"
-    answer={`The IdeaRevive blog publishes practical, no-fluff guides on SEO, AI search, local marketing, paid advertising and conversion, written from ${site.proof.years} years of hands-on work with ${site.proof.clients} clients in Hyderabad, across India and abroad.`}
+    answer={`The IdeaRevive blog publishes practical, no-fluff guides on SEO, AI search, local marketing, paid advertising and conversion, written by director ${site.founder.name} from hands-on client work in Hyderabad, across India and abroad.`}
     crumbs={crumbs}
   />
 
@@ -85,7 +85,7 @@ const faqs = [
           <div class="key-fact"><dt>Guides published</dt><dd>{posts.length}</dd></div>
           <div class="key-fact"><dt>Topics</dt><dd>{categories.join(', ')}</dd></div>
           <div class="key-fact"><dt>Written by</dt><dd>The IdeaRevive team</dd></div>
-          <div class="key-fact"><dt>Experience</dt><dd>{site.proof.years} years · {site.proof.clients} clients</dd></div>
+          <div class="key-fact"><dt>Who you work with</dt><dd>{site.founder.name}, director</dd></div>
         </dl>
       </aside>
     </div>

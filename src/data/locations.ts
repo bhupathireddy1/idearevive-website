@@ -2,6 +2,8 @@ import type { FAQ } from './services';
 
 export type Location = {
   slug: string;
+  /** Date this page’s copy was last reviewed. Bump only when you edit this entry. */
+  reviewed?: string;
   name: string;
   metaTitle: string;
   metaDescription: string;
@@ -97,11 +99,12 @@ export const locations: Location[] = [
   },
   {
     slug: 'jubilee-hills',
+    reviewed: '2026-10-10',
     name: 'Jubilee Hills',
     metaTitle: 'Jubilee Hills Digital Marketing Agency | IdeaRevive',
     metaDescription: 'Branding, social media, websites and performance marketing for lifestyle, hospitality, wellness and professional brands in Jubilee Hills, Hyderabad.',
     h1: 'Digital Marketing Agency in Jubilee Hills',
-    answer: 'IdeaRevive delivers branding, social media, website design and performance marketing for lifestyle, hospitality, wellness and professional-services brands in Jubilee Hills, Hyderabad, backed by 10+ years of digital marketing experience.',
+    answer: 'IdeaRevive delivers branding, social media, website design and performance marketing for lifestyle, hospitality, wellness and professional-services brands in Jubilee Hills, Hyderabad, with one team handling the brand and the campaigns that sell it.',
     context: 'Jubilee Hills is home to many of Hyderabad’s best-known cafés, studios, salons and boutiques, as well as founders and professionals building personal brands. Visual storytelling and a polished web presence carry a lot of weight here.',
     businesses: ['Cafés, restaurants and bars', 'Salons, spas and wellness studios', 'Designers and boutiques', 'Founders and professional personal brands'],
     focus: ['Instagram-first content', 'Brand identity and websites', 'Event and launch promotion', 'Founder-led LinkedIn content'],

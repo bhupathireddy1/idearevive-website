@@ -2,6 +2,8 @@ import type { FAQ } from './services';
 
 export type Industry = {
   slug: string;
+  /** Date this page’s copy was last reviewed. Bump only when you edit this entry. */
+  reviewed?: string;
   name: string;
   icon: string;
   metaTitle: string;

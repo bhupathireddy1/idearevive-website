@@ -105,8 +105,8 @@ export function webPageSchema(opts: {
     isPartOf: { '@id': websiteId },
     about: { '@id': orgId },
     publisher: { '@id': orgId },
-    datePublished: opts.published ?? site.contentPublished,
-    dateModified: opts.updated ?? site.contentUpdated,
+    datePublished: opts.published ?? site.launched,
+    dateModified: opts.updated ?? site.launched,
     speakable: { '@type': 'SpeakableSpecification', cssSelector: ['h1', '[data-speakable]'] },
     primaryImageOfPage: { '@type': 'ImageObject', url: image, width: 1200, height: 630 },
     image,
@@ -138,6 +138,8 @@ export function founderSchema() {
     description: f.bio.join(' '),
     url: `${site.url}/about/#founder`,
     worksFor: { '@id': orgId },
+    ...(sameAs.length && { sameAs }),
+    knowsLanguage: ['English', 'Hindi', 'Telugu'],
     email: site.email,
     ...(site.phone && { telephone: telephone() }),
     address: postalAddress(),
@@ -189,7 +191,7 @@ export function articleSchema(opts: {
     datePublished: opts.published,
     dateModified: opts.updated,
     author: opts.author === site.founder.name
-      ? { '@type': 'Person', '@id': founderId, name: opts.author, url: `${site.url}/about/#founder` }
+      ? { '@type': 'Person', '@id': founderId, name: opts.author, jobTitle: site.founder.role, url: `${site.url}/about/#founder`, worksFor: { '@id': orgId }, ...(sameAs.length && { sameAs }) }
       : { '@type': 'Organization', name: opts.author, url: site.url },
     publisher: { '@id': orgId },
     mainEntityOfPage: abs(opts.path),

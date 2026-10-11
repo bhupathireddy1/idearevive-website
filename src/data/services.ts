@@ -2,6 +2,8 @@ export type FAQ = { q: string; a: string };
 
 export type Service = {
   slug: string;
+  /** Date this page’s copy was last reviewed. Bump only when you edit this entry. */
+  reviewed?: string;
   name: string;
   shortName: string;
   icon: string;
@@ -270,6 +272,7 @@ export const services: Service[] = [
   },
   {
     slug: 'ecommerce-marketing-hyderabad',
+    reviewed: '2026-10-10',
     name: 'eCommerce Marketing',
     shortName: 'eCommerce marketing',
     icon: 'cart',
@@ -294,7 +297,7 @@ export const services: Service[] = [
     timeline: 'Feed and campaign fixes often lift results within 2–4 weeks; SEO and retention gains build over 3–6 months.',
     bestFor: ['D2C brands on Shopify or WooCommerce', 'Marketplace sellers on Amazon and Flipkart', 'Brands selling internationally', 'Retailers launching online'],
     faqs: [
-      { q: 'Do you work with eCommerce brands outside India?', a: 'Yes. Over 10+ years we have worked with eCommerce brands in India and in international markets, running region-specific Shopping, Meta and marketplace campaigns with local currency, shipping and tax settings.' },
+      { q: 'Do you work with eCommerce brands outside India?', a: 'Yes. We have worked with eCommerce brands in India and in international markets, running region-specific Shopping, Meta and marketplace campaigns with local currency, shipping and tax settings.' },
       { q: 'Which eCommerce platforms do you support?', a: 'We work with Shopify, WooCommerce, Magento and custom storefronts, plus marketplaces such as Amazon and Flipkart. Tracking and feeds are set up for whichever platform you use.' },
       { q: 'How do you measure eCommerce marketing success?', a: 'We report revenue, ROAS, new versus returning customers and contribution margin after ad spend, so you can see whether growth is actually profitable rather than just bigger.' },
     ],

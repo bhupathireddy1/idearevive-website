@@ -4,13 +4,20 @@ interface Props {
   class?: string;
 }
 const { on = 'paper', class: className } = Astro.props;
-const src = on === 'ink' ? '/brand/logo-on-ink.png' : '/brand/logo.png';
-const size = on === 'ink' ? { width: 739, height: 281 } : { width: 925, height: 346 };
+const ink = on === 'ink';
+const base = ink ? '/brand/logo-on-ink' : '/brand/logo';
+const size = ink ? { width: 739, height: 281 } : { width: 480, height: 180 };
 ---
-<img
-  class:list={['brand-logo', className]}
-  src={src}
-  alt="IdeaRevive — Strategic Digital Marketing"
-  width={size.width}
-  height={size.height}
-/>
+<picture>
+  <source srcset={`${base}.webp`} type="image/webp" />
+  <img
+    class:list={['brand-logo', className]}
+    src={`${base}.png`}
+    alt="IdeaRevive — Strategic Digital Marketing"
+    width={size.width}
+    height={size.height}
+    loading={ink ? 'lazy' : undefined}
+    decoding={ink ? 'async' : undefined}
+    fetchpriority={ink ? undefined : 'high'}
+  />
+</picture>

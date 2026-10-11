@@ -4,8 +4,10 @@ import '@fontsource-variable/instrument-sans';
 import '../styles/site.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import WhatsAppFloat from '../components/WhatsAppFloat.astro';
 import { site } from '../data/site';
 import { coverFor } from '../lib/og';
+import { reviewedFor } from '../lib/reviewed';
 import {
   organizationSchema, websiteSchema, webPageSchema, breadcrumbSchema, founderSchema, type Crumb,
 } from '../lib/schema';
@@ -24,7 +26,8 @@ interface Props {
 
 const { title, description, crumbs = [], schema = [], pageType, ogType = 'website', noindex = false, published, updated } = Astro.props;
 const path = Astro.url.pathname;
-const reviewed = updated || site.contentUpdated;
+const reviewed = updated || reviewedFor(path);
+const { cloudflareToken, ga4 } = site.analytics;
 const canonical = new URL(path, site.url).toString();
 const cover = coverFor(path);
 const ogPath = cover.src;
@@ -36,7 +39,7 @@ const graph = {
     organizationSchema(),
     founderSchema(),
     websiteSchema(),
-    webPageSchema({ path, title, description, type: pageType, published, updated, image: ogPath }),
+    webPageSchema({ path, title, description, type: pageType, published, updated: reviewed, image: ogPath }),
     ...(crumbs.length ? [breadcrumbSchema([{ name: 'Home', path: '/' }, ...crumbs])] : []),
     ...schema,
   ],
@@ -80,6 +83,20 @@ const graph = {
     <meta name="twitter:image" content={ogImage} />
 
     <script type="application/ld+json" set:html={JSON.stringify(graph)} />
+    {cloudflareToken && !noindex && (
+      <script is:inline defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon={JSON.stringify({ token: cloudflareToken })}></script>
+    )}
+    {ga4 && (
+      <>
+        <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${ga4}`}></script>
+        <script is:inline define:vars={{ ga4 }}>
+          window.dataLayer = window.dataLayer || [];
+          window.gtag = function () { window.dataLayer.push(arguments); };
+          window.gtag('js', new Date());
+          window.gtag('config', ga4);
+        </script>
+      </>
+    )}
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to main content</a>
@@ -88,7 +105,8 @@ const graph = {
       <slot />
       <p class="sr-only"><time datetime={reviewed}>Page last reviewed {reviewed}</time></p>
     </main>
-    <Footer />
+    <Footer reviewed={reviewed} />
+    <WhatsAppFloat />
 
     <script>
       const toggle = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');

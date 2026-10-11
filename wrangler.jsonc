@@ -16,6 +16,9 @@
     "html_handling": "none",
     "run_worker_first": true
   },
+  "send_email": [
+    { "name": "LEADS", "destination_address": "idearevive1@gmail.com" }
+  ],
   "routes": [
     { "pattern": "idearevive.com/*", "zone_name": "idearevive.com" },
     { "pattern": "www.idearevive.com/*", "zone_name": "idearevive.com" }

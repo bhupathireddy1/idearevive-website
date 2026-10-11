@@ -6,6 +6,7 @@ import { cities } from '../data/cities';
 import { industries } from '../data/industries';
 import { posts } from '../data/posts';
 import { staticPages } from '../lib/pages';
+import { latestReview } from '../lib/reviewed';
 
 const u = (path: string) => new URL(path, site.url).toString();
 const faqs = (list: FAQ[]) => (list.length ? ['', 'FAQs:', ...list.flatMap((f) => [`Q: ${f.q}`, `A: ${f.a}`])] : []);
@@ -17,7 +18,7 @@ export const GET: APIRoute = () => {
     '',
     `> ${site.description}`,
     '',
-    `Last updated: ${site.contentUpdated}. Source: ${site.url}. Summary index: ${u('/llms.txt')}`,
+    `Last updated: ${latestReview()}. Source: ${site.url}. Summary index: ${u('/llms.txt')}`,
     '',
     '## About IdeaRevive',
     `${site.name} is a digital marketing agency based at ${formatInAddress()}.`,

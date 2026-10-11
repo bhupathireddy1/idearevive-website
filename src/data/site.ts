@@ -12,11 +12,10 @@ export const site = {
   /** Short lockup under the logo. Keep to 2–4 words. */
   lockup: 'Strategic digital marketing',
   description:
-    'IdeaRevive is a Hyderabad digital marketing agency with 10+ years of experience and 50+ clients, offering SEO, Google Ads, social media, websites, SaaS and mobile app development, and app install campaigns across India and worldwide.',
+    'IdeaRevive is a Hyderabad digital marketing agency offering SEO, Google Ads, social media, websites, SaaS and mobile app development, and app install campaigns across India and worldwide.',
   foundingYear: '',
-  /** Last full content review. Rendered as the visible "Updated" date and WebPage dateModified. */
-  contentUpdated: '2026-10-09',
-  contentPublished: '2026-10-01',
+  /** Site went live. Default "reviewed" date for any page without its own `reviewed`. */
+  launched: '2026-10-08',
   /** Proof points supplied by IdeaRevive. Keep these accurate; they appear in copy and schema. */
   proof: {
     years: '10+',
@@ -28,12 +27,21 @@ export const site = {
       { value: 'Web + App', label: 'SaaS products and mobile apps built and launched' },
     ],
   },
+  /** Shown in the proof strip until published case studies supply real metrics. */
+  commitments: [
+    { value: '1 day', label: 'reply to every enquiry, by WhatsApp, phone or email' },
+    { value: 'Yours', label: 'ad, analytics and Search Console accounts stay in your name' },
+    { value: 'Leads', label: 'monthly reports in leads and cost per lead, not impressions' },
+    { value: 'Director', label: 'Bhupathi Reddy reviews every audit and plan himself' },
+  ],
   email: 'contact@idearevive.com',
   phone: '+91 99853 11989',
   whatsapp: '919985311989',
   founder: {
     name: 'Bhupathi Reddy',
     role: 'Director',
+    shortBio:
+      'Director of IdeaRevive. Bhupathi runs SEO, Google Ads and website projects for Hyderabad businesses and for eCommerce brands abroad, and reviews every audit and monthly report himself.',
     quote:
       'I have spent more than ten years in digital marketing and worked with 50+ clients around the world. IdeaRevive is how I put that work in one place — search, ads, websites, products and reporting — so a business owner is not juggling five vendors.',
     bio: [
@@ -62,15 +70,21 @@ export const site = {
   hoursLabel: 'Monday to Saturday, 10:00 AM – 7:00 PM IST',
   areaServed: ['Kondapur', 'Hyderabad', 'Secunderabad', 'Telangana', 'India', 'United States', 'Worldwide'],
   social: {
+    instagram: 'https://www.instagram.com/idearevivers/',
     linkedin: '',
-    instagram: '',
     facebook: '',
     x: '',
     youtube: '',
   },
+  instagramHandle: '@idearevivers',
   googleBusinessProfile: '',
   bookingUrl: '',
-  formEndpoint: '',
+  formEndpoint: '/api/lead',
+  analytics: {
+    cloudflareToken: '9e0bee6bf86d4d08b014f8de395d6e5e',
+    /** GA4 measurement ID, e.g. G-XXXXXXX. Loads gtag only when set. */
+    ga4: '',
+  },
   ogImage: '/og/hyd.png',
   logo: '/brand/logo.png',
 };

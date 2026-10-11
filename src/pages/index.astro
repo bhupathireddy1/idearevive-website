@@ -7,6 +7,7 @@ import CTA from '../components/CTA.astro';
 import CityMap from '../components/CityMap.astro';
 import IndiaMap from '../components/IndiaMap.astro';
 import Proof from '../components/Proof.astro';
+import QuickLead from '../components/QuickLead.astro';
 import NextSteps from '../components/NextSteps.astro';
 import MotionField from '../components/MotionField.astro';
 import VectorPlate from '../components/VectorPlate.astro';
@@ -23,11 +24,11 @@ import { faqSchema } from '../lib/schema';
 
 const title = 'Get Found on Google, Maps & AI | IdeaRevive';
 const description =
-  'IdeaRevive helps Hyderabad businesses get found on Google, Maps and AI answers. 10+ years, 50+ clients, SEO, ads, apps. Free audit.';
+  'IdeaRevive helps Hyderabad businesses get found on Google, Maps and AI answers. SEO, ads, websites and apps, director-led. Free audit.';
 
 const faqs = [
   { q: 'What does IdeaRevive actually do for a Hyderabad business?', a: 'IdeaRevive plans, runs and reports SEO, Google Ads, social, content, websites, eCommerce, SaaS builds and app install campaigns as one system. Success is measured in qualified leads and revenue, not in reports.' },
-  { q: 'How long has IdeaRevive been doing this work?', a: 'The team has 10+ years of digital marketing experience and has worked with 50+ clients, including eCommerce brands in India and abroad, plus SaaS products and mobile apps we have built and launched.' },
+  { q: 'How long has IdeaRevive been doing this work?', a: 'Director Bhupathi Reddy and the team have run SEO, ads and websites for Hyderabad businesses and eCommerce brands in India and abroad, plus SaaS products and mobile apps we have built and launched.' },
   { q: 'Do you work only in Hyderabad?', a: 'Hyderabad is our base. We also work with businesses in Bengaluru, Mumbai, Delhi NCR, Gurugram, Pune and Chennai, plus international eCommerce and SaaS brands. Day-to-day work is remote; we visit in person when a kick-off or shoot needs it.' },
   { q: 'Can you build a product as well as market it?', a: 'Yes. Alongside marketing we design and develop SaaS products and iOS and Android apps, then run the launch and install campaigns, so build and growth stay on the same team.' },
   { q: 'How soon will I see results from IdeaRevive?', a: 'Paid ads can bring leads within days of launch. SEO and content usually take 3–6 months to show meaningful gains. We agree monthly leading indicators so progress is visible from the first report.' },
@@ -69,7 +70,7 @@ const fmt = (d: string) => new Date(d).toLocaleDateString('en-IN', { day: '2-dig
       <div class="hero-grid">
         <div class="hero-left">
           <p class="hero-lead" data-speakable>
-            IdeaRevive is a Hyderabad digital marketing agency with 10+ years of experience and 50+ clients.
+            IdeaRevive is a Hyderabad digital marketing agency led by director {site.founder.name}.
             We run SEO, ads, social, websites, eCommerce, SaaS and apps as one system — and measure it in leads.
           </p>
           <div class="hero-ctas">
@@ -83,7 +84,7 @@ const fmt = (d: string) => new Date(d).toLocaleDateString('en-IN', { day: '2-dig
           </dl>
         </div>
 
-        <SerpDemo />
+        <QuickLead id="hero-lead" title="Get a call back today" />
       </div>
     </div>
   </section>
@@ -115,10 +116,13 @@ const fmt = (d: string) => new Date(d).toLocaleDateString('en-IN', { day: '2-dig
 
   <section class="section section-ink" aria-labelledby="surfaces-title">
     <div class="wrap">
-      <div class="section-head">
+      <div class="surfaces-intro">
+        <div class="section-head">
         <p class="eyebrow">Why it matters</p>
         <h2 id="surfaces-title" class="heading-1" data-reveal>Where do customers look before they pick a business?</h2>
         <p class="body-lg" data-reveal style="color:var(--on-ink-2)">They check Search, Maps and AI answers. Most businesses only show up in one. We put you in all three.</p>
+      </div>
+        <SerpDemo />
       </div>
       <div class="surfaces">
         {surfaces.map((s, i) => (
@@ -220,7 +224,7 @@ const fmt = (d: string) => new Date(d).toLocaleDateString('en-IN', { day: '2-dig
   </section>
 
   <section class="section-tight">
-    <div class="wrap"><Proof title="In numbers" /></div>
+    <div class="wrap"><Proof title="What you can hold us to" /></div>
   </section>
   <FAQ faqs={faqs} title="Before you get in touch" alt />
   <NextSteps />

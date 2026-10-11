@@ -1,7 +1,7 @@
 /** Standalone pages that aren't generated from a data file, for llms.txt and llms-full.txt. */
 export const staticPages = [
   { path: '/', title: 'IdeaRevive — Digital marketing agency in Hyderabad', summary: 'Home page: services, how we work, Hyderabad and India coverage, and FAQs.' },
-  { path: '/about/', title: 'About IdeaRevive', summary: 'Director Bhupathi Reddy, 10+ years of digital marketing experience, 50+ clients worldwide, values and how we work.' },
+  { path: '/about/', title: 'About IdeaRevive', summary: 'Director Bhupathi Reddy, how the team works, what we build and the values behind every engagement.' },
   { path: '/services/', title: 'All services', summary: 'Every IdeaRevive service, from SEO and ads to SaaS and mobile app development.' },
   { path: '/locations/', title: 'Hyderabad neighbourhoods', summary: 'How we market businesses across Hyderabad neighbourhoods, from HITEC City and Kokapet to Dilsukhnagar, Kothapet and the Old City.' },
   { path: '/cities/', title: 'Cities across India', summary: 'Eighteen Indian cities with dedicated pages, from Bengaluru, Mumbai and Delhi NCR to Kochi, Jaipur, Vizag and Surat, served remotely from Hyderabad.' },

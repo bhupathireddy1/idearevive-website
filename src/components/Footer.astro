@@ -5,8 +5,13 @@ import { services } from '../data/services';
 import { locations } from '../data/locations';
 import { cities } from '../data/cities';
 
+interface Props { reviewed: string; }
+const { reviewed } = Astro.props;
 const year = new Date().getFullYear();
-const updated = new Date(site.contentUpdated).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+const reviewedLabel = new Date(reviewed).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+const socialLabels: Record<string, string> = {
+  instagram: `Instagram ${site.instagramHandle}`, linkedin: 'LinkedIn', facebook: 'Facebook', x: 'X', youtube: 'YouTube',
+};
 const address = formatInAddress();
 const usAddress = formatUsAddress();
 ---
@@ -29,7 +34,7 @@ const usAddress = formatUsAddress();
         {sameAs.length > 0 && (
           <ul class="footer-social">
             {Object.entries(site.social).filter(([, url]) => url).map(([name, url]) => (
-              <li><a href={url} rel="me noopener" target="_blank">{name}</a></li>
+              <li><a href={url} rel="me noopener" target="_blank" data-track={`social-${name}`}>{socialLabels[name] ?? name}</a></li>
             ))}
           </ul>
         )}
@@ -75,7 +80,7 @@ const usAddress = formatUsAddress();
     <p class="footer-giant" aria-hidden="true"><Logo on="ink" /></p>
 
     <div class="footer-bottom">
-      <p>© {year} {site.legalName} · Kondapur, Hyderabad · {site.geo.lat.toFixed(2)}° N {site.geo.lng.toFixed(2)}° E · <time datetime={site.contentUpdated}>Updated {updated}</time></p>
+      <p>© {year} {site.legalName} · Kondapur, Hyderabad · {site.geo.lat.toFixed(2)}° N {site.geo.lng.toFixed(2)}° E · <time datetime={reviewed}>Page reviewed {reviewedLabel}</time></p>
       <ul>
         <li><a href="/privacy-policy/">Privacy</a></li>
         <li><a href="/terms/">Terms</a></li>

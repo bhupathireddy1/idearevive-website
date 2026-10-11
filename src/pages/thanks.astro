@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { site } from '../data/site';
+const wa = `https://wa.me/${site.whatsapp}`;
+---
+<BaseLayout title="Thank you | IdeaRevive" description="Your enquiry reached IdeaRevive. We reply within one business day." noindex>
+  <PageHero
+    lead={false}
+    eyebrow="Message received"
+    title="Thank you. Your enquiry is with us."
+    answer={`${site.founder.name} or the team will reply within one business day. If it is urgent, call ${site.phone} or message us on WhatsApp.`}
+    answerLabel="What happens next"
+    primary={{ label: 'WhatsApp us now', href: wa }}
+    secondary={{ label: 'Back to home', href: '/' }}
+    showCover={false}
+  />
+</BaseLayout>

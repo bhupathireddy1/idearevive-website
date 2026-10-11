@@ -1,0 +1,18 @@
+---
+import { site } from '../data/site';
+const f = site.founder;
+const initials = f.name.split(' ').map((w) => w[0]).join('');
+---
+<aside class="author-bio" aria-label="About the author">
+  <span class="author-bio-mark" aria-hidden="true">{initials}</span>
+  <div>
+    <p class="caption">Written by</p>
+    <p class="author-bio-name"><a href="/about/#founder" rel="author">{f.name}</a>, {f.role.toLowerCase()} of {site.name}</p>
+    <p class="author-bio-text">{f.shortBio}</p>
+    <p class="author-bio-links">
+      <a href="/about/#founder">Full profile</a>
+      {site.social.instagram && <a href={site.social.instagram} rel="me noopener" target="_blank">Instagram {site.instagramHandle}</a>}
+      <a href={`mailto:${site.email}`}>{site.email}</a>
+    </p>
+  </div>
+</aside>

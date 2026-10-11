@@ -33,9 +33,10 @@ const faqs = [
 ---
 <BaseLayout title={title} description={description} crumbs={crumbs} schema={[faqSchema(faqs)]} pageType="ContactPage">
   <PageHero
+    lead={false}
     eyebrow="Let’s talk about your growth"
     title="Contact IdeaRevive, a digital marketing agency in Hyderabad"
-    answer={`Tell IdeaRevive about your business and goals. We reply within one business day with next steps, usually a short discovery call and a free audit, drawing on ${site.proof.years} years of digital marketing experience with ${site.proof.clients} clients.`}
+    answer={`Tell IdeaRevive about your business and goals. We reply within one business day with next steps, usually a short discovery call and a free audit, answered by director ${site.founder.name} or his team.`}
     crumbs={crumbs}
     primary={{ label: 'Jump to the form', href: '#contact-form' }}
   />
@@ -52,7 +53,8 @@ const faqs = [
           <ul class="info-list">
             <li><Icon name="mail" size={18} /><a href={`mailto:${site.email}`}>{site.email}</a></li>
             {site.phone && <li><Icon name="phone" size={18} /><a href={`tel:${site.phone.replace(/\s/g, '')}`}>{site.phone}</a></li>}
-            {wa && <li><Icon name="whatsapp" size={18} /><a href={wa}>Chat on WhatsApp</a></li>}
+            {wa && <li><Icon name="whatsapp" size={18} /><a href={wa} data-track="contact-whatsapp">Chat on WhatsApp</a></li>}
+            {site.social.instagram && <li><Icon name="instagram" size={18} /><a href={site.social.instagram} rel="me noopener" target="_blank" data-track="social-instagram">Instagram {site.instagramHandle}</a></li>}
             <li><Icon name="pin" size={18} /><span>Hyderabad studio: {address}</span></li>
             <li><Icon name="pin" size={18} /><span>US mailing: {usAddress}</span></li>
             <li><Icon name="clock" size={18} /><span>{site.hoursLabel}</span></li>

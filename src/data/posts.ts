@@ -25,7 +25,7 @@ export type Post = {
   services: string[];
 };
 
-export const posts: Post[] = [
+export const allPosts: Post[] = [
   {
     slug: 'how-to-choose-digital-marketing-agency-hyderabad',
     title: 'How to Choose a Digital Marketing Agency in Hyderabad: A 10-Point Checklist',
@@ -39,7 +39,7 @@ export const posts: Post[] = [
     tldr: 'Choose an agency that asks about your revenue goals before your budget, shows verifiable work, gives you ownership of every account, reports on leads and sales rather than vanity metrics, and never promises guaranteed rankings.',
     body: [
       { type: 'p', text: 'Hyderabad has hundreds of digital marketing agencies, from freelancers to large networks. Choosing the wrong partner usually costs months of budget and momentum. Use this checklist to compare agencies on what actually predicts results.' },
-      { type: 'p', text: 'This guide comes from more than 10 years of running digital marketing for 50+ clients, and from sitting on the other side of the table when businesses replace an agency that did not work out. The same warning signs come up again and again.' },
+      { type: 'p', text: 'This guide comes from running client accounts, and from sitting on the other side of the table when businesses replace an agency that did not work out. The same warning signs come up again and again.' },
       { type: 'h2', text: 'What should be on your agency checklist?' },
       { type: 'ol', items: [
         'They ask about your business goals, margins and sales process before quoting.',
@@ -208,7 +208,7 @@ export const posts: Post[] = [
     category: 'Paid Media',
     tldr: 'Do not start Hyderabad Google Ads by dumping budget into Performance Max. Fix conversion tracking, launch exact and phrase search on the terms that already describe your offer, and judge the first month on qualified leads — not on cheap clicks.',
     body: [
-      { type: 'p', text: 'Most wasted Google Ads spend in Hyderabad has the same shape: the account was turned on before anyone could name a lead, the campaign type was chosen because it sounded modern, and the first report was a screenshot of impressions. After 10+ years of running paid search, this is the sequence we use instead.' },
+      { type: 'p', text: 'Most wasted Google Ads spend in Hyderabad has the same shape: the account was turned on before anyone could name a lead, the campaign type was chosen because it sounded modern, and the first report was a screenshot of impressions. After years of running paid search, this is the sequence we use instead.' },
       { type: 'h2', text: 'What should you set up before you spend a rupee?' },
       { type: 'ol', items: [
         'A conversion you can defend: a form, a call from a tracked number, or a WhatsApp click that a human then qualifies.',
@@ -238,7 +238,7 @@ export const posts: Post[] = [
       { type: 'p', text: 'Geo targeting should match where you can actually fulfil work. A Gachibowli clinic does not need clicks from Warangal. A D2C brand shipping pan-India can go broader, but still exclude job-seeker queries and other languages you cannot support. We keep a shared negative list for Hyderabad service businesses: “salary”, “job”, “course”, “PDF”, “meaning” and neighbouring cities you do not drive to.' },
       { type: 'h2', text: 'How should you talk about budget with a client — or with yourself?' },
       { type: 'p', text: 'Budget is not a personality trait. It is “enough trials to see a lead at a cost we could live with”. If a qualified enquiry is worth ₹4,000 to you, a ₹15,000 first month that produces three conversations is information. A ₹4,000 month that produces none is not a failed channel; it is an unfinished test. IdeaRevive will say that on the first call. We would rather turn work down than run an account that can only buy impressions.' },
-      { type: 'p', text: 'After 10+ years and 50+ clients, the pattern is boring: the accounts that work have a named conversion, a human reading search terms every week, and a landing page that does not change the offer. The accounts that stall have a dashboard full of “optimisations” and no one who can point to a lead in WhatsApp.' },
+      { type: 'p', text: 'Across the accounts we have run, the pattern is boring: the accounts that work have a named conversion, a human reading search terms every week, and a landing page that does not change the offer. The accounts that stall have a dashboard full of “optimisations” and no one who can point to a lead in WhatsApp.' },
     ],
     faqs: [
       { q: 'How much should a Hyderabad business spend on Google Ads to learn anything?', a: 'Enough to generate a few real enquiries in 30 days at a cost you could live with if it worked. A budget that only buys clicks and no conversations teaches you nothing.' },
@@ -357,5 +357,10 @@ export const posts: Post[] = [
     services: ['ecommerce-marketing-hyderabad', 'google-ads-ppc-hyderabad', 'performance-marketing-lead-generation-hyderabad'],
   },
 ];
+
+const today = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
+
+/** A post dated in the future stays off the site until the first build on or after that date. */
+export const posts = allPosts.filter((p) => p.published <= today);
 
 export const getPost = (slug: string) => posts.find((p) => p.slug === slug);

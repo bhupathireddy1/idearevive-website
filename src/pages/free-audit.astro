@@ -10,7 +10,7 @@ import { faqSchema } from '../lib/schema';
 
 const crumbs = [{ name: 'Free Growth Audit', path: '/free-audit/' }];
 const title = 'Free Digital Marketing Audit in Hyderabad – IdeaRevive';
-const description = 'Free IdeaRevive audit: website, SEO, Maps, AI search, ads and tracking reviewed, plus a 90-day plan. 10+ years, 50+ clients. No obligation.';
+const description = 'Free IdeaRevive audit: website, SEO, Maps, AI search, ads and tracking reviewed, plus a 90-day plan. Reviewed by the director. No obligation.';
 
 const checks = [
   'Technical SEO health and Core Web Vitals',
@@ -39,6 +39,7 @@ const faqs = [
 ---
 <BaseLayout title={title} description={description} crumbs={crumbs} schema={[faqSchema(faqs)]}>
   <PageHero
+    lead={false}
     eyebrow="Find out what’s holding your growth back"
     title="Free digital marketing audit in Hyderabad"
     answer="The IdeaRevive free growth audit reviews your website, search visibility, AI-search readiness, ad accounts and tracking, then gives you a prioritised list of the fixes with the biggest expected impact. It is free and there is no obligation."
@@ -65,7 +66,7 @@ const faqs = [
         <dl class="key-facts" style="grid-template-columns:1fr">
           <div class="key-fact"><dt>Cost</dt><dd>Free, no obligation</dd></div>
           <div class="key-fact"><dt>Turnaround</dt><dd>About five business days</dd></div>
-          <div class="key-fact"><dt>Reviewed by</dt><dd>A team with {site.proof.years} years and {site.proof.clients} clients</dd></div>
+          <div class="key-fact"><dt>Reviewed by</dt><dd>{site.founder.name}, director</dd></div>
         </dl>
       </aside>
     </div>
@@ -76,7 +77,7 @@ const faqs = [
       <div class="section-head" data-reveal>
         <p class="eyebrow">Common findings</p>
         <h2 id="findings-title" class="heading-1">What does an audit usually find?</h2>
-        <p class="body-lg text-muted">After more than ten years of audits, these five problems come up most often, and fixing them is usually the cheapest growth a business can buy.</p>
+        <p class="body-lg text-muted">Across the audits we run, these five problems come up most often, and fixing them is usually the cheapest growth a business can buy.</p>
       </div>
       <div class="prose" style="max-width:none" data-reveal>
         <table>

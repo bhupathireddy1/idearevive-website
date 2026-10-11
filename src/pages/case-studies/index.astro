@@ -10,7 +10,7 @@ import { faqSchema } from '../../lib/schema';
 
 const crumbs = [{ name: 'Case Studies', path: '/case-studies/' }];
 const title = 'Case Studies and Results | IdeaRevive Hyderabad';
-const description = 'How IdeaRevive publishes verified marketing results: baseline, timeframe, changes and outcome. No fake stats. 10+ years and 50+ clients of real work.';
+const description = 'How IdeaRevive publishes verified marketing results: baseline, timeframe, changes and outcome. No fake stats, no unnamed claims, only permitted data.';
 
 const faqs = [
   { q: 'Why are there no case studies on the site yet?', a: 'We only publish results with the client’s written permission and numbers we can verify in analytics or ad accounts. Until those studies are live, we will walk you through relevant references on a call.' },
@@ -22,7 +22,7 @@ const faqs = [
   <PageHero
     eyebrow="Case Studies"
     title="Results you can verify"
-    answer={`Every IdeaRevive case study will show the starting baseline, the time frame, what we changed and the measured outcome. We have ${site.proof.years} years of work and ${site.proof.clients} clients; we still will not invent results to fill this page.`}
+    answer={`Every IdeaRevive case study will show the starting baseline, the time frame, what we changed and the measured outcome. We will not invent results to fill this page.`}
     crumbs={crumbs}
   />
 
@@ -45,9 +45,8 @@ const faqs = [
         <div class="empty-state" data-reveal>
           <h2 class="heading-2">Case studies are being published</h2>
           <p class="body-lg text-muted" style="max-width:720px;margin:var(--space-4) auto 0">
-            We only publish results with our clients’ permission and verified data. IdeaRevive has {site.proof.years} years
-            of digital marketing experience and {site.proof.clients} clients, including eCommerce brands in India and abroad,
-            plus SaaS products and mobile apps we have built and launched. That work is real; it is not on this page until
+            We only publish results with our clients’ permission and verified data. Our client work spans Hyderabad businesses, eCommerce brands in India and abroad,
+            and SaaS products and mobile apps we have built and launched. That work is real; it is not on this page until
             a client agrees in writing and we can show the baseline, the time frame, the changes and the measured outcome.
             While new studies are prepared, we will walk you through relevant references on a call, and the free audit is a
             live sample of how we think about a business like yours.
@@ -74,7 +73,7 @@ const faqs = [
       <dl class="key-facts" style="margin-top:var(--space-10)">
         <div class="key-fact"><dt>What we publish</dt><dd>Baselines, time frames, changes, outcomes</dd></div>
         <div class="key-fact"><dt>What we will not publish</dt><dd>Fake percentages, unnamed logos, invented ROI</dd></div>
-        <div class="key-fact"><dt>Experience</dt><dd>{site.proof.years} years · {site.proof.clients} clients</dd></div>
+        <div class="key-fact"><dt>Who you work with</dt><dd>{site.founder.name}, director</dd></div>
       </dl>
     </div>
   </section>
