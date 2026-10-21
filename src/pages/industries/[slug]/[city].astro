@@ -1,0 +1,22 @@
+---
+import ComboPage from '../../../components/ComboPage.astro';
+import { industryCityPaths, industryCityCopy } from '../../../lib/combos';
+import type { Industry } from '../../../data/industries';
+import type { City } from '../../../data/cities';
+
+export function getStaticPaths() {
+  return industryCityPaths().map(({ industry, city }) => ({
+    params: { slug: industry.slug, city: city.slug },
+    props: { industry, city },
+  }));
+}
+
+const { industry, city } = Astro.props as { industry: Industry; city: City };
+const copy = industryCityCopy(industry, city);
+const crumbs = [
+  { name: 'Industries', path: '/industries/' },
+  { name: industry.name, path: `/industries/${industry.slug}/` },
+  { name: city.name, path: copy.path },
+];
+---
+<ComboPage copy={copy} crumbs={crumbs} />

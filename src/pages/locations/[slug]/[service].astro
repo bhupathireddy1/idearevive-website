@@ -1,0 +1,22 @@
+---
+import ComboPage from '../../../components/ComboPage.astro';
+import { areaServicePaths, areaServiceCopy, offerPhrase } from '../../../lib/combos';
+import type { Location } from '../../../data/locations';
+import type { Service } from '../../../data/services';
+
+export function getStaticPaths() {
+  return areaServicePaths().map(({ location, service, key }) => ({
+    params: { slug: location.slug, service: key },
+    props: { location, service },
+  }));
+}
+
+const { location, service } = Astro.props as { location: Location; service: Service };
+const copy = areaServiceCopy(location, service);
+const crumbs = [
+  { name: 'Hyderabad', path: '/locations/' },
+  { name: location.name, path: `/locations/${location.slug}/` },
+  { name: offerPhrase(service), path: copy.path },
+];
+---
+<ComboPage copy={copy} crumbs={crumbs} />

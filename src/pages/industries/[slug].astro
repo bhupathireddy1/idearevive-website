@@ -11,6 +11,7 @@ import { industries, industryMetrics, type Industry } from '../../data/industrie
 import { getService, type Service } from '../../data/services';
 import { site } from '../../data/site';
 import { serviceSchema, faqSchema } from '../../lib/schema';
+import { citiesForIndustry } from '../../lib/combos';
 
 export function getStaticPaths() {
   return industries.map((industry) => ({ params: { slug: industry.slug }, props: { industry } }));
@@ -24,6 +25,7 @@ const crumbs = [
 ];
 const recommended = industry.services.map(getService).filter((s): s is Service => Boolean(s));
 const others = industries.filter((i) => i.slug !== industry.slug);
+const otherCities = citiesForIndustry(industry);
 ---
 <BaseLayout
   title={industry.metaTitle}
@@ -86,6 +88,21 @@ const others = industries.filter((i) => i.slug !== industry.slug);
           </tbody>
         </table>
       </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" aria-labelledby="cities-title">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Other cities</p>
+        <h2 id="cities-title" class="heading-1">Where else do we do {industry.name.toLowerCase()} marketing?</h2>
+        <p class="body-lg text-muted">This page is Hyderabad. The cities below are secondary markets, served from the same studio.</p>
+      </div>
+      <ul class="tag-list">
+        {otherCities.map((city) => (
+          <li><a href={`/industries/${industry.slug}/${city.slug}/`}>{city.name}</a></li>
+        ))}
+      </ul>
     </div>
   </section>
 

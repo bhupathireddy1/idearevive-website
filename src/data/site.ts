@@ -71,8 +71,8 @@ export const site = {
   areaServed: ['Kondapur', 'Hyderabad', 'Secunderabad', 'Telangana', 'India', 'United States', 'Worldwide'],
   social: {
     instagram: 'https://www.instagram.com/idearevivers/',
-    linkedin: '',
-    facebook: '',
+    linkedin: 'https://www.linkedin.com/company/idearevive/',
+    facebook: 'https://www.facebook.com/Ideareviver/',
     x: '',
     youtube: '',
   },

@@ -12,6 +12,7 @@ import { industries } from '../../data/industries';
 import { cities } from '../../data/cities';
 import { site } from '../../data/site';
 import { serviceSchema, faqSchema } from '../../lib/schema';
+import { citiesForService, locationsForService, keyOf } from '../../lib/combos';
 
 export function getStaticPaths() {
   return services.map((service) => ({ params: { slug: service.slug }, props: { service } }));
@@ -25,6 +26,9 @@ const crumbs = [
 ];
 const related = services.filter((s) => s.slug !== service.slug).slice(0, 3);
 const relatedIndustries = industries.filter((i) => i.services.includes(service.slug));
+const serviceCities = citiesForService(service);
+const serviceAreas = locationsForService(service);
+const serviceKey = keyOf(service);
 ---
 <BaseLayout
   title={service.metaTitle}
@@ -112,10 +116,12 @@ const relatedIndustries = industries.filter((i) => i.services.includes(service.s
         {relatedIndustries.map((i) => <li><a href={`/industries/${i.slug}/`}>{i.name} marketing</a></li>)}
       </ul>
       <h3 class="heading-4" style="margin:var(--space-12) 0 var(--space-4)">Where do we deliver {service.shortName}?</h3>
-      <p class="text-muted" style="margin-bottom:var(--space-4)">In Hyderabad and remotely for businesses across India and abroad, including:</p>
+      <p class="text-muted" style="margin-bottom:var(--space-4)">Hyderabad is the home market. Other cities are served remotely from the same studio.</p>
       <ul class="tag-list">
         <li><a href="/locations/">Hyderabad</a></li>
-        {cities.map((c) => <li><a href={`/cities/${c.slug}/`}>{c.name}</a></li>)}
+        {serviceAreas.map((area) => <li><a href={`/locations/${area.slug}/${serviceKey}/`}>{area.name}</a></li>)}
+        {serviceCities.map((c) => <li><a href={`/cities/${c.slug}/${serviceKey}/`}>{c.name}</a></li>)}
+        {cities.filter((c) => !serviceCities.some((item) => item.slug === c.slug)).map((c) => <li><a href={`/cities/${c.slug}/`}>{c.name}</a></li>)}
         <li><a href="/cities/">All cities</a></li>
       </ul>
     </div>

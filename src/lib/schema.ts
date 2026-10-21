@@ -175,7 +175,15 @@ export function serviceSchema(opts: {
     description: opts.description,
     url: abs(opts.path),
     provider: { '@id': orgId },
-    areaServed: areas.map((name) => ({ '@type': name === 'India' ? 'Country' : 'City', name })),
+    areaServed: areas.map((name, index) => {
+      if (name === 'India') return { '@type': 'Country', name };
+      if (name.includes('Hyderabad') && name !== 'Hyderabad') {
+        return { '@type': 'Place', name, containedInPlace: { '@type': 'City', name: 'Hyderabad' } };
+      }
+      if (name === 'Hyderabad') return { '@type': 'City', name };
+      if (index > 0) return { '@type': 'State', name, containedInPlace: { '@type': 'Country', name: 'India' } };
+      return { '@type': 'City', name };
+    }),
     serviceType: opts.serviceType ?? opts.name,
   };
 }

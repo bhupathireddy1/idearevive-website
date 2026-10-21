@@ -9,6 +9,7 @@ import NextSteps from '../../components/NextSteps.astro';
 import { site } from '../../data/site';
 import { locations, getLocation, type Location } from '../../data/locations';
 import { servicesForLocation } from '../../lib/area-services';
+import { keyOf, offerPhrase } from '../../lib/combos';
 import { faqSchema, serviceSchema } from '../../lib/schema';
 
 export function getStaticPaths() {
@@ -84,7 +85,7 @@ const faqs = [
         <h2 class="heading-1">Which services matter first in {location.name}?</h2>
       </div>
       <ul class="index-list">
-        {areaServices.map((s, i) => <ServiceCard href={`/services/${s.slug}/`} index={i} icon={s.icon} title={s.name} text={s.card} />)}
+        {areaServices.map((s, i) => <ServiceCard href={`/locations/${location.slug}/${keyOf(s)}/`} index={i} icon={s.icon} title={`${offerPhrase(s)} in ${location.name}`} text={s.card} />)}
       </ul>
     </div>
   </section>

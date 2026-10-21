@@ -1,0 +1,155 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from './PageHero.astro';
+import FAQ from './FAQ.astro';
+import NextSteps from './NextSteps.astro';
+import CTA from './CTA.astro';
+import AuthorBio from './AuthorBio.astro';
+import { site } from '../data/site';
+import { faqSchema, serviceSchema, type Crumb } from '../lib/schema';
+import type { ComboCopy } from '../lib/combos';
+
+interface Props {
+  copy: ComboCopy;
+  crumbs: Crumb[];
+}
+
+const { copy, crumbs } = Astro.props;
+const titledItems = copy.items.some((item) => item.title);
+---
+<BaseLayout
+  title={copy.title}
+  description={copy.description}
+  crumbs={crumbs}
+  schema={[
+    serviceSchema({ name: copy.h1, description: copy.answer, path: copy.path, area: copy.area, serviceType: copy.serviceType }),
+    faqSchema(copy.faqs),
+  ]}
+>
+  <PageHero
+    eyebrow={copy.eyebrow}
+    title={copy.h1}
+    answer={copy.answer}
+    crumbs={crumbs}
+    secondary={{ label: 'All services', href: '/services/' }}
+  />
+
+  <section class="section">
+    <div class="container split">
+      <div>
+        <div data-reveal>
+          <h2 class="heading-1">{copy.meaningTitle}</h2>
+          <p class="body-lg text-muted" style="margin-top:var(--space-4)" data-speakable>{copy.meaning}</p>
+        </div>
+
+        <h2 class="heading-3" style="margin:var(--space-12) 0 var(--space-4)">{copy.whoTitle}</h2>
+        <ul class="check-list">
+          {copy.who.map((item) => <li>{item}</li>)}
+        </ul>
+        <p class="text-muted" style="margin-top:var(--space-4)">{copy.whoText}</p>
+
+        <h2 class="heading-3" style="margin:var(--space-12) 0 var(--space-2)">{copy.contextTitle}</h2>
+        <p class="body-lg text-muted" style="margin-top:var(--space-4)">{copy.context}</p>
+
+        <h2 class="heading-3" style="margin:var(--space-12) 0 var(--space-2)">{copy.itemsTitle}</h2>
+        {titledItems ? (
+          <ul class="feature-list" style="margin-top:var(--space-6)">
+            {copy.items.map((item) => (
+              <li class="feature" data-reveal>
+                <div>
+                  {item.title && <h3 class="heading-4">{item.title}</h3>}
+                  <p>{item.text}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <ul class="check-list" style="margin-top:var(--space-6)">
+            {copy.items.map((item) => <li>{item.text}</li>)}
+          </ul>
+        )}
+      </div>
+      <aside class="info-card sticky-aside" data-reveal>
+        <p class="eyebrow">At a glance</p>
+        <dl class="key-facts" style="grid-template-columns:1fr;margin-top:var(--space-2)">
+          {copy.facts.map((fact) => (
+            <div class="key-fact">
+              <dt>{fact.label}</dt>
+              <dd>
+                {Array.isArray(fact.value) ? (
+                  <ul class="fact-chips">
+                    {fact.value.map((item) => <li>{item}</li>)}
+                  </ul>
+                ) : fact.value}
+              </dd>
+            </div>
+          ))}
+          <div class="key-fact">
+            <dt>Who you work with</dt>
+            <dd>{site.founder.name}, director</dd>
+          </div>
+        </dl>
+        <a href="/free-audit/" class="btn btn-primary btn-lg btn-block" style="margin-top:var(--space-6)" data-track={`combo-${copy.path}`}>
+          {copy.cta}
+        </a>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">How the work runs</p>
+        <h2 class="heading-1">{copy.processTitle}</h2>
+      </div>
+      <ol class="feature-list">
+        {copy.process.map((step) => (
+          <li class="feature" data-reveal>
+            <div>
+              <h3 class="heading-4">{step.title}</h3>
+              <p>{step.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+      <div class="prose" style="margin-top:var(--space-12);max-width:none" data-reveal>
+        <h2 class="heading-3" style="margin-bottom:var(--space-4)">{copy.tableTitle}</h2>
+        <table>
+          <caption class="sr-only">{copy.tableTitle}</caption>
+          <thead>
+            <tr>
+              <th scope="col">{copy.table.head[0]}</th>
+              <th scope="col">{copy.table.head[1]}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {copy.table.rows.map(([label, value]) => (
+              <tr>
+                <th scope="row">{label}</th>
+                <td>{value}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <FAQ faqs={copy.faqs} title={`${copy.h1}: FAQs`} alt />
+
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow">Related</p>
+      <h2 class="heading-2" style="margin:var(--space-4) 0 var(--space-8)">Where should you go next?</h2>
+      <ul class="tag-list">
+        {copy.related.map((link) => (
+          <li><a href={link.href}>{link.label}</a></li>
+        ))}
+      </ul>
+      <AuthorBio />
+    </div>
+  </section>
+
+  <NextSteps />
+  <CTA />
+</BaseLayout>

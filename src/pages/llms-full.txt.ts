@@ -7,6 +7,7 @@ import { industries } from '../data/industries';
 import { posts } from '../data/posts';
 import { staticPages } from '../lib/pages';
 import { latestReview } from '../lib/reviewed';
+import { areaServiceCopy, areaServicePaths, cityServiceCopy, cityServicePaths, industryCityCopy, industryCityPaths } from '../lib/combos';
 
 const u = (path: string) => new URL(path, site.url).toString();
 const faqs = (list: FAQ[]) => (list.length ? ['', 'FAQs:', ...list.flatMap((f) => [`Q: ${f.q}`, `A: ${f.a}`])] : []);
@@ -27,6 +28,9 @@ export const GET: APIRoute = () => {
     ...site.founder.bio,
     ...site.proof.points.map((p) => `- ${p.value} ${p.label}`),
     `- Contact: ${site.email}${site.phone ? ` · ${site.phone}` : ''} · ${site.hoursLabel}`,
+    `- Instagram: ${site.social.instagram}`,
+    `- LinkedIn: ${site.social.linkedin}`,
+    `- Facebook: ${site.social.facebook}`,
     `- Hyderabad studio: ${formatInAddress()}`,
     `- US mailing address: 30 N Gould St Ste R, Sheridan, Sheridan County, Wyoming 82801, United States`,
     '',
@@ -54,6 +58,18 @@ export const GET: APIRoute = () => {
   for (const i of industries) {
     out.push(`## ${i.name} marketing`, `URL: ${u(`/industries/${i.slug}/`)}`, '', i.answer,
       ...bullets('Common challenges', i.challenges), ...bullets('Our approach', i.approach), ...faqs(i.faqs), '');
+  }
+  for (const pair of areaServicePaths()) {
+    const copy = areaServiceCopy(pair.location, pair.service);
+    out.push(`## ${copy.h1}`, `URL: ${u(copy.path)}`, '', copy.answer, '', copy.meaning, '', copy.whoText, ...bullets('Who it is for', copy.who), '', copy.context, ...faqs(copy.faqs), '');
+  }
+  for (const pair of cityServicePaths()) {
+    const copy = cityServiceCopy(pair.city, pair.service);
+    out.push(`## ${copy.h1}`, `URL: ${u(copy.path)}`, '', copy.answer, '', copy.meaning, '', copy.whoText, ...bullets('Who it is for', copy.who), '', copy.context, ...faqs(copy.faqs), '');
+  }
+  for (const pair of industryCityPaths()) {
+    const copy = industryCityCopy(pair.industry, pair.city);
+    out.push(`## ${copy.h1}`, `URL: ${u(copy.path)}`, '', copy.answer, '', copy.meaning, '', copy.whoText, ...bullets('Who it is for', copy.who), '', copy.context, ...faqs(copy.faqs), '');
   }
   for (const p of posts) {
     out.push(`## ${p.title}`, `URL: ${u(`/blog/${p.slug}/`)}`, `Published: ${p.published} · Updated: ${p.updated} · By ${p.author}`, '', `Key takeaway: ${p.tldr}`, '');

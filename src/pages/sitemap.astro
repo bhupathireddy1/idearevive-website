@@ -7,6 +7,7 @@ import { cities } from '../data/cities';
 import { industries } from '../data/industries';
 import { posts } from '../data/posts';
 import { site } from '../data/site';
+import { areaServicePaths, cityServicePaths, industryCityPaths, offerPhrase } from '../lib/combos';
 
 const crumbs = [{ name: 'Sitemap', path: '/sitemap/' }];
 const groups = [
@@ -18,6 +19,9 @@ const groups = [
   { title: 'Cities across India', links: [['All cities', '/cities/'], ...cities.map((c) => [`Digital marketing in ${c.name}`, `/cities/${c.slug}/`])] },
   { title: 'Hyderabad neighbourhoods', links: [['All Hyderabad areas', '/locations/'], ...locations.map((l) => [l.h1, `/locations/${l.slug}/`])] },
   { title: 'Industries', links: [['All industries', '/industries/'], ...industries.map((i) => [i.name, `/industries/${i.slug}/`])] },
+  { title: 'Hyderabad area services', links: areaServicePaths().map(({ location, service, key }) => [`${offerPhrase(service)} in ${location.name}`, `/locations/${location.slug}/${key}/`]) },
+  { title: 'City services', links: cityServicePaths().map(({ city, service, key }) => [`${offerPhrase(service)} in ${city.name}`, `/cities/${city.slug}/${key}/`]) },
+  { title: 'Industry pages in other cities', links: industryCityPaths().map(({ industry, city }) => [`${industry.name} marketing in ${city.name}`, `/industries/${industry.slug}/${city.slug}/`]) },
   { title: 'Blog and guides', links: [['All articles', '/blog/'], ...posts.map((p) => [p.title, `/blog/${p.slug}/`])] },
   { title: 'Legal and policies', links: [
     ['Privacy policy', '/privacy-policy/'], ['Terms of use', '/terms/'], ['Cookie policy', '/cookie-policy/'], ['Accessibility statement', '/accessibility/'],

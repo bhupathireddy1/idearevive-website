@@ -8,6 +8,7 @@ import CTA from '../../components/CTA.astro';
 import IndiaMap from '../../components/IndiaMap.astro';
 import { cities, getCity, type City } from '../../data/cities';
 import { servicesForCity } from '../../lib/area-services';
+import { keyOf, offerPhrase, industriesForCity } from '../../lib/combos';
 import { site } from '../../data/site';
 import { faqSchema, serviceSchema } from '../../lib/schema';
 
@@ -23,6 +24,7 @@ const crumbs = [
 ];
 const nearby = city.nearby.map(getCity).filter((c): c is City => Boolean(c));
 const cityServices = servicesForCity(city.slug);
+const cityIndustries = industriesForCity(city);
 
 const steps = [
   { title: `A free audit of your ${city.name} market`, text: `We review your website, search visibility, Google Business Profile, ads and the competitors ${city.name} customers compare you with, then share the five fixes we would make first.` },
@@ -96,7 +98,22 @@ const steps = [
         <p class="body-lg text-muted">These are the channels that usually move the needle for {city.name} businesses like the ones above. The rest of the stack is available after the first 90 days prove a channel.</p>
       </div>
       <ul class="index-list">
-        {cityServices.map((s, i) => <ServiceCard href={`/services/${s.slug}/`} index={i} icon={s.icon} title={s.name} text={s.card} />)}
+        {cityServices.map((s, i) => <ServiceCard href={`/cities/${city.slug}/${keyOf(s)}/`} index={i} icon={s.icon} title={`${offerPhrase(s)} in ${city.name}`} text={s.card} />)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="industries-title">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Industries in {city.name}</p>
+        <h2 id="industries-title" class="heading-1">Which {city.name} businesses do we market?</h2>
+        <p class="body-lg text-muted">Hyderabad is the home market. {city.name} is served remotely, with pages written for this city rather than a copied Hyderabad brief.</p>
+      </div>
+      <ul class="tag-list">
+        {cityIndustries.map((industry) => (
+          <li><a href={`/industries/${industry.slug}/${city.slug}/`}>{industry.name} marketing in {city.name}</a></li>
+        ))}
       </ul>
     </div>
   </section>

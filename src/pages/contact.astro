@@ -55,6 +55,8 @@ const faqs = [
             {site.phone && <li><Icon name="phone" size={18} /><a href={`tel:${site.phone.replace(/\s/g, '')}`}>{site.phone}</a></li>}
             {wa && <li><Icon name="whatsapp" size={18} /><a href={wa} data-track="contact-whatsapp">Chat on WhatsApp</a></li>}
             {site.social.instagram && <li><Icon name="instagram" size={18} /><a href={site.social.instagram} rel="me noopener" target="_blank" data-track="social-instagram">Instagram {site.instagramHandle}</a></li>}
+            {site.social.linkedin && <li><Icon name="linkedin" size={18} /><a href={site.social.linkedin} rel="me noopener" target="_blank" data-track="social-linkedin">LinkedIn</a></li>}
+            {site.social.facebook && <li><Icon name="facebook" size={18} /><a href={site.social.facebook} rel="me noopener" target="_blank" data-track="social-facebook">Facebook</a></li>}
             <li><Icon name="pin" size={18} /><span>Hyderabad studio: {address}</span></li>
             <li><Icon name="pin" size={18} /><span>US mailing: {usAddress}</span></li>
             <li><Icon name="clock" size={18} /><span>{site.hoursLabel}</span></li>

@@ -12,6 +12,8 @@ const initials = f.name.split(' ').map((w) => w[0]).join('');
     <p class="author-bio-links">
       <a href="/about/#founder">Full profile</a>
       {site.social.instagram && <a href={site.social.instagram} rel="me noopener" target="_blank">Instagram {site.instagramHandle}</a>}
+      {site.social.linkedin && <a href={site.social.linkedin} rel="me noopener" target="_blank">LinkedIn</a>}
+      {site.social.facebook && <a href={site.social.facebook} rel="me noopener" target="_blank">Facebook</a>}
       <a href={`mailto:${site.email}`}>{site.email}</a>
     </p>
   </div>
