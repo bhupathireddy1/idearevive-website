@@ -7,8 +7,7 @@ import NextSteps from '../../components/NextSteps.astro';
 import CTA from '../../components/CTA.astro';
 import IndiaMap from '../../components/IndiaMap.astro';
 import { cities, getCity, type City } from '../../data/cities';
-import { servicesForCity } from '../../lib/area-services';
-import { keyOf, offerPhrase, industriesForCity } from '../../lib/combos';
+import { keyOf, offerPhrase, liveServicesForCity, liveIndustriesForCity } from '../../lib/combos';
 import { site } from '../../data/site';
 import { faqSchema, serviceSchema } from '../../lib/schema';
 
@@ -23,8 +22,8 @@ const crumbs = [
   { name: city.name, path },
 ];
 const nearby = city.nearby.map(getCity).filter((c): c is City => Boolean(c));
-const cityServices = servicesForCity(city.slug);
-const cityIndustries = industriesForCity(city);
+const cityServices = liveServicesForCity(city.slug);
+const cityIndustries = liveIndustriesForCity(city);
 
 const steps = [
   { title: `A free audit of your ${city.name} market`, text: `We review your website, search visibility, Google Business Profile, ads and the competitors ${city.name} customers compare you with, then share the five fixes we would make first.` },

@@ -3,6 +3,7 @@ import { locations, type Location } from '../data/locations';
 import { industries, type Industry } from '../data/industries';
 import { services, type FAQ, type Service } from '../data/services';
 import { servicesForCity, servicesForLocation } from './area-services';
+import { DAILY_LIMIT, SHIPPED } from './combo-rollout';
 
 export const SERVICE_KEY: Record<string, string> = {
   'seo-services-hyderabad': 'seo',
@@ -81,16 +82,67 @@ export function industriesForCity(city: City) {
   });
 }
 
+function uniqueBy<T>(items: T[], key: (item: T) => string) {
+  const seen = new Set<string>();
+  return items.filter((item) => {
+    const id = key(item);
+    if (seen.has(id)) return false;
+    seen.add(id);
+    return true;
+  });
+}
+
+{
+  const byDate = new Map<string, number>();
+  for (const pair of SHIPPED) byDate.set(pair.shipped, (byDate.get(pair.shipped) ?? 0) + 1);
+  for (const [day, count] of byDate) {
+    if (count > DAILY_LIMIT) throw new Error(`combo-rollout ${day} ships ${count} pages; daily limit is ${DAILY_LIMIT}`);
+  }
+}
+
+export function liveServicesForLocation(slug: string) {
+  const extra = SHIPPED.filter((pair) => pair.kind === 'area-service' && pair.area === slug)
+    .map((pair) => serviceByKey(pair.service))
+    .filter((item): item is Service => Boolean(item));
+  return uniqueBy([...servicesForLocation(slug), ...extra], (item) => item.slug);
+}
+
+export function liveServicesForCity(slug: string) {
+  const extra = SHIPPED.filter((pair) => pair.kind === 'city-service' && pair.city === slug)
+    .map((pair) => serviceByKey(pair.service))
+    .filter((item): item is Service => Boolean(item));
+  return uniqueBy([...servicesForCity(slug), ...extra], (item) => item.slug);
+}
+
+export function liveIndustriesForCity(city: City) {
+  const extra = SHIPPED.filter((pair) => pair.kind === 'industry-city' && pair.city === city.slug)
+    .map((pair) => industries.find((item) => item.slug === pair.industry))
+    .filter((item): item is Industry => Boolean(item));
+  return uniqueBy([...industriesForCity(city), ...extra], (item) => item.slug);
+}
+
+export function liveIndustriesForLocation(slug: string) {
+  return SHIPPED.filter((pair) => pair.kind === 'industry-area' && pair.area === slug)
+    .map((pair) => industries.find((item) => item.slug === pair.industry))
+    .filter((item): item is Industry => Boolean(item));
+}
+
+export function areasForIndustry(industry: Industry) {
+  return SHIPPED.filter((pair) => pair.kind === 'industry-area' && pair.industry === industry.slug)
+    .map((pair) => locations.find((item) => item.slug === pair.area))
+    .filter((item): item is Location => Boolean(item));
+}
+
 export function citiesForIndustry(industry: Industry) {
-  return cities.filter((city) => industriesForCity(city).some((item) => item.slug === industry.slug));
+  return cities.filter((city) => liveIndustriesForCity(city).some((item) => item.slug === industry.slug));
 }
 
 export function citiesForService(service: Service) {
-  return cities.filter((city) => servicesForCity(city.slug).some((item) => item.slug === service.slug));
+  return cities.filter((city) => liveServicesForCity(city.slug).some((item) => item.slug === service.slug));
 }
 
 export function locationsForService(service: Service) {
-  return locations.filter((location) => servicesForLocation(location.slug).some((item) => item.slug === service.slug));
+  return locations.filter((location) => liveServicesForLocation(location.slug).some((item) => item.slug === service.slug));
 }
 
 const HYD_ONLY = /\b(Kokapet|ORR|HITEC City|Kondapur|Gachibowli|Madhapur|Banjara Hills|Jubilee Hills|Old City|Abids|Krishe|WeWork|Telangana)\b/;
@@ -116,7 +168,7 @@ function titleTag(phrase: string, place: string) {
   if (withPlace.length <= 60) return withPlace;
   const shortPlace = place.split(',')[0];
   const shorter = `${phrase} in ${shortPlace} | IdeaRevive`;
-  return shorter.length <= 62 ? shorter : `${phrase} in ${shortPlace}`;
+  return shorter.length <= 60 ? shorter : `${phrase} in ${shortPlace}`;
 }
 
 function metaDescription(parts: string[]) {
@@ -151,14 +203,16 @@ export type ComboCopy = {
   area: string[];
   serviceType: string;
   cta: string;
+  mapSlug?: string;
+  mapTitle?: string;
 };
 
 export function cityServiceCopy(city: City, service: Service): ComboCopy {
   const key = keyOf(service);
   const path = `/cities/${city.slug}/${key}/`;
   const offer = offerPhrase(service);
-  const siblings = servicesForCity(city.slug).filter((item) => item.slug !== service.slug);
-  const industryLinks = industriesForCity(city)
+  const siblings = liveServicesForCity(city.slug).filter((item) => item.slug !== service.slug);
+  const industryLinks = liveIndustriesForCity(city)
     .filter((industry) => industry.services.includes(service.slug))
     .slice(0, 4);
 
@@ -242,7 +296,8 @@ export function areaServiceCopy(location: Location, service: Service): ComboCopy
   const nearby = location.nearby
     .map((slug) => locations.find((item) => item.slug === slug))
     .filter((item): item is Location => Boolean(item));
-  const siblings = servicesForLocation(location.slug).filter((item) => item.slug !== service.slug);
+  const siblings = liveServicesForLocation(location.slug).filter((item) => item.slug !== service.slug);
+  const areaIndustries = liveIndustriesForLocation(location.slug).slice(0, 3);
 
   return {
     path,
@@ -295,11 +350,11 @@ export function areaServiceCopy(location: Location, service: Service): ComboCopy
         a: `Yes. The Google profile, the landing page and the ads can sit on ${location.name} first. Nearby areas are added only when the numbers justify it.`,
       },
       {
-        q: `Who in ${location.name} is this for?`,
+        q: `Who in ${location.name} needs ${offer}?`,
         a: `${listAnd(location.businesses)}. If your work does not look like that, say so on the audit and we will say if ${offer} is the wrong first channel.`,
       },
       {
-        q: `Do you meet clients in ${location.name}?`,
+        q: `Do you meet ${offer} clients in ${location.name}?`,
         a: `Yes, in ${location.name} or at the Kondapur studio. Weekly work runs on calls and WhatsApp.`,
       },
     ],
@@ -307,12 +362,18 @@ export function areaServiceCopy(location: Location, service: Service): ComboCopy
       { href: `/locations/${location.slug}/`, label: `Marketing in ${location.name}` },
       { href: `/services/${service.slug}/`, label: `${offer} across Hyderabad` },
       ...siblings.map((item) => ({ href: `/locations/${location.slug}/${keyOf(item)}/`, label: `${offerPhrase(item)} in ${location.name}` })),
-      ...nearby.slice(0, 3).map((item) => ({ href: `/locations/${item.slug}/${key}/`, label: `${offer} in ${item.name}` })),
+      ...nearby
+        .filter((item) => liveServicesForLocation(item.slug).some((mapped) => keyOf(mapped) === key))
+        .slice(0, 3)
+        .map((item) => ({ href: `/locations/${item.slug}/${key}/`, label: `${offer} in ${item.name}` })),
+      ...areaIndustries.map((industry) => ({ href: `/industries/${industry.slug}/${location.slug}/`, label: `${industry.name} marketing in ${location.name}` })),
       { href: '/locations/', label: 'All Hyderabad areas' },
     ],
     area: [`${location.name}, Hyderabad`, 'Hyderabad', 'Telangana'],
     serviceType: offer,
     cta: `Free ${service.shortName} audit for my ${location.name} business`,
+    mapSlug: location.slug,
+    mapTitle: `Where in Hyderabad is ${location.name}?`,
   };
 }
 
@@ -402,18 +463,157 @@ export function industryCityCopy(industry: Industry, city: City): ComboCopy {
   };
 }
 
+const INDUSTRY_AREA_HINT: Record<string, RegExp> = {
+  healthcare: /\bhospitals?\b|\bclinics?\b|dental|diagnostic|doctor|patient|\bhealth\b/i,
+  education: /school|coach|education|college|training/i,
+  'real-estate': /real estate|property|housing|villa/i,
+  hospitality: /dining|restaurant|café|cafe|hotel|hospitality|bar|food/i,
+  'interior-design': /interior|home brand|designer|villa|furniture/i,
+  landscaping: /landscape|garden|outdoor/i,
+  'home-services': /home service|plumber|electrician|cleaning|interior/i,
+  'beauty-salons': /salon|spa|beauty|wellness/i,
+  'fitness-wellness': /gym|fitness|yoga|wellness/i,
+  'jewellery-fashion': /fashion|jewellery|jewelry|boutique/i,
+  'ecommerce-retail': /retail|store|fashion|boutique/i,
+  'it-saas': /saas|it\b|software|start-?up/i,
+  manufacturing: /manufactur|industrial/i,
+  automotive: /auto|vehicle/i,
+  'professional-services': /professional|founder|consult/i,
+  'architecture-construction': /architect|construction/i,
+};
+
+function usableForArea(text: string, location: Location) {
+  if (text.includes(location.name)) return text;
+  if (HYD_ONLY.test(text)) return '';
+  return text;
+}
+
+function industryOffer(industry: Industry) {
+  if (industry.slug === 'healthcare') return 'Healthcare marketing';
+  return `${industry.name} marketing`;
+}
+
+export function industryAreaCopy(industry: Industry, location: Location): ComboCopy {
+  const path = `/industries/${industry.slug}/${location.slug}/`;
+  const offer = industryOffer(industry);
+  const nearby = location.nearby
+    .map((slug) => locations.find((item) => item.slug === slug))
+    .filter((item): item is Location => Boolean(item));
+  const hint = INDUSTRY_AREA_HINT[industry.slug];
+  const who = hint ? location.businesses.filter((item) => hint.test(item)) : location.businesses;
+  const buyers = who.length ? who : location.businesses;
+  const linkedServices = industry.services
+    .map((slug) => services.find((item) => item.slug === slug))
+    .filter((item): item is Service => Boolean(item));
+  const startWith = linkedServices
+    .filter((item) => liveServicesForLocation(location.slug).some((mapped) => mapped.slug === item.slug))
+    .slice(0, 3);
+  const channels = (startWith.length ? startWith : linkedServices).slice(0, 3);
+  const challenges = industry.challenges.map((line) => usableForArea(line, location)).filter(Boolean);
+  const approach = industry.approach.map((line) => usableForArea(line, location)).filter(Boolean);
+  const otherAreas = areasForIndustry(industry).filter((item) => item.slug !== location.slug).slice(0, 4);
+
+  return {
+    path,
+    title: titleTag(offer, `${location.name}, Hyderabad`),
+    description: metaDescription([
+      `${offer} in ${location.name}, Hyderabad.`,
+      `${buyers[0]}.`,
+      'Neighbourhood pages and ads, not a generic Hyderabad campaign.',
+    ]),
+    h1: `${offer} in ${location.name}, Hyderabad`,
+    eyebrow: `${location.name}, Hyderabad`,
+    answer: `${offer} in ${location.name} is the work IdeaRevive writes for this Hyderabad neighbourhood first. ${buyers[0]} here are usually found through ${location.focus[0].toLowerCase()}. We start with ${listAnd(channels.map((item) => offerPhrase(item)))}.`,
+    meaningTitle: `What is ${offer} in ${location.name}?`,
+    meaning: `${offer} in ${location.name} means the listing, the page and the ads sit on this neighbourhood first, not on a citywide Hyderabad brief. ${sentence(challenges[0] || industry.challenges[0])} ${sentence(location.context)} ${buyers.length > 1 ? `${buyers[0]} and ${buyers[1]} are` : `${buyers[0]} are`} the usual buyers. Nearby ${listAnd(nearby.slice(0, 3).map((item) => item.name))} are added only when the numbers justify it. Meetings can happen in ${location.name} or at the Kondapur studio. Bhupathi Reddy reviews the plan.`,
+    whoTitle: `Who is ${offer} in ${location.name} for?`,
+    who: buyers,
+    whoText: `Usual first channels: ${listAnd(channels.map((item) => offerPhrase(item)))}. If your work in ${location.name} does not look like that, say so on the audit. We will say if this is the wrong first channel.`,
+    contextTitle: `What does ${location.name} change about ${industry.name.toLowerCase()} marketing?`,
+    context: `${sentence(location.context)} The ${industry.name.toLowerCase()} problems stay the same. The street, the neighbours and the competitors do not. A Hyderabad-wide campaign that ignores ${location.name} usually wastes spend.`,
+    itemsTitle: `How do we approach ${industry.name.toLowerCase()} work in ${location.name}?`,
+    items: (approach.length ? approach : industry.approach).map((text) => ({ title: '', text })),
+    processTitle: `How does ${offer} in ${location.name} run?`,
+    process: [
+      { title: 'Free audit', text: `We look at your ${location.name} listing, site, ads and the three nearby competitors ${/^[aeiou]/i.test(industry.name) ? 'an' : 'a'} ${industry.name.toLowerCase()} buyer actually compares.` },
+      { title: '90-day plan', text: `Usually ${channels[0] ? offerPhrase(channels[0]) : 'the first channel that brings enquiries'}, then the next one the audit names. Nearby areas wait.` },
+      { title: 'Weekly work', text: `Calls and WhatsApp. We can meet in ${location.name} or at the Kondapur studio.` },
+    ],
+    tableTitle: `${offer} in ${location.name}, at a glance`,
+    table: {
+      head: ['Fact', 'Detail'],
+      rows: [
+        ['Place', `${location.name}, Hyderabad, Telangana`],
+        ['What this page is', offer],
+        ['Usual first channels', listAnd(channels.map((item) => offerPhrase(item)))],
+        ['Nearby', listAnd(nearby.map((item) => item.name))],
+        ['Meetings', `In ${location.name} or at the Kondapur studio`],
+        ['Who reviews the plan', 'Bhupathi Reddy, director'],
+      ],
+    },
+    facts: [
+      { label: 'Area', value: `${location.name}, Hyderabad, Telangana` },
+      { label: 'Businesses we see', value: buyers },
+      { label: 'Usual first channels', value: channels.map((item) => offerPhrase(item)) },
+      { label: 'Meetings', value: `In ${location.name} or over video. Studio in Kondapur.` },
+    ],
+    faqs: [
+      {
+        q: `Do you market ${industry.name.toLowerCase()} businesses in ${location.name}?`,
+        a: `Yes. The Google profile, the landing page and the ads can sit on ${location.name} first. Nearby areas are added only when the numbers justify it. Bhupathi Reddy reviews the plan.`,
+      },
+      {
+        q: `Is ${offer} in ${location.name} the same as the Hyderabad ${industry.name.toLowerCase()} page?`,
+        a: `No. The Hyderabad industry page is the city overview. This page is for ${location.name} buyers, the streets next to ${nearby[0]?.name ?? 'the neighbourhood'}, and the businesses listed above.`,
+      },
+      {
+        q: `Where should a ${location.name} ${industry.name.toLowerCase()} firm start?`,
+        a: `Usually ${channels[0] ? offerPhrase(channels[0]) : 'a free audit'}, then ${channels[1] ? offerPhrase(channels[1]) : 'the next channel that brings enquiries'}. The free audit says which one first for your street.`,
+      },
+      {
+        q: `Do you meet ${industry.name.toLowerCase()} clients in ${location.name}?`,
+        a: `Yes, in ${location.name} or at the Kondapur studio. Weekly work runs on calls and WhatsApp. You keep your ad and analytics accounts.`,
+      },
+    ],
+    related: [
+      { href: `/industries/${industry.slug}/`, label: `${industry.name} marketing in Hyderabad` },
+      { href: `/locations/${location.slug}/`, label: `Marketing in ${location.name}` },
+      ...(startWith.length ? startWith : linkedServices.slice(0, 2)).map((item) => (
+        startWith.length
+          ? { href: `/locations/${location.slug}/${keyOf(item)}/`, label: `${offerPhrase(item)} in ${location.name}` }
+          : { href: `/services/${item.slug}/`, label: `${offerPhrase(item)} in Hyderabad` }
+      )),
+      ...otherAreas.map((item) => ({ href: `/industries/${industry.slug}/${item.slug}/`, label: `${industry.name} marketing in ${item.name}` })),
+      { href: '/locations/', label: 'All Hyderabad areas' },
+    ],
+    area: [`${location.name}, Hyderabad`, 'Hyderabad', 'Telangana'],
+    serviceType: offer,
+    cta: `Free audit for my ${location.name} ${industry.name.toLowerCase()} business`,
+    mapSlug: location.slug,
+    mapTitle: `Where in Hyderabad is ${location.name}?`,
+  };
+}
+
 export function cityServicePaths() {
   return cities.flatMap((city) =>
-    servicesForCity(city.slug).map((service) => ({ city, service, key: keyOf(service) })),
+    liveServicesForCity(city.slug).map((service) => ({ city, service, key: keyOf(service) })),
   );
 }
 
 export function areaServicePaths() {
   return locations.flatMap((location) =>
-    servicesForLocation(location.slug).map((service) => ({ location, service, key: keyOf(service) })),
+    liveServicesForLocation(location.slug).map((service) => ({ location, service, key: keyOf(service) })),
   );
 }
 
 export function industryCityPaths() {
-  return cities.flatMap((city) => industriesForCity(city).map((industry) => ({ city, industry })));
+  return cities.flatMap((city) => liveIndustriesForCity(city).map((industry) => ({ city, industry })));
+}
+
+export function industryAreaPaths() {
+  return SHIPPED.filter((pair) => pair.kind === 'industry-area').flatMap((pair) => {
+    const industry = industries.find((item) => item.slug === pair.industry);
+    const location = locations.find((item) => item.slug === pair.area);
+    return industry && location ? [{ industry, location }] : [];
+  });
 }

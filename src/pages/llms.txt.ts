@@ -6,6 +6,7 @@ import { cities } from '../data/cities';
 import { industries } from '../data/industries';
 import { posts } from '../data/posts';
 import { staticPages } from '../lib/pages';
+import { areaServicePaths, cityServicePaths, industryAreaPaths, industryCityPaths, offerPhrase } from '../lib/combos';
 
 const u = (path: string) => new URL(path, site.url).toString();
 
@@ -49,6 +50,11 @@ export const GET: APIRoute = () => {
     '- Hyderabad is the primary market. Neighbourhood service pages live under /locations/{area}/{service}/ (example: /locations/kondapur/google-ads/).',
     '- Other Indian cities are secondary and served from Hyderabad. Service-in-city pages live under /cities/{city}/{service}/ (example: /cities/pune/google-ads/).',
     '- Industry-in-city pages live under /industries/{industry}/{city}/ (example: /industries/landscaping/pune/). The industry hub without a city is Hyderabad.',
+    '- Industry-in-neighbourhood pages live under /industries/{industry}/{area}/ (example: /industries/healthcare/banjara-hills/).',
+    ...areaServicePaths().map(({ location, service, key }) => `- [${offerPhrase(service)} in ${location.name}](${u(`/locations/${location.slug}/${key}/`)})`),
+    ...cityServicePaths().map(({ city, service, key }) => `- [${offerPhrase(service)} in ${city.name}](${u(`/cities/${city.slug}/${key}/`)})`),
+    ...industryCityPaths().map(({ industry, city }) => `- [${industry.name} marketing in ${city.name}](${u(`/industries/${industry.slug}/${city.slug}/`)})`),
+    ...industryAreaPaths().map(({ industry, location }) => `- [${industry.name} marketing in ${location.name}](${u(`/industries/${industry.slug}/${location.slug}/`)})`),
     '',
     '## Guides',
     ...posts.map((p) => `- [${p.title}](${u(`/blog/${p.slug}/`)}): ${p.tldr}`),

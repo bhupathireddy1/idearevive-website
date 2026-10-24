@@ -5,7 +5,8 @@ import { locations } from '../data/locations';
 import { industries } from '../data/industries';
 import { services } from '../data/services';
 import { caseStudies } from '../data/caseStudies';
-import { areaServicePaths, cityServicePaths, industryCityPaths } from './combos';
+import { areaServicePaths, cityServicePaths, industryAreaPaths, industryCityPaths } from './combos';
+import { SHIPPED } from './combo-rollout';
 
 /** Pages without a data entry. Bump a date only when that page’s own copy changes, never on a sitewide deploy. */
 const pageReviews: Record<string, string> = {
@@ -38,6 +39,17 @@ for (const pair of areaServicePaths()) {
 }
 for (const pair of industryCityPaths()) {
   byPath.set(`/industries/${pair.industry.slug}/${pair.city.slug}/`, pair.city.reviewed ?? pair.industry.reviewed ?? site.launched);
+}
+for (const pair of industryAreaPaths()) {
+  byPath.set(`/industries/${pair.industry.slug}/${pair.location.slug}/`, pair.location.reviewed ?? pair.industry.reviewed ?? site.launched);
+}
+for (const pair of SHIPPED) {
+  const path =
+    pair.kind === 'area-service' ? `/locations/${pair.area}/${pair.service}/` :
+    pair.kind === 'city-service' ? `/cities/${pair.city}/${pair.service}/` :
+    pair.kind === 'industry-city' ? `/industries/${pair.industry}/${pair.city}/` :
+    `/industries/${pair.industry}/${pair.area}/`;
+  byPath.set(path, pair.shipped);
 }
 
 export function reviewedFor(path: string): string {

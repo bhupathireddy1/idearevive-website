@@ -11,7 +11,7 @@ import { industries, industryMetrics, type Industry } from '../../data/industrie
 import { getService, type Service } from '../../data/services';
 import { site } from '../../data/site';
 import { serviceSchema, faqSchema } from '../../lib/schema';
-import { citiesForIndustry } from '../../lib/combos';
+import { citiesForIndustry, areasForIndustry } from '../../lib/combos';
 
 export function getStaticPaths() {
   return industries.map((industry) => ({ params: { slug: industry.slug }, props: { industry } }));
@@ -26,6 +26,7 @@ const crumbs = [
 const recommended = industry.services.map(getService).filter((s): s is Service => Boolean(s));
 const others = industries.filter((i) => i.slug !== industry.slug);
 const otherCities = citiesForIndustry(industry);
+const hydAreas = areasForIndustry(industry);
 ---
 <BaseLayout
   title={industry.metaTitle}
@@ -90,6 +91,23 @@ const otherCities = citiesForIndustry(industry);
       </div>
     </div>
   </section>
+
+  {hydAreas.length > 0 && (
+    <section class="section" aria-labelledby="areas-title">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow">Hyderabad neighbourhoods</p>
+          <h2 id="areas-title" class="heading-1">Which Hyderabad areas have their own {industry.name.toLowerCase()} page?</h2>
+          <p class="body-lg text-muted">This page is the Hyderabad overview. The neighbourhood pages below sit on one catchment first.</p>
+        </div>
+        <ul class="tag-list">
+          {hydAreas.map((area) => (
+            <li><a href={`/industries/${industry.slug}/${area.slug}/`}>{area.name}</a></li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
 
   <section class="section section-alt" aria-labelledby="cities-title">
     <div class="container">

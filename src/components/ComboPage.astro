@@ -5,6 +5,7 @@ import FAQ from './FAQ.astro';
 import NextSteps from './NextSteps.astro';
 import CTA from './CTA.astro';
 import AuthorBio from './AuthorBio.astro';
+import CityMap from './CityMap.astro';
 import { site } from '../data/site';
 import { faqSchema, serviceSchema, type Crumb } from '../lib/schema';
 import type { ComboCopy } from '../lib/combos';
@@ -136,6 +137,19 @@ const titledItems = copy.items.some((item) => item.title);
   </section>
 
   <FAQ faqs={copy.faqs} title={`${copy.h1}: FAQs`} alt />
+
+  {copy.mapSlug && (
+    <section class="section">
+      <div class="container city">
+        <div>
+          <p class="eyebrow">On the map</p>
+          <h2 class="heading-2" style="margin:var(--space-4) 0 var(--space-8)">{copy.mapTitle ?? `Where is this neighbourhood?`}</h2>
+          <p class="body-lg text-muted">IdeaRevive’s studio is in Kondapur. Meetings for this page can happen in the neighbourhood or at the studio.</p>
+        </div>
+        <div data-reveal><CityMap active={copy.mapSlug} /></div>
+      </div>
+    </section>
+  )}
 
   <section class="section">
     <div class="container">

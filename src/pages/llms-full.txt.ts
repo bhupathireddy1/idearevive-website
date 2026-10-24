@@ -7,7 +7,7 @@ import { industries } from '../data/industries';
 import { posts } from '../data/posts';
 import { staticPages } from '../lib/pages';
 import { latestReview } from '../lib/reviewed';
-import { areaServiceCopy, areaServicePaths, cityServiceCopy, cityServicePaths, industryCityCopy, industryCityPaths } from '../lib/combos';
+import { areaServiceCopy, areaServicePaths, cityServiceCopy, cityServicePaths, industryAreaCopy, industryAreaPaths, industryCityCopy, industryCityPaths } from '../lib/combos';
 
 const u = (path: string) => new URL(path, site.url).toString();
 const faqs = (list: FAQ[]) => (list.length ? ['', 'FAQs:', ...list.flatMap((f) => [`Q: ${f.q}`, `A: ${f.a}`])] : []);
@@ -69,6 +69,10 @@ export const GET: APIRoute = () => {
   }
   for (const pair of industryCityPaths()) {
     const copy = industryCityCopy(pair.industry, pair.city);
+    out.push(`## ${copy.h1}`, `URL: ${u(copy.path)}`, '', copy.answer, '', copy.meaning, '', copy.whoText, ...bullets('Who it is for', copy.who), '', copy.context, ...faqs(copy.faqs), '');
+  }
+  for (const pair of industryAreaPaths()) {
+    const copy = industryAreaCopy(pair.industry, pair.location);
     out.push(`## ${copy.h1}`, `URL: ${u(copy.path)}`, '', copy.answer, '', copy.meaning, '', copy.whoText, ...bullets('Who it is for', copy.who), '', copy.context, ...faqs(copy.faqs), '');
   }
   for (const p of posts) {

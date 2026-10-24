@@ -1,22 +1,33 @@
 ---
 import ComboPage from '../../../components/ComboPage.astro';
-import { industryCityPaths, industryCityCopy } from '../../../lib/combos';
+import { industryCityPaths, industryCityCopy, industryAreaPaths, industryAreaCopy } from '../../../lib/combos';
 import type { Industry } from '../../../data/industries';
 import type { City } from '../../../data/cities';
+import type { Location } from '../../../data/locations';
 
 export function getStaticPaths() {
-  return industryCityPaths().map(({ industry, city }) => ({
-    params: { slug: industry.slug, city: city.slug },
-    props: { industry, city },
-  }));
+  return [
+    ...industryCityPaths().map(({ industry, city }) => ({
+      params: { slug: industry.slug, city: city.slug },
+      props: { industry, city, location: undefined as Location | undefined },
+    })),
+    ...industryAreaPaths().map(({ industry, location }) => ({
+      params: { slug: industry.slug, city: location.slug },
+      props: { industry, city: undefined as City | undefined, location },
+    })),
+  ];
 }
 
-const { industry, city } = Astro.props as { industry: Industry; city: City };
-const copy = industryCityCopy(industry, city);
+const { industry, city, location } = Astro.props as {
+  industry: Industry;
+  city?: City;
+  location?: Location;
+};
+const copy = location ? industryAreaCopy(industry, location) : industryCityCopy(industry, city!);
 const crumbs = [
   { name: 'Industries', path: '/industries/' },
   { name: industry.name, path: `/industries/${industry.slug}/` },
-  { name: city.name, path: copy.path },
+  { name: location ? location.name : city!.name, path: copy.path },
 ];
 ---
 <ComboPage copy={copy} crumbs={crumbs} />

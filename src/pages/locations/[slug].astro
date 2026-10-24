@@ -8,8 +8,7 @@ import CityMap from '../../components/CityMap.astro';
 import NextSteps from '../../components/NextSteps.astro';
 import { site } from '../../data/site';
 import { locations, getLocation, type Location } from '../../data/locations';
-import { servicesForLocation } from '../../lib/area-services';
-import { keyOf, offerPhrase } from '../../lib/combos';
+import { keyOf, offerPhrase, liveServicesForLocation, liveIndustriesForLocation } from '../../lib/combos';
 import { faqSchema, serviceSchema } from '../../lib/schema';
 
 export function getStaticPaths() {
@@ -23,7 +22,8 @@ const crumbs = [
   { name: location.name, path },
 ];
 const nearby = location.nearby.map(getLocation).filter((l): l is Location => Boolean(l));
-const areaServices = servicesForLocation(location.slug);
+const areaServices = liveServicesForLocation(location.slug);
+const areaIndustries = liveIndustriesForLocation(location.slug);
 const searches = location.businesses.map((b) => `${b} in ${location.name}`);
 const lc = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
 const faqs = [
@@ -87,6 +87,13 @@ const faqs = [
       <ul class="index-list">
         {areaServices.map((s, i) => <ServiceCard href={`/locations/${location.slug}/${keyOf(s)}/`} index={i} icon={s.icon} title={`${offerPhrase(s)} in ${location.name}`} text={s.card} />)}
       </ul>
+      {areaIndustries.length > 0 && (
+        <ul class="tag-list" style="margin-top:var(--space-8)">
+          {areaIndustries.map((industry) => (
+            <li><a href={`/industries/${industry.slug}/${location.slug}/`}>{industry.name} marketing in {location.name}</a></li>
+          ))}
+        </ul>
+      )}
     </div>
   </section>
 
